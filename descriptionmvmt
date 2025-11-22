@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Point mobile et vecteurs</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background: #f5f5f5;
+        }
+
+        #container {
+            margin: auto;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        #canvasWrapper {
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 320px;
+        }
+
+        button {
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #888;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ddd;
+        }
+
+        select {
+            padding: 4px;
+            margin-top: 4px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #vectorList {
+            max-height: 220px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+
+        #info {
+            font-size: 0.9em;
+        }
+
+        .small {
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        .vector-item {
+            border-bottom: 1px solid #eee;
+            padding: 3px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="canvasWrapper">
+        <canvas id="scene" width="800" height="600"></canvas>
+    </div>
+
+    <div id="controls">
+        <div class="panel">
+            <div id="info">
+                <p>
+                    Point rouge: mouvement curviligne, vitesse variable.<br>
+                    Cliquer sur le canvas: 1er clic = origine, 2e clic = extrémité du vecteur.
+                </p>
+                <p>
+                    Position actuelle (en unités de position): 
+                    <span id="posText">(0, 0)</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="panel">
+            <p>Contrôles</p>
+            <button id="resetBtn">Réinitialiser</button>
+            <button id="traceBtn">Trace: arrêtée</button>
+            <button id="axesBtn">Repère: masqué</button>
+            <p class="small">
+                Origine du repère: cliquer près de O puis déplacer la souris (repère visible).
+            </p>
+        </div>
+
+        <div class="panel">
+            <p>Vecteurs</p>
+            <label for="vectorType">Type de vecteur:</label><br>
+            <select id="vectorType">
+                <option value="position">Position</option>
+                <option value="deplacement">Déplacement</option>
+                <option value="vitesse_inst">Vitesse instantanée</option>
+                <option value="vitesse_moy">Vitesse moyenne</option>
+                <option value="acc_moy">Accélération moyenne</option>
+                <option value="autre">Autre</option>
+            </select>
+            <p class="small">
+                1er clic: origine du vecteur<br>
+                2e clic: extrémité du vecteur
+            </p>
+            <p class="small">
+                Attention: pour les vitesses et accélérations, il faut choisir et noter une échelle
+                (par exemple: 1 carreau de vecteur vitesse = 1 m/s).
+            </p>
+            <button id="clearVectorsBtn">Effacer les vecteurs</button>
+
+            <p>Liste des vecteurs</p>
+            <div id="vectorList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Paramètres de la scène
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    const gridSpacing = 40; // pixels entre lignes du quadrillage
+    const scale = gridSpacing; // 1 unité de position = 1 case
+
+    // Origine du repère (en pixels)
+    let originX = width / 2;
+    let originY = height / 2;
+
+    // Animation du point
+    let lastTimestamp = null;
+    let t = 0; // temps en ms
+    let traceEnabled = false;
+    let axesVisible = false;
+
+    const trace = []; // positions passées du point
+
+    // Vecteurs dessinés par l'utilisateur
+    const vectors = []; // {type, x1, y1, x2, y2, norm, dxu, dyu, color}
+    let currentVectorStart = null; // {x, y} en pixels
+
+    // Drag de l'origine du repère
+    let draggingOrigin = false;
+
+    // UI
+    const posText = document.getElementById('posText');
+    const resetBtn = document.getElementById('resetBtn');
+    const traceBtn = document.getElementById('traceBtn');
+    const axesBtn = document.getElementById('axesBtn');
+    const vectorTypeSelect = document.getElementById('vectorType');
+    const vectorListDiv = document.getElementById('vectorList');
+    const clearVectorsBtn = document.getElementById('clearVectorsBtn');
+
+    // Conversion pixel -> coordonnées du repère
+    function pixelToWorld(px, py) {
+        const x = (px - originX) / scale;
+        const y = (originY - py) / scale; // inversion de l'axe y
+        return { x, y };
+    }
+
+    // Conversion repère -> pixel
+    function worldToPixel(x, y) {
+        const px = originX + x * scale;
+        const py = originY - y * scale;
+        return { px, py };
+    }
+
+    // Trajectoire du point: courbe fermée, vitesse non uniforme
+    function getPointPosition(ms) {
+        const s = ms / 1000; // temps en secondes
+        // Paramètre qui avance avec une vitesse oscillante
+        const param = s + 0.6 * Math.sin(1.2 * s);
+
+        // Courbe type "8" aplatie (Lissajous simple)
+        const x = 4 * Math.cos(param);
+        const y = 2.5 * Math.sin(2 * param);
+
+        return { x, y };
+    }
+
+    // Dessin du quadrillage
+    function drawGrid() {
+        ctx.save();
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+
+        // lignes verticales
+        for (let x = 0; x <= width; x += gridSpacing) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.stroke();
+        }
+
+        // lignes horizontales
+        for (let y = 0; y <= height; y += gridSpacing) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    // Dessin du repère orthonormé
+    function drawAxes() {
+        ctx.save();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1.5;
+
+        // Axe x
+        ctx.beginPath();
+        ctx.moveTo(0, originY);
+        ctx.lineTo(width, originY);
+        ctx.stroke();
+
+        // Axe y
+        ctx.beginPath();
+        ctx.moveTo(originX, 0);
+        ctx.lineTo(originX, height);
+        ctx.stroke();
+
+        // Graduations
+        ctx.fillStyle = '#000000';
+        ctx.font = '10px sans-serif';
+
+        // graduations sur l'axe x
+        for (let x = originX; x <= width; x += scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, originY - 4);
+            ctx.lineTo(x, originY + 4);
+            ctx.stroke();
+        }
+        for (let x = originX; x >= 0; x -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, originY - 4);
+            ctx.lineTo(x, originY + 4);
+            ctx.stroke();
+        }
+
+        // graduations sur l'axe y
+        for (let y = originY; y <= height; y += scale) {
+            ctx.beginPath();
+            ctx.moveTo(originX - 4, y);
+            ctx.lineTo(originX + 4, y);
+            ctx.stroke();
+        }
+        for (let y = originY; y >= 0; y -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(originX - 4, y);
+            ctx.lineTo(originX + 4, y);
+            ctx.stroke();
+        }
+
+        // Dessin de O (origine)
+        ctx.beginPath();
+        ctx.fillStyle = '#ff0000';
+        ctx.arc(originX, originY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#000000';
+        ctx.fillText('O', originX + 8, originY - 8);
+
+        ctx.restore();
+    }
+
+    // Dessin de la trace
+    function drawTrace() {
+        if (trace.length < 2) return;
+
+        ctx.save();
+        ctx.strokeStyle = '#aa0000';
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.moveTo(trace[0].px, trace[0].py);
+        for (let i = 1; i < trace.length; i++) {
+            ctx.lineTo(trace[i].px, trace[i].py);
+        }
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    // Dessin du point rouge mobile
+    function drawPoint(px, py) {
+        ctx.save();
+        ctx.fillStyle = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Dessin d'une flèche (vecteur) de (x1,y1) à (x2,y2) en pixels
+    function drawArrow(x1, y1, x2, y2, color) {
+        const headLength = 10; // longueur de la pointe
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const angle = Math.atan2(dy, dx);
+
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2;
+
+        // corps de la flèche
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        // pointe
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(
+            x2 - headLength * Math.cos(angle - Math.PI / 6),
+            y2 - headLength * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.lineTo(
+            x2 - headLength * Math.cos(angle + Math.PI / 6),
+            y2 - headLength * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Couleur en fonction du type de vecteur
+    function colorForType(type) {
+        switch (type) {
+            case 'position': return '#0074D9';       // bleu
+            case 'deplacement': return '#2ECC40';    // vert
+            case 'vitesse_inst': return '#FF4136';   // rouge
+            case 'vitesse_moy': return '#FF851B';    // orange
+            case 'acc_moy': return '#B10DC9';        // violet
+            default: return '#111111';
+        }
+    }
+
+    // Texte lisible pour le type
+    function labelForType(type) {
+        switch (type) {
+            case 'position': return 'Position';
+            case 'deplacement': return 'Déplacement';
+            case 'vitesse_inst': return 'Vitesse instantanée';
+            case 'vitesse_moy': return 'Vitesse moyenne';
+            case 'acc_moy': return 'Accélération moyenne';
+            case 'autre': return 'Autre';
+            default: return type;
+        }
+    }
+
+    // Unités associées au type
+    function unitLabelForType(type) {
+        switch (type) {
+            case 'position':
+            case 'deplacement':
+            case 'autre':
+                return 'unités de position';
+            case 'vitesse_inst':
+            case 'vitesse_moy':
+                return 'unités de vitesse';
+            case 'acc_moy':
+                return 'unités d’accélération';
+            default:
+                return 'unités';
+        }
+    }
+
+    // Dessin de tous les vecteurs
+    function drawVectors() {
+        ctx.save();
+        vectors.forEach(v => {
+            drawArrow(v.x1, v.y1, v.x2, v.y2, v.color);
+        });
+        ctx.restore();
+    }
+
+    // Rafraîchit la liste textuelle des vecteurs
+    function refreshVectorList() {
+        vectorListDiv.innerHTML = '';
+        vectors.forEach((v, i) => {
+            const div = document.createElement('div');
+            div.className = 'vector-item';
+            const label = labelForType(v.type);
+            const unit = unitLabelForType(v.type);
+            const compX = v.dxu.toFixed(2);
+            const compY = v.dyu.toFixed(2);
+            const norm = v.norm.toFixed(2);
+            div.textContent =
+                'n° ' + (i + 1) + ' – ' + label +
+                ' : norme ≈ ' + norm + ' ' + unit +
+                '  (Δx ≈ ' + compX + ', Δy ≈ ' + compY + ')';
+            vectorListDiv.appendChild(div);
+        });
+    }
+
+    // Animation principale
+    function animate(timestamp) {
+        if (lastTimestamp === null) {
+            lastTimestamp = timestamp;
+        }
+        const dt = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+        t += dt;
+
+        // Position du point en coordonnées du repère
+        const pos = getPointPosition(t);
+        const pixelPos = worldToPixel(pos.x, pos.y);
+
+        // Mise à jour du texte de position
+        posText.textContent = '(' + pos.x.toFixed(2) + ', ' + pos.y.toFixed(2) + ')';
+
+        // Gestion de la trace
+        if (traceEnabled) {
+            trace.push({ px: pixelPos.px, py: pixelPos.py });
+            if (trace.length > 2000) {
+                trace.shift();
+            }
+        }
+
+        // Dessin
+        ctx.clearRect(0, 0, width, height);
+        drawGrid();
+        if (axesVisible) {
+            drawAxes();
+        }
+        drawTrace();
+        drawVectors();
+        drawPoint(pixelPos.px, pixelPos.py);
+
+        requestAnimationFrame(animate);
+    }
+
+    // Gestion des clics sur le canvas pour les vecteurs
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+
+        // Si on est en train de déplacer l'origine, on ne crée pas de vecteur
+        if (draggingOrigin) return;
+
+        if (!currentVectorStart) {
+            currentVectorStart = { x: px, y: py };
+        } else {
+            const x1 = currentVectorStart.x;
+            const y1 = currentVectorStart.y;
+            const x2 = px;
+            const y2 = py;
+
+            // Composantes en unités du repère (position)
+            const w1 = pixelToWorld(x1, y1);
+            const w2 = pixelToWorld(x2, y2);
+            const dxu = w2.x - w1.x;
+            const dyu = w2.y - w1.y;
+            const norm = Math.sqrt(dxu * dxu + dyu * dyu);
+
+            const type = vectorTypeSelect.value;
+            const color = colorForType(type);
+
+            vectors.push({
+                type,
+                x1, y1, x2, y2,
+                dxu, dyu,
+                norm,
+                color
+            });
+
+            currentVectorStart = null;
+            refreshVectorList();
+        }
+    });
+
+    // Gestion du drag de l'origine du repère
+    canvas.addEventListener('mousedown', (e) => {
+        if (!axesVisible) return;
+        const rect = canvas.getBoundingClientRect();
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+        const dx = px - originX;
+        const dy = py - originY;
+        const dist2 = dx * dx + dy * dy;
+        if (dist2 < 15 * 15) {
+            draggingOrigin = true;
+        }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!draggingOrigin) return;
+        const rect = canvas.getBoundingClientRect();
+        originX = e.clientX - rect.left;
+        originY = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        draggingOrigin = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        draggingOrigin = false;
+    });
+
+    // Bouton réinitialiser
+    resetBtn.addEventListener('click', () => {
+        t = 0;
+        lastTimestamp = null;
+        trace.length = 0;
+        vectors.length = 0;
+        originX = width / 2;
+        originY = height / 2;
+        currentVectorStart = null;
+        refreshVectorList();
+    });
+
+    // Bouton trace
+    traceBtn.addEventListener('click', () => {
+        traceEnabled = !traceEnabled;
+        if (!traceEnabled) {
+            trace.length = 0;
+            traceBtn.textContent = 'Trace: arrêtée';
+        } else {
+            traceBtn.textContent = 'Trace: en cours';
+        }
+    });
+
+    // Bouton axes
+    axesBtn.addEventListener('click', () => {
+        axesVisible = !axesVisible;
+        axesBtn.textContent = axesVisible ? 'Repère: affiché' : 'Repère: masqué';
+    });
+
+    // Effacer les vecteurs
+    clearVectorsBtn.addEventListener('click', () => {
+        vectors.length = 0;
+        currentVectorStart = null;
+        refreshVectorList();
+    });
+
+    // Lancer l’animation
+    requestAnimationFrame(animate);
+</script>
+</body>
+</html>
