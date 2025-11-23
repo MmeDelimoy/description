@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mouvement et vecteurs</title>
+    <title>Mouvement du point et vecteurs</title>
     <style>
         body {
             font-family: system-ui, sans-serif;
@@ -12,78 +12,69 @@
             height: 100vh;
             background: #f5f5f5;
         }
-
         #container {
             margin: auto;
             display: flex;
             gap: 20px;
             align-items: flex-start;
         }
-
         #canvasWrapper {
             background: white;
             border: 1px solid #ccc;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
         canvas {
             display: block;
         }
-
         #controls {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 340px;
+            max-width: 320px;
         }
-
+        .panel {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 0.9em;
+        }
         button {
             padding: 6px 10px;
             border-radius: 4px;
             border: 1px solid #888;
             background: #eee;
             cursor: pointer;
+            margin: 2px 0;
         }
-
         button:hover {
             background: #ddd;
         }
-
         select {
             padding: 4px;
             margin-top: 4px;
         }
-
-        .panel {
-            background: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        #vectorList {
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 0.9em;
-        }
-
-        #info {
-            font-size: 0.9em;
-        }
-
         .small {
             font-size: 0.8em;
             color: #555;
         }
-
-        .vector-item {
-            border-bottom: 1px solid #eee;
-            padding: 3px 0;
+        #vectorList {
+            max-height: 200px;
+            overflow-y: auto;
         }
-
-        #chronoInfo, #avgInfo, #instInfo {
+        .vector-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 2px 0;
             font-size: 0.85em;
-            margin: 4px 0;
+        }
+        .trash-btn {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1em;
         }
     </style>
 </head>
@@ -95,59 +86,45 @@
 
     <div id="controls">
         <div class="panel">
-            <div id="info">
-                <p>
-                    Point rouge: mouvement curviligne, vitesse variable (indépendant du repère).<br>
-                    Le repère Oxy, lui, peut être déplacé.
-                </p>
-                <p>
-                    Position actuelle dans le repère (x, y): 
-                    <span id="posText">(0, 0)</span>
-                </p>
-            </div>
+            <p>
+                Point rouge: mouvement curviligne en forme de 8, un seul tour quand on appuie sur Play.
+            </p>
+            <p>
+                Position actuelle (m): <span id="posText">(0, 0)</span>
+            </p>
+            <p>
+                Mode: 
+                <select id="modeSelect">
+                    <option value="position">Vecteur position</option>
+                    <option value="deplacement">Vecteur déplacement</option>
+                    <option value="vitesse_inst">Vitesse instantanée</option>
+                    <option value="vitesse_moy">Vitesse moyenne</option>
+                </select>
+            </p>
+            <p class="small">
+                Position / déplacement: 2 clics (origine puis extrémité).<br>
+                Vitesse instantanée: clic sur un point de la trajectoire.<br>
+                Vitesse moyenne: 1er clic = position initiale, 2e clic = position finale.
+            </p>
         </div>
 
         <div class="panel">
             <p>Contrôles</p>
+            <button id="playBtn">Play</button>
             <button id="resetBtn">Réinitialiser</button>
-            <button id="traceBtn">Trace: arrêtée</button>
             <button id="axesBtn">Repère: masqué</button>
             <p class="small">
-                Origine du repère: cliquer près de O puis déplacer la souris (repère visible).
+                Origine du repère: cliquer près de O puis déplacer la souris (quand le repère est visible).<br>
+                Graduations en mètres (1, 2, 3, ...).
             </p>
         </div>
 
         <div class="panel">
-            <p>Vecteurs</p>
-            <label for="vectorType">Mode / type de vecteur:</label><br>
-            <select id="vectorType">
-                <option value="position">Position (2 clics)</option>
-                <option value="deplacement">Déplacement (2 clics)</option>
-                <option value="vitesse_inst">Vitesse instantanée (1 clic sur la trajectoire)</option>
-                <option value="vitesse_moy">Vitesse moyenne (2 clics sur la trajectoire)</option>
-                <option value="autre">Autre (2 clics)</option>
-            </select>
-            <p class="small">
-                Position, déplacement, autre: 1er clic = origine, 2e clic = extrémité.<br>
-                Vitesse instantanée: clic sur la trajectoire (le vecteur est calculé).<br>
-                Vitesse moyenne: 1er clic = point A, 2e clic = point B sur la trajectoire.
-            </p>
-            <button id="clearVectorsBtn">Effacer les vecteurs</button>
-
-            <p>Liste des vecteurs</p>
+            <p>Vecteurs créés (r, Δr)</p>
             <div id="vectorList"></div>
-        </div>
-
-        <div class="panel">
-            <p>Mesures</p>
-            <p id="instInfo">Vitesse instantanée: aucune sélection.</p>
-            <p id="chronoInfo">Chronomètre (segment pour vitesse moyenne): aucun segment.</p>
-            <p id="avgInfo">Vitesse moyenne: aucune sélection.</p>
             <p class="small">
-                Unités:
-                position / déplacement: unités de position (une case = 1 unité).<br>
-                vitesse: unités de position par seconde.<br>
-                L’échelle des vecteurs vitesse est choisie pour être visible à l’écran.
+                Max 6 vecteurs position / déplacement simultanés.<br>
+                Utiliser les poubelles pour supprimer un vecteur.
             </p>
         </div>
     </div>
@@ -156,119 +133,158 @@
 <script>
     const canvas = document.getElementById('scene');
     const ctx = canvas.getContext('2d');
-
     const width = canvas.width;
     const height = canvas.height;
 
-    const gridSpacing = 40; // pixels entre lignes du quadrillage
-    const scale = gridSpacing; // 1 unité de position = 1 case
+    const gridSpacing = 40; // pixels entre lignes
+    const scale = gridSpacing; // 1 m = 1 case
 
-    // Référentiel "monde" fixe: origine au centre du canvas
-    const worldOriginX = width / 2;
-    const worldOriginY = height / 2;
+    let originX = width / 2;
+    let originY = height / 2;
 
-    // Origine du repère Oxy, exprimée en coordonnées du monde
-    let repereOx = 0;
-    let repereOy = 0;
+    const posText = document.getElementById('posText');
+    const modeSelect = document.getElementById('modeSelect');
+    const playBtn = document.getElementById('playBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const axesBtn = document.getElementById('axesBtn');
+    const vectorListDiv = document.getElementById('vectorList');
 
-    // Animation du point
-    let lastTimestamp = null;
-    let t = 0; // temps en ms
-    let traceEnabled = false;
     let axesVisible = false;
-
-    // Historique de la trajectoire, même si la trace n’est pas affichée
-    const trace = []; // {px, py, wx, wy, time}
-    const maxTraceLength = 5000;
-
-    // Vecteurs dessinés ou calculés
-    const vectors = []; // {type, x1, y1, x2, y2, dxu, dyu, norm, color}
-
-    let currentVectorStart = null; // pour modes 2 clics (position, déplacement, autre)
-
-    // Pour vitesse moyenne
-    let avgFirstIndex = null;
-    let avgSegment = null; // {i1, i2, dtSec, dx, dy, speed, startTime}
-
-    // Drag de l'origine du repère
     let draggingOrigin = false;
 
-    // UI
-    const posText = document.getElementById('posText');
-    const resetBtn = document.getElementById('resetBtn');
-    const traceBtn = document.getElementById('traceBtn');
-    const axesBtn = document.getElementById('axesBtn');
-    const vectorTypeSelect = document.getElementById('vectorType');
-    const vectorListDiv = document.getElementById('vectorList');
-    const clearVectorsBtn = document.getElementById('clearVectorsBtn');
-    const chronoInfo = document.getElementById('chronoInfo');
-    const avgInfo = document.getElementById('avgInfo');
-    const instInfo = document.getElementById('instInfo');
+    // Trajectoire pré-calculée (forme de 8, indépendante du repère)
+    const pathSamples = [];
+    const T_total_s = 20; // durée "physique" d'un tour, en s
+    const N_samples = 1000;
 
-    // Conversion pixel -> coordonnées du monde
+    function buildPath() {
+        pathSamples.length = 0;
+        for (let i = 0; i < N_samples; i++) {
+            const t = (T_total_s * i) / (N_samples - 1); // en s
+            const theta = 2 * Math.PI * (t / T_total_s);
+            // Courbe en 8 (Lemniscate-like simplifiée)
+            const x = 4 * Math.cos(theta);
+            const y = 2.5 * Math.sin(2 * theta);
+            pathSamples.push({ t, x, y });
+        }
+        // Vitesse instantanée par différence finie
+        for (let i = 0; i < N_samples; i++) {
+            let im1 = Math.max(0, i - 1);
+            let ip1 = Math.min(N_samples - 1, i + 1);
+            const dt = pathSamples[ip1].t - pathSamples[im1].t;
+            const vx = (pathSamples[ip1].x - pathSamples[im1].x) / dt;
+            const vy = (pathSamples[ip1].y - pathSamples[im1].y) / dt;
+            const speed = Math.sqrt(vx * vx + vy * vy);
+            pathSamples[i].vx = vx;
+            pathSamples[i].vy = vy;
+            pathSamples[i].speed = speed;
+        }
+    }
+
+    buildPath();
+
+    // Animation principale
+    let loopPlaying = false;
+    let loopStartReal = null;
+    let currentLoopTime = 0; // en s
+    const EPSILON_END = 0.05; // marge de fin de tour
+
+    // Vecteurs position / déplacement
+    let positionCounter = 0;
+    let deplacementCounter = 0;
+    const maxVectors = 6;
+    const vectors = []; // {id, type, name, x1,y1,x2,y2, dx,dy, norm, color}
+
+    // Vitesse instantanée (un seul vecteur affiché)
+    let instantVelocityVector = null; // {x, y, vx, vy, speed}
+
+    // Vitesse moyenne: scène avec chrono
+    let avgScene = {
+        active: false,
+        startIndex: null,
+        endIndex: null,
+        deltaT: 0,
+        deltaX: 0,
+        deltaY: 0,
+        speed: 0,
+        startRealTime: 0
+    };
+    const PHASE1_DURATION = 4000; // ms
+    const PHASE2_DURATION = 3000; // ms
+
+    let mode = 'position';
+    let currentVectorStart = null; // pour position / déplacement
+
     function pixelToWorld(px, py) {
-        const x = (px - worldOriginX) / scale;
-        const y = (worldOriginY - py) / scale;
+        const x = (px - originX) / scale;
+        const y = (originY - py) / scale;
         return { x, y };
     }
 
-    // Conversion monde -> pixel
     function worldToPixel(x, y) {
-        const px = worldOriginX + x * scale;
-        const py = worldOriginY - y * scale;
+        const px = originX + x * scale;
+        const py = originY - y * scale;
         return { px, py };
     }
 
-    // Coordonnées dans le repère (translation par rapport à O)
-    function worldToRepere(wx, wy) {
-        return {
-            x: wx - repereOx,
-            y: wy - repereOy
-        };
+    function getPositionAtTime(t) {
+        // t en s, entre 0 et T_total_s
+        if (t <= 0) return pathSamples[0];
+        if (t >= T_total_s) return pathSamples[N_samples - 1];
+        const u = t / T_total_s;
+        const index = u * (N_samples - 1);
+        const i0 = Math.floor(index);
+        const i1 = Math.min(N_samples - 1, i0 + 1);
+        const alpha = index - i0;
+        const p0 = pathSamples[i0];
+        const p1 = pathSamples[i1];
+        const x = p0.x * (1 - alpha) + p1.x * alpha;
+        const y = p0.y * (1 - alpha) + p1.y * alpha;
+        const vx = p0.vx * (1 - alpha) + p1.vx * alpha;
+        const vy = p0.vy * (1 - alpha) + p1.vy * alpha;
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        return { t, x, y, vx, vy, speed, i0, i1, alpha };
     }
 
-    // Trajectoire du point (indépendante du repère)
-    function getPointPosition(ms) {
-        const s = ms / 1000; // temps en secondes
-        // Paramètre qui avance avec vitesse oscillante
-        const param = s + 0.6 * Math.sin(1.2 * s);
-
-        // Courbe en huit un peu plus grande
-        const x = 5 * Math.cos(param);
-        const y = 3.5 * Math.sin(2 * param);
-
-        return { x, y };
+    function getNearestSample(px, py) {
+        // renvoie l'index du point de trajectoire le plus proche en pixels
+        let bestIndex = 0;
+        let bestDist2 = Infinity;
+        for (let i = 0; i < pathSamples.length; i++) {
+            const p = pathSamples[i];
+            const pp = worldToPixel(p.x, p.y);
+            const dx = pp.px - px;
+            const dy = pp.py - py;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < bestDist2) {
+                bestDist2 = d2;
+                bestIndex = i;
+            }
+        }
+        return { index: bestIndex, dist2: bestDist2 };
     }
 
-    // Dessin du quadrillage
     function drawGrid() {
         ctx.save();
         ctx.strokeStyle = '#e0e0e0';
         ctx.lineWidth = 1;
-
         for (let x = 0; x <= width; x += gridSpacing) {
             ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x, height);
             ctx.stroke();
         }
-
         for (let y = 0; y <= height; y += gridSpacing) {
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(width, y);
             ctx.stroke();
         }
-
         ctx.restore();
     }
 
-    // Dessin du repère orthonormé
     function drawAxes() {
-        const oPix = worldToPixel(repereOx, repereOy);
-        const originX = oPix.px;
-        const originY = oPix.py;
-
+        if (!axesVisible) return;
         ctx.save();
         ctx.strokeStyle = '#000000';
         ctx.lineWidth = 1.5;
@@ -285,78 +301,47 @@
         ctx.lineTo(originX, height);
         ctx.stroke();
 
+        // Graduations en m
         ctx.fillStyle = '#000000';
         ctx.font = '10px sans-serif';
 
-        // Graduations sur x
-        for (let x = originX; x <= width; x += scale) {
+        // Axe x graduations et numéros
+        for (let k = -10; k <= 10; k++) {
+            const x = originX + k * scale;
+            if (x < 0 || x > width) continue;
             ctx.beginPath();
             ctx.moveTo(x, originY - 4);
             ctx.lineTo(x, originY + 4);
             ctx.stroke();
-        }
-        for (let x = originX; x >= 0; x -= scale) {
-            ctx.beginPath();
-            ctx.moveTo(x, originY - 4);
-            ctx.lineTo(x, originY + 4);
-            ctx.stroke();
+            if (k !== 0) {
+                ctx.fillText(k + ' m', x - 8, originY + 14);
+            }
         }
 
-        // Graduations sur y
-        for (let y = originY; y <= height; y += scale) {
+        // Axe y graduations et numéros
+        for (let k = -10; k <= 10; k++) {
+            const y = originY - k * scale;
+            if (y < 0 || y > height) continue;
             ctx.beginPath();
             ctx.moveTo(originX - 4, y);
             ctx.lineTo(originX + 4, y);
             ctx.stroke();
-        }
-        for (let y = originY; y >= 0; y -= scale) {
-            ctx.beginPath();
-            ctx.moveTo(originX - 4, y);
-            ctx.lineTo(originX + 4, y);
-            ctx.stroke();
+            if (k !== 0) {
+                ctx.fillText(k + ' m', originX + 6, y + 3);
+            }
         }
 
-        // Point O
+        // Origine O
         ctx.beginPath();
         ctx.fillStyle = '#ff0000';
         ctx.arc(originX, originY, 6, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.fillStyle = '#000000';
         ctx.fillText('O', originX + 8, originY - 8);
 
         ctx.restore();
     }
 
-    // Dessin de la trace (optionnelle)
-    function drawTrace() {
-        if (!traceEnabled || trace.length < 2) return;
-
-        ctx.save();
-        ctx.strokeStyle = '#aa0000';
-        ctx.lineWidth = 1;
-
-        ctx.beginPath();
-        ctx.moveTo(trace[0].px, trace[0].py);
-        for (let i = 1; i < trace.length; i++) {
-            ctx.lineTo(trace[i].px, trace[i].py);
-        }
-        ctx.stroke();
-
-        ctx.restore();
-    }
-
-    // Point rouge mobile
-    function drawPoint(px, py) {
-        ctx.save();
-        ctx.fillStyle = '#ff0000';
-        ctx.beginPath();
-        ctx.arc(px, py, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-    }
-
-    // Flèche (vecteur)
     function drawArrow(x1, y1, x2, y2, color) {
         const headLength = 10;
         const dx = x2 - x1;
@@ -386,389 +371,263 @@
         ctx.fill();
     }
 
+    function colorForType(type) {
+        if (type === 'position') return '#0074D9';      // bleu
+        if (type === 'deplacement') return '#2ECC40';   // vert
+        return '#111111';
+    }
+
     function drawVectors() {
-        ctx.save();
-        vectors.forEach(v => {
-            drawArrow(v.x1, v.y1, v.x2, v.y2, v.color);
+        vectors.forEach((v) => {
+            const p1 = worldToPixel(v.x1, v.y1);
+            const p2 = worldToPixel(v.x2, v.y2);
+            drawArrow(p1.px, p1.py, p2.px, p2.py, v.color);
         });
+    }
+
+    function drawVectorAnnotations() {
+        ctx.save();
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px sans-serif';
+
+        let baseX = 10;
+        let baseY = 20;
+        let lineHeight = 34;
+
+        vectors.forEach((v, idx) => {
+            if (idx >= maxVectors) return;
+            const y0 = baseY + idx * lineHeight;
+            const nom = v.type === 'position' ? ('\u2192r\u2090'.replace('\u2090', '') ) : 'Δ\u2192r'; // petite astuce, on va préciser texte complet à côté
+            const label = v.name; // r1, Δr1...
+
+            const comps = '(' +
+                v.dx.toFixed(2) + ' m, ' +
+                v.dy.toFixed(2) + ' m)';
+            const norme = '| ' + label + ' | ≈ ' + v.norm.toFixed(2) + ' m';
+
+            ctx.fillText(label + ' : ' + comps, baseX, y0);
+            ctx.fillText(norme, baseX, y0 + 14);
+        });
+
+        // Vitesse instantanée
+        if (instantVelocityVector) {
+            const yBase = baseY + maxVectors * lineHeight + 10;
+            const v = instantVelocityVector;
+            ctx.fillText('v_inst : (' +
+                v.vx.toFixed(2) + ' m/s, ' +
+                v.vy.toFixed(2) + ' m/s)', baseX, yBase);
+            ctx.fillText('| v_inst | ≈ ' + v.speed.toFixed(2) + ' m/s', baseX, yBase + 14);
+        }
+
         ctx.restore();
     }
 
-    function colorForType(type) {
-        switch (type) {
-            case 'position': return '#0074D9';
-            case 'deplacement': return '#2ECC40';
-            case 'vitesse_inst': return '#FF4136';
-            case 'vitesse_moy': return '#FF851B';
-            default: return '#111111';
+    function drawInstantVelocityArrow() {
+        if (!instantVelocityVector) return;
+        const p = instantVelocityVector;
+        const pPix = worldToPixel(p.x, p.y);
+        const k = 0.8; // échelle (m/s -> pixels)
+        const x2 = pPix.px + p.vx * scale * k;
+        const y2 = pPix.py - p.vy * scale * k;
+        drawArrow(pPix.px, pPix.py, x2, y2, '#FF4136');
+    }
+
+    function drawAvgSceneOverlay(now) {
+        if (!avgScene.active) return;
+
+        const elapsed = now - avgScene.startRealTime; // ms
+        const totalScene = PHASE1_DURATION + PHASE2_DURATION;
+        if (elapsed > totalScene) {
+            avgScene.active = false;
+            return;
+        }
+
+        const startP = pathSamples[avgScene.startIndex];
+        const endP = pathSamples[avgScene.endIndex];
+        const startPix = worldToPixel(startP.x, startP.y);
+        const endPix = worldToPixel(endP.x, endP.y);
+
+        // Phase 1: déplacement + chrono
+        if (elapsed <= PHASE1_DURATION) {
+            const alpha = elapsed / PHASE1_DURATION;
+            const currX = startP.x * (1 - alpha) + endP.x * alpha;
+            const currY = startP.y * (1 - alpha) + endP.y * alpha;
+            const currPix = worldToPixel(currX, currY);
+
+            // mobile à la position interpolée
+            drawPointAt(currPix.px, currPix.py);
+
+            // vecteur déplacement Δr
+            drawArrow(startPix.px, startPix.py, endPix.px, endPix.py, '#FF851B');
+
+            // chrono
+            const tChrono = avgScene.deltaT * alpha;
+            drawChrono(tChrono, avgScene.deltaT);
+
+            // texte Δr, Δt
+            drawAvgTextsPhase1(tChrono);
+        } else {
+            // Phase 2: mobile à la position finale, chrono figé, calcul de v_m
+            drawPointAt(endPix.px, endPix.py);
+            drawChrono(avgScene.deltaT, avgScene.deltaT);
+            drawAvgTextsPhase2();
         }
     }
 
-    function labelForType(type) {
-        switch (type) {
-            case 'position': return 'Position';
-            case 'deplacement': return 'Déplacement';
-            case 'vitesse_inst': return 'Vitesse instantanée';
-            case 'vitesse_moy': return 'Vitesse moyenne';
-            case 'autre': return 'Autre';
-            default: return type;
+    function drawChrono(tChrono, tFinal) {
+        ctx.save();
+        const x = width - 180;
+        const y = 20;
+        const w = 160;
+        const h = 50;
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Chrono', x + 8, y + 16);
+        ctx.fillText('t = ' + tChrono.toFixed(2) + ' s', x + 8, y + 32);
+        ctx.fillText('Δt = ' + tFinal.toFixed(2) + ' s', x + 8, y + 46);
+        ctx.restore();
+    }
+
+    function drawAvgTextsPhase1(tChrono) {
+        ctx.save();
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px sans-serif';
+        const baseX = width - 180;
+        const baseY = 90;
+        ctx.fillText('Scène vitesse moyenne', baseX, baseY);
+        ctx.fillText('Vecteur Δr affiché', baseX, baseY + 16);
+        ctx.fillText('Chrono en cours: t = ' + tChrono.toFixed(2) + ' s', baseX, baseY + 32);
+        ctx.restore();
+    }
+
+    function drawAvgTextsPhase2() {
+        ctx.save();
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px sans-serif';
+        const baseX = width - 220;
+        const baseY = 90;
+
+        const dx = avgScene.deltaX;
+        const dy = avgScene.deltaY;
+        const dt = avgScene.deltaT;
+        const vx = dx / dt;
+        const vy = dy / dt;
+        const speed = Math.sqrt(vx * vx + vy * vy);
+
+        ctx.fillText('Vecteur v_m :', baseX, baseY);
+        ctx.fillText('\u2192v_m = Δ\u2192r / Δt', baseX, baseY + 16);
+        ctx.fillText('Δ\u2192r = (' +
+            dx.toFixed(2) + ' m, ' +
+            dy.toFixed(2) + ' m)', baseX, baseY + 32);
+        ctx.fillText('Δt = ' + dt.toFixed(2) + ' s', baseX, baseY + 48);
+        ctx.fillText('\u2192v_m = (' +
+            vx.toFixed(2) + ' m/s, ' +
+            vy.toFixed(2) + ' m/s)', baseX, baseY + 64);
+        ctx.fillText('| v_m | ≈ ' + speed.toFixed(2) + ' m/s', baseX, baseY + 80);
+
+        ctx.restore();
+    }
+
+    function drawPointAt(px, py) {
+        ctx.save();
+        ctx.fillStyle = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function updateLoopState(now) {
+        if (!loopPlaying) return;
+        if (!loopStartReal) {
+            loopStartReal = now;
+        }
+        const elapsed = (now - loopStartReal) / 1000; // s
+        currentLoopTime = elapsed;
+        if (currentLoopTime >= T_total_s - EPSILON_END) {
+            currentLoopTime = T_total_s;
+            loopPlaying = false;
         }
     }
 
-    function unitLabelForType(type) {
-        switch (type) {
-            case 'position':
-            case 'deplacement':
-            case 'autre':
-                return 'unités de position';
-            case 'vitesse_inst':
-            case 'vitesse_moy':
-                return 'unités de vitesse';
-            default:
-                return 'unités';
-        }
-    }
-
-    function refreshVectorList() {
-        vectorListDiv.innerHTML = '';
-        vectors.forEach((v, i) => {
-            const div = document.createElement('div');
-            div.className = 'vector-item';
-            const label = labelForType(v.type);
-            const unit = unitLabelForType(v.type);
-            const compX = v.dxu.toFixed(2);
-            const compY = v.dyu.toFixed(2);
-            const norm = v.norm.toFixed(2);
-            div.textContent =
-                'n° ' + (i + 1) + ' – ' + label +
-                ' : norme ≈ ' + norm + ' ' + unit +
-                '  (Δx ≈ ' + compX + ', Δy ≈ ' + compY + ')';
-            vectorListDiv.appendChild(div);
-        });
-    }
-
-    // Cherche dans la trace le point le plus proche du clic
-    function findNearestTraceIndex(px, py, maxDist = 20) {
-        if (trace.length === 0) return null;
-        let bestIndex = null;
-        let bestDist2 = maxDist * maxDist;
-        for (let i = 0; i < trace.length; i++) {
-            const dx = trace[i].px - px;
-            const dy = trace[i].py - py;
-            const d2 = dx * dx + dy * dy;
-            if (d2 <= bestDist2) {
-                bestDist2 = d2;
-                bestIndex = i;
-            }
-        }
-        return bestIndex;
-    }
-
-    // Animation principale
-    function animate(timestamp) {
-        if (lastTimestamp === null) {
-            lastTimestamp = timestamp;
-        }
-        const dt = timestamp - lastTimestamp;
-        lastTimestamp = timestamp;
-        t += dt;
-
-        const posWorld = getPointPosition(t);
-        const posPix = worldToPixel(posWorld.x, posWorld.y);
-
-        // Position dans le repère
-        const posRep = worldToRepere(posWorld.x, posWorld.y);
-        posText.textContent = '(' + posRep.x.toFixed(2) + ', ' + posRep.y.toFixed(2) + ')';
-
-        // Enregistre la trajectoire dans la table
-        trace.push({
-            px: posPix.px,
-            py: posPix.py,
-            wx: posWorld.x,
-            wy: posWorld.y,
-            time: t
-        });
-        if (trace.length > maxTraceLength) {
-            trace.shift();
-        }
-
+    function drawScene(now) {
         ctx.clearRect(0, 0, width, height);
         drawGrid();
-        if (axesVisible) drawAxes();
-        drawTrace();
+        drawAxes();
+
+        // Position du mobile (soit dans la scène moyenne, soit dans le loop)
+        let pos;
+        if (avgScene.active) {
+            // la fonction drawAvgSceneOverlay dessine le mobile
+            // on ne dessine pas ici le point principal
+        } else {
+            // mouvement normal (ou figé)
+            const t = Math.min(currentLoopTime, T_total_s);
+            const p = getPositionAtTime(t);
+            pos = p;
+            const pix = worldToPixel(p.x, p.y);
+            drawPointAt(pix.px, pix.py);
+
+            // texte position
+            posText.textContent = '(' +
+                p.x.toFixed(2) + ', ' +
+                p.y.toFixed(2) + ')';
+        }
+
+        // Vecteurs r / Δr
         drawVectors();
 
-        // Animation du segment de vitesse moyenne (point fantôme + chrono)
-        if (avgSegment && trace.length > 1) {
-            const period = 4000; // 4 secondes pour refaire le trajet A→B
-            const now = timestamp;
-            const frac = ((now - avgSegment.startTime) % period) / period;
-            const index = Math.floor(
-                avgSegment.i1 + frac * (avgSegment.i2 - avgSegment.i1)
-            );
-            const idxClamped = Math.min(
-                Math.max(avgSegment.i1, index),
-                avgSegment.i2
-            );
-            const s = trace[idxClamped];
+        // Vitesse instantanée
+        drawInstantVelocityArrow();
 
-            // point fantôme
-            ctx.save();
-            ctx.fillStyle = '#0000ff';
-            ctx.beginPath();
-            ctx.arc(s.px, s.py, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
+        // Annotations pour vecteurs et vitesse instantanée
+        drawVectorAnnotations();
 
-            const tCurrent = frac * avgSegment.dtSec;
-            chronoInfo.textContent =
-                'Chronomètre (vitesse moyenne): t ≈ ' +
-                tCurrent.toFixed(2) + ' s / ' +
-                avgSegment.dtSec.toFixed(2) + ' s';
-        } else {
-            chronoInfo.textContent =
-                'Chronomètre (segment pour vitesse moyenne): aucun segment.';
+        // Scène de vitesse moyenne (par-dessus)
+        if (avgScene.active) {
+            drawAvgSceneOverlay(now);
         }
+    }
 
-        // Vitesse moyenne, texte
-        if (avgSegment) {
-            avgInfo.textContent =
-                'Vitesse moyenne: |v| ≈ ' +
-                avgSegment.speed.toFixed(2) +
-                ' unités de vitesse (|Δx| ≈ ' +
-                avgSegment.dist.toFixed(2) +
-                ', Δt ≈ ' +
-                avgSegment.dtSec.toFixed(2) +
-                ' s)';
-        } else {
-            avgInfo.textContent = 'Vitesse moyenne: aucune sélection.';
-        }
-
-        drawPoint(posPix.px, posPix.py);
-
+    function animate(now) {
+        updateLoopState(now);
+        drawScene(now);
         requestAnimationFrame(animate);
     }
 
-    // Gestion des clics (vecteurs et vitesses)
-    canvas.addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const px = e.clientX - rect.left;
-        const py = e.clientY - rect.top;
+    requestAnimationFrame(animate);
 
-        if (draggingOrigin) return;
-
-        const type = vectorTypeSelect.value;
-
-        if (type === 'vitesse_inst') {
-            // Un seul clic sur la trajectoire
-            const idx = findNearestTraceIndex(px, py, 25);
-            if (idx === null) return;
-            if (trace.length < 3) return;
-
-            const i0 = Math.max(0, idx - 2);
-            const i1 = idx;
-            const i2 = Math.min(trace.length - 1, idx + 2);
-
-            const sPrev = trace[i0];
-            const s = trace[i1];
-            const sNext = trace[i2];
-
-            const dtSec = (sNext.time - sPrev.time) / 1000;
-            if (dtSec <= 0) return;
-
-            const vx = (sNext.wx - sPrev.wx) / dtSec;
-            const vy = (sNext.wy - sPrev.wy) / dtSec;
-            const speed = Math.sqrt(vx * vx + vy * vy);
-
-            // Pour dessiner le vecteur vitesse, on le raccourcit pour l’écran
-            const velScale = 0.4; // facteur arbitraire (unités de temps fictif)
-            const endWorldX = s.wx + vx * velScale;
-            const endWorldY = s.wy + vy * velScale;
-
-            const startPix = worldToPixel(s.wx, s.wy);
-            const endPix = worldToPixel(endWorldX, endWorldY);
-
-            const color = colorForType('vitesse_inst');
-
-            vectors.push({
-                type: 'vitesse_inst',
-                x1: startPix.px,
-                y1: startPix.py,
-                x2: endPix.px,
-                y2: endPix.py,
-                dxu: vx,
-                dyu: vy,
-                norm: speed,
-                color
-            });
-
-            instInfo.textContent =
-                'Vitesse instantanée: |v| ≈ ' +
-                speed.toFixed(2) +
-                ' unités de vitesse (vx ≈ ' +
-                vx.toFixed(2) +
-                ', vy ≈ ' +
-                vy.toFixed(2) +
-                ').';
-
-            refreshVectorList();
-            return;
-        }
-
-        if (type === 'vitesse_moy') {
-            const idx = findNearestTraceIndex(px, py, 25);
-            if (idx === null) return;
-            if (trace.length < 2) return;
-
-            if (avgFirstIndex === null) {
-                avgFirstIndex = idx;
-                chronoInfo.textContent =
-                    'Chronomètre: premier point choisi, clique un deuxième point pour définir le segment.';
-            } else {
-                let i1 = avgFirstIndex;
-                let i2 = idx;
-                if (i2 < i1) {
-                    const tmp = i1;
-                    i1 = i2;
-                    i2 = tmp;
-                }
-                const s1 = trace[i1];
-                const s2 = trace[i2];
-
-                const dtSec = (s2.time - s1.time) / 1000;
-                if (dtSec <= 0) {
-                    avgFirstIndex = null;
-                    return;
-                }
-
-                const dx = s2.wx - s1.wx;
-                const dy = s2.wy - s1.wy;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const speed = dist / dtSec;
-
-                // Vecteur déplacement s1 -> s2
-                const p1 = worldToPixel(s1.wx, s1.wy);
-                const p2 = worldToPixel(s2.wx, s2.wy);
-                const colorDisp = colorForType('deplacement');
-
-                // composantes de déplacement dans le repère
-                const rep1 = worldToRepere(s1.wx, s1.wy);
-                const rep2 = worldToRepere(s2.wx, s2.wy);
-                const dxRep = rep2.x - rep1.x;
-                const dyRep = rep2.y - rep1.y;
-
-                vectors.push({
-                    type: 'deplacement',
-                    x1: p1.px,
-                    y1: p1.py,
-                    x2: p2.px,
-                    y2: p2.py,
-                    dxu: dxRep,
-                    dyu: dyRep,
-                    norm: Math.sqrt(dxRep * dxRep + dyRep * dyRep),
-                    color: colorDisp
-                });
-
-                // Vecteur vitesse moyenne (à partir de s1, même direction que déplacement)
-                const vxM = dx / dtSec;
-                const vyM = dy / dtSec;
-                const velScale = 0.4;
-                const endWorldX = s1.wx + vxM * velScale;
-                const endWorldY = s1.wy + vyM * velScale;
-                const pVelEnd = worldToPixel(endWorldX, endWorldY);
-                const colorVel = colorForType('vitesse_moy');
-
-                vectors.push({
-                    type: 'vitesse_moy',
-                    x1: p1.px,
-                    y1: p1.py,
-                    x2: pVelEnd.px,
-                    y2: pVelEnd.py,
-                    dxu: vxM,
-                    dyu: vyM,
-                    norm: Math.sqrt(vxM * vxM + vyM * vyM),
-                    color: colorVel
-                });
-
-                avgSegment = {
-                    i1,
-                    i2,
-                    dtSec,
-                    dx,
-                    dy,
-                    dist,
-                    speed,
-                    startTime: performance.now()
-                };
-
-                avgFirstIndex = null;
-                refreshVectorList();
-            }
-            return;
-        }
-
-        // Modes classiques à deux clics: position, déplacement, autre
-        if (!currentVectorStart) {
-            currentVectorStart = { x: px, y: py };
-        } else {
-            const x1 = currentVectorStart.x;
-            const y1 = currentVectorStart.y;
-            const x2 = px;
-            const y2 = py;
-
-            const w1 = pixelToWorld(x1, y1);
-            const w2 = pixelToWorld(x2, y2);
-
-            const rep1 = worldToRepere(w1.x, w1.y);
-            const rep2 = worldToRepere(w2.x, w2.y);
-
-            const dxu = rep2.x - rep1.x;
-            const dyu = rep2.y - rep1.y;
-            const norm = Math.sqrt(dxu * dxu + dyu * dyu);
-
-            const color = colorForType(type);
-
-            vectors.push({
-                type,
-                x1,
-                y1,
-                x2,
-                y2,
-                dxu,
-                dyu,
-                norm,
-                color
-            });
-
-            currentVectorStart = null;
-            refreshVectorList();
-        }
-    });
-
-    // Déplacement de l’origine du repère
+    // Gestion des clics sur le canvas
     canvas.addEventListener('mousedown', (e) => {
-        if (!axesVisible) return;
-        const rect = canvas.getBoundingClientRect();
-        const px = e.clientX - rect.left;
-        const py = e.clientY - rect.top;
-
-        const oPix = worldToPixel(repereOx, repereOy);
-        const dx = px - oPix.px;
-        const dy = py - oPix.py;
-        const dist2 = dx * dx + dy * dy;
-        if (dist2 < 15 * 15) {
-            draggingOrigin = true;
+        if (!axesVisible) {
+            draggingOrigin = false;
+        } else {
+            const rect = canvas.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+            const dx = px - originX;
+            const dy = py - originY;
+            const dist2 = dx * dx + dy * dy;
+            if (dist2 < 15 * 15) {
+                draggingOrigin = true;
+                return;
+            }
         }
     });
 
     canvas.addEventListener('mousemove', (e) => {
         if (!draggingOrigin) return;
         const rect = canvas.getBoundingClientRect();
-        const px = e.clientX - rect.left;
-        const py = e.clientY - rect.top;
-        const w = pixelToWorld(px, py);
-        repereOx = w.x;
-        repereOy = w.y;
+        originX = e.clientX - rect.left;
+        originY = e.clientY - rect.top;
     });
 
     canvas.addEventListener('mouseup', () => {
@@ -779,49 +638,170 @@
         draggingOrigin = false;
     });
 
-    // Boutons
-    resetBtn.addEventListener('click', () => {
-        t = 0;
-        lastTimestamp = null;
-        trace.length = 0;
-        vectors.length = 0;
-        repereOx = 0;
-        repereOy = 0;
-        currentVectorStart = null;
-        avgFirstIndex = null;
-        avgSegment = null;
-        instInfo.textContent = 'Vitesse instantanée: aucune sélection.';
-        chronoInfo.textContent = 'Chronomètre (segment pour vitesse moyenne): aucun segment.';
-        avgInfo.textContent = 'Vitesse moyenne: aucune sélection.';
-        refreshVectorList();
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+
+        if (draggingOrigin) return;
+
+        const { index, dist2 } = getNearestSample(px, py);
+        const nearThreshold2 = 15 * 15; // clic à max 15 px de la trajectoire
+
+        mode = modeSelect.value;
+
+        if (mode === 'position' || mode === 'deplacement') {
+            // Création de vecteurs r ou Δr à partir de clics libres (pas forcément sur la trajectoire)
+            if (vectors.length >= maxVectors && !currentVectorStart) {
+                return; // on limite à maxVectors vecteurs
+            }
+            if (!currentVectorStart) {
+                currentVectorStart = { px, py };
+            } else {
+                const p1w = pixelToWorld(currentVectorStart.px, currentVectorStart.py);
+                const p2w = pixelToWorld(px, py);
+                const dx = p2w.x - p1w.x;
+                const dy = p2w.y - p1w.y;
+                const norm = Math.sqrt(dx * dx + dy * dy);
+
+                let type = mode;
+                let name;
+                if (type === 'position') {
+                    positionCounter += 1;
+                    name = 'r' + positionCounter;
+                } else {
+                    deplacementCounter += 1;
+                    name = 'Δr' + deplacementCounter;
+                }
+
+                const color = colorForType(type);
+                vectors.push({
+                    id: Date.now() + '_' + Math.random(),
+                    type,
+                    name,
+                    x1: p1w.x,
+                    y1: p1w.y,
+                    x2: p2w.x,
+                    y2: p2w.y,
+                    dx,
+                    dy,
+                    norm,
+                    color
+                });
+
+                currentVectorStart = null;
+                refreshVectorList();
+            }
+        } else if (mode === 'vitesse_inst') {
+            // clic doit être proche de la trajectoire
+            if (dist2 > nearThreshold2) {
+                return;
+            }
+            const p = pathSamples[index];
+            instantVelocityVector = {
+                x: p.x,
+                y: p.y,
+                vx: p.vx,
+                vy: p.vy,
+                speed: p.speed
+            };
+        } else if (mode === 'vitesse_moy') {
+            if (dist2 > nearThreshold2) {
+                return;
+            }
+            handleAverageVelocityClick(index);
+        }
     });
 
-    traceBtn.addEventListener('click', () => {
-        traceEnabled = !traceEnabled;
-        if (!traceEnabled) {
-            traceBtn.textContent = 'Trace: arrêtée';
+    function handleAverageVelocityClick(index) {
+        // On utilise une petite machine à états implicite: si avgScene.active, on ignore les clics
+        // On mémorise le premier clic dans currentVectorStartIndex (réutilisation)
+        if (avgScene.active) return;
+
+        if (currentVectorStart === null || typeof currentVectorStart.index === 'undefined') {
+            currentVectorStart = { index };
         } else {
-            traceBtn.textContent = 'Trace: en cours';
+            const i1 = currentVectorStart.index;
+            let i2 = index;
+            if (i2 <= i1) {
+                // si clic en arrière, on prend quand même i2 > i1 dans la limite
+                if (i1 < pathSamples.length - 2) {
+                    i2 = i1 + 1;
+                } else {
+                    i2 = pathSamples.length - 1;
+                }
+            }
+            const p1 = pathSamples[i1];
+            const p2 = pathSamples[i2];
+            const dt = p2.t - p1.t;
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+
+            avgScene = {
+                active: true,
+                startIndex: i1,
+                endIndex: i2,
+                deltaT: dt,
+                deltaX: dx,
+                deltaY: dy,
+                speed,
+                startRealTime: performance.now()
+            };
+
+            currentVectorStart = null;
         }
+    }
+
+    function refreshVectorList() {
+        vectorListDiv.innerHTML = '';
+        vectors.forEach((v) => {
+            const item = document.createElement('div');
+            item.className = 'vector-item';
+            const labelSpan = document.createElement('span');
+            labelSpan.textContent = v.name + ' (' + v.type + ')';
+            const trashBtn = document.createElement('button');
+            trashBtn.className = 'trash-btn';
+            trashBtn.textContent = '🗑';
+            trashBtn.addEventListener('click', () => {
+                const idx = vectors.findIndex((vv) => vv.id === v.id);
+                if (idx !== -1) {
+                    vectors.splice(idx, 1);
+                    refreshVectorList();
+                }
+            });
+            item.appendChild(labelSpan);
+            item.appendChild(trashBtn);
+            vectorListDiv.appendChild(item);
+        });
+    }
+
+    // Boutons
+    playBtn.addEventListener('click', () => {
+        loopPlaying = true;
+        loopStartReal = performance.now();
+        currentLoopTime = 0;
+    });
+
+    resetBtn.addEventListener('click', () => {
+        loopPlaying = false;
+        loopStartReal = null;
+        currentLoopTime = 0;
+        vectors.length = 0;
+        instantVelocityVector = null;
+        avgScene.active = false;
+        positionCounter = 0;
+        deplacementCounter = 0;
+        currentVectorStart = null;
+        originX = width / 2;
+        originY = height / 2;
+        refreshVectorList();
     });
 
     axesBtn.addEventListener('click', () => {
         axesVisible = !axesVisible;
         axesBtn.textContent = axesVisible ? 'Repère: affiché' : 'Repère: masqué';
     });
-
-    clearVectorsBtn.addEventListener('click', () => {
-        vectors.length = 0;
-        currentVectorStart = null;
-        avgFirstIndex = null;
-        avgSegment = null;
-        instInfo.textContent = 'Vitesse instantanée: aucune sélection.';
-        chronoInfo.textContent = 'Chronomètre (segment pour vitesse moyenne): aucun segment.';
-        avgInfo.textContent = 'Vitesse moyenne: aucune sélection.';
-        refreshVectorList();
-    });
-
-    requestAnimationFrame(animate);
 </script>
 </body>
 </html>
