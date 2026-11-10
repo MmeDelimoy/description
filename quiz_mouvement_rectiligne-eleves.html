@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Quiz – Mouvement rectiligne</title>
+<style>
+:root{--bleu:#2563EB;--turq:#0D9488;--indigo:#4F46E5;--viol:#7C3AED;--rose:#DB2777;--amb:#D97706;--vert:#16A34A;--org:#EA580C;--encre:#1F2A44;--gris:#64748B;--fond:#F1F5F9}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{color-scheme:light}
+body{margin:0;background:var(--fond);color:var(--encre);font:17px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+main{max-width:640px;margin:0 auto;padding:14px 16px 40px}
+h1{font-size:1.35rem;margin:6px 0 2px;color:var(--bleu)}
+h2{font-size:1.1rem;margin:0 0 8px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(31,42,68,.08);margin-top:12px}
+.bar{height:10px;background:#E2E8F0;border-radius:6px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--bleu),var(--viol));transition:width .4s}
+.top{display:flex;justify-content:space-between;font-size:.9rem;color:var(--gris);margin-top:8px}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;border-radius:20px;padding:2px 10px;color:#fff;background:var(--indigo);margin-bottom:8px}
+.tag.ren{background:var(--amb)}
+.q{font-size:1.05rem;margin:4px 0 10px}
+svg{width:100%;height:auto;display:block;background:#fff;border:1px solid #E2E8F0;border-radius:10px;margin:6px 0 10px}
+svg text{font:11px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;fill:#334155}
+svg .gr{stroke:#E2E8F0;stroke-width:1}
+svg .ax{stroke:#1F2A44;stroke-width:1.6}
+svg .z{stroke:#1F2A44;stroke-width:1.3}
+button{font:inherit;cursor:pointer}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid #CBD5E1;border-radius:12px;padding:12px 14px;margin:8px 0;min-height:48px;color:var(--encre)}
+.opt:active{background:#EFF6FF}
+.opt.ok{border-color:var(--vert);background:#DCFCE7}
+.opt.ko{border-color:var(--rose);background:#FCE7F3}
+.opt[disabled]{cursor:default}
+.num{display:flex;gap:8px;align-items:center;margin:8px 0}
+.num input{flex:1;min-width:0;font:inherit;font-size:18px;padding:12px;border:2px solid #CBD5E1;border-radius:12px}
+.num span{font-weight:700;white-space:nowrap}
+.go{display:block;width:100%;background:var(--bleu);color:#fff;border:0;border-radius:12px;padding:14px;font-weight:700;margin-top:10px;min-height:50px}
+.go.sec{background:#fff;color:var(--bleu);border:2px solid var(--bleu)}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px}
+.fb.ok{background:#DCFCE7;border-left:6px solid var(--vert)}
+.fb.ko{background:#FCE7F3;border-left:6px solid var(--rose)}
+.fb b.t{display:block;font-size:1.05rem;margin-bottom:4px}
+.add{background:#FEF3C7;border-left:6px solid var(--amb);border-radius:12px;padding:10px 14px;margin-top:10px}
+input.nom{width:100%;font:inherit;font-size:18px;padding:12px;border:2px solid #CBD5E1;border-radius:12px;margin-top:8px}
+ul.rec{padding-left:0;list-style:none;margin:8px 0}
+ul.rec li{padding:6px 0;border-bottom:1px solid #E2E8F0;font-size:.95rem}
+.big{font-size:2.2rem;font-weight:800;color:var(--bleu);text-align:center}
+#sky{position:fixed;inset:0;background:radial-gradient(circle at 50% 100%,#1e2a5a,#0a0f28);display:none;z-index:50;text-align:center;color:#fff}
+#sky canvas{position:absolute;inset:0;width:100%;height:100%}
+#sky .msg{position:relative;z-index:2;padding-top:22vh}
+#sky .msg h2{font-size:2.2rem;margin:0 0 8px;text-shadow:0 2px 12px #000}
+#sky .msg .go{display:inline-block;width:auto;padding:14px 28px}
+.hid{display:none}
+noscript{display:block;padding:16px;background:#FEE2E2}
+</style>
+</head>
+<body>
+<main>
+<h1>Quiz – Le mouvement rectiligne</h1>
+<noscript>Ce quiz a besoin de JavaScript. Ouvre-le dans le navigateur (Chrome, Safari, Firefox…).</noscript>
+<div id="app"></div>
+</main>
+<div id="sky"><canvas id="fw"></canvas><div class="msg"><h2 id="bravo">Bravo !</h2><p>Tu as terminé toutes les questions.</p><button class="go" id="seebilan">Voir mon bilan</button></div></div>
+
+<script>
+"use strict";
+/* ============ Graphiques SVG ============ */
+const B='#2563EB',P='#DB2777',O='#EA580C',G='#16A34A',GR='#94A3B8';
+const XT={xl:'t (s)',yl:'x (m)'}, VT={xl:'t (s)',yl:'v (m/s)'}, AT={xl:'t (s)',yl:'a (m/s²)'};
+const seg=(x1,y1,x2,y2,c,d)=>({k:'l',x1,y1,x2,y2,c,d});
+const dot=(x,y,t,dx,dy,c,a)=>({k:'p',x,y,t,dx,dy,c,a});
+const txt=(x,y,s,c,dx,dy,a)=>({k:'t',x,y,s,c,dx,dy,a});
+function tri(x1,y1,x2,y2,l1,l2,left){
+  return [seg(x1,y1,x2,y1,O,1),seg(x2,y1,x2,y2,O,1),
+    txt((x1+x2)/2,y1,l1,O,0,y2>=y1?15:-6,'middle'),
+    txt(x2,(y1+y2)/2,l2,O,left?-6:6,4,left?'end':'start')];
+}
+const fmt=n=>String(+n.toFixed(2)).replace('.',',');
+function graph(o){
+  const W=340,H=235,L=48,R=16,T=20,Bm=38;
+  const [x0,x1]=o.xr,[y0,y1]=o.yr;
+  const X=x=>L+(x-x0)/(x1-x0)*(W-L-R), Y=y=>H-Bm-(y-y0)/(y1-y0)*(H-T-Bm);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.alt||'graphique'}">`;
+  for(let k=0;k<=Math.round((x1-x0)/o.xt);k++){const x=x0+k*o.xt;
+    s+=`<line class="gr" x1="${X(x)}" y1="${T}" x2="${X(x)}" y2="${H-Bm}"/><text x="${X(x)}" y="${H-Bm+14}" text-anchor="middle">${fmt(x)}</text>`;}
+  for(let k=0;k<=Math.round((y1-y0)/o.yt);k++){const y=y0+k*o.yt;
+    s+=`<line class="gr" x1="${L}" y1="${Y(y)}" x2="${W-R}" y2="${Y(y)}"/><text x="${L-6}" y="${Y(y)+4}" text-anchor="end">${fmt(y)}</text>`;}
+  if(y0<0&&y1>0) s+=`<line class="z" x1="${L}" y1="${Y(0)}" x2="${W-R}" y2="${Y(0)}"/>`;
+  s+=`<line class="ax" x1="${L}" y1="${T}" x2="${L}" y2="${H-Bm}"/><line class="ax" x1="${L}" y1="${H-Bm}" x2="${W-R}" y2="${H-Bm}"/>`;
+  s+=`<text x="${L+4}" y="12" font-weight="700">${o.yl}</text><text x="${W-R}" y="${H-5}" text-anchor="end" font-weight="700">${o.xl}</text>`;
+  (o.curves||[]).forEach(c=>{
+    const a=c.a??x0,b=c.b??x1,n=80;let p='';
+    for(let i=0;i<=n;i++){const t=a+(b-a)*i/n;p+=`${X(t).toFixed(1)},${Y(c.f(t)).toFixed(1)} `;}
+    s+=`<polyline fill="none" stroke="${c.c||B}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${p}"/>`;
+    if(c.lab) s+=`<text x="${X(c.lab[0])}" y="${Y(c.lab[1])}" fill="${c.c}" font-weight="700" style="fill:${c.c}" text-anchor="${c.lab[3]||'start'}">${c.lab[2]}</text>`;
+  });
+  (o.g||[]).forEach(([x,y])=>{
+    s+=`<line x1="${X(x)}" y1="${Y(y)}" x2="${X(x)}" y2="${H-Bm}" stroke="${GR}" stroke-dasharray="4 3"/><line x1="${L}" y1="${Y(y)}" x2="${X(x)}" y2="${Y(y)}" stroke="${GR}" stroke-dasharray="4 3"/>`;
+    s+=`<circle cx="${X(x)}" cy="${Y(y)}" r="5" fill="#fff" stroke="#1F2A44" stroke-width="2"/>`;
+  });
+  (o.ann||[]).forEach(a=>{
+    if(a.k==='l') s+=`<line x1="${X(a.x1)}" y1="${Y(a.y1)}" x2="${X(a.x2)}" y2="${Y(a.y2)}" stroke="${a.c||O}" stroke-width="${a.d?2:3}" ${a.d?'stroke-dasharray="5 4"':''}/>`;
+    if(a.k==='p') {s+=`<circle cx="${X(a.x)}" cy="${Y(a.y)}" r="5" fill="${a.c||O}"/>`; if(a.t) s+=`<text x="${X(a.x)+(a.dx||0)}" y="${Y(a.y)+(a.dy||0)}" text-anchor="${a.a||'start'}" font-weight="700" style="fill:${a.c||O}">${a.t}</text>`;}
+    if(a.k==='t') s+=`<text x="${X(a.x)+(a.dx||0)}" y="${Y(a.y)+(a.dy||0)}" text-anchor="${a.a||'middle'}" font-weight="700" style="fill:${a.c||O}">${a.s}</text>`;
+  });
+  return s+'</svg>';
+}
+const tangent=(f,df,t0,h=1)=>seg(t0-h,f(t0)-df*h,t0+h,f(t0)+df*h,O,0);
+
+/* ============ Questions : générateurs aléatoires ============ */
+const MCQ=(skill,text,fig,opts,ok,exp)=>({type:'mcq',skill,text,fig,opts,ok,exp});
+const NUM=(skill,text,fig,ans,unit,exp,tol)=>({type:'num',skill,text,fig,ans,unit,exp,tol});
+const SK={mru:'Reconnaître un MRU',acc:'Reconnaître une accélération constante',sens:'Sens du mouvement',pente:'Pente = vitesse',vm:'Vitesse moyenne',ad:'Accélère ou décélère',rc:'Rencontre de deux mobiles (calcul)',rg:'Rencontre de deux mobiles (graphique)',arr:'Mobile à l’arrêt'};
+const ADOPT=['Il accélère, dans le sens de l’axe','Il accélère, dans le sens opposé à l’axe','Il décélère, dans le sens de l’axe','Il décélère, dans le sens opposé à l’axe'];
+const ADEXP='Pour savoir si le mobile accélère ou décélère, on regarde la <b>valeur</b> de la vitesse (sans le signe) : si elle augmente il accélère, si elle diminue il décélère. Le <b>signe</b> de v donne le sens : v &gt; 0 → sens de l’axe, v &lt; 0 → sens opposé.';
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[ri(0,a.length-1)], sg=()=>Math.random()<.5?-1:1;
+const sgn=n=>(n<0?'−':'+')+Math.abs(n);
+function nice(lo,hi,st){
+  const span=Math.max(hi-lo,1);
+  if(!st) st=[1,2,4,5,10,20,25,50].find(s=>span/s<=8)||100;
+  let a=Math.floor(lo/st+1e-9)*st,b=Math.ceil(hi/st-1e-9)*st; if(a===b)b+=st;
+  return {yr:[a,b],yt:st};
+}
+const LAB={x:XT,v:VT,a:AT};
+function GR2(kind,T,curves,lo,hi,st,extra){
+  const n=nice(lo,hi,st);
+  return graph({...LAB[kind],xr:[0,T],yr:n.yr,xt:T<=8?1:T<=16?2:5,yt:n.yt,curves,...(extra||{})});
+}
+const OPT_MRU=['MRU, dans le sens de l’axe','MRU, dans le sens opposé à l’axe','Le mobile est à l’arrêt','Mouvement à accélération constante non nulle'];
+
+function gMRUx(o={}){
+  const v=(o.dir||sg())*ri(1,4),T=6,x0=v>0?ri(0,3)*2:-v*T+ri(0,2)*2,f=t=>x0+v*t,hi=Math.max(f(0),f(T));
+  return MCQ(v>0?SK.mru:SK.sens,'Voici le graphique de la position d’un mobile en fonction du temps. Que peut-on dire de son mouvement ?',
+   a=>GR2('x',T,[{f,c:v>0?B:P}],0,hi,undefined,{alt:'x(t) droite',ann:a?tri(1,f(1),5,f(5),'Δt = 4 s','Δx = '+fmt(4*v)+' m',v<0):[]}),
+   OPT_MRU,v>0?0:1,
+   'x(t) est une <b>droite</b> : la pente est constante, donc la vitesse est constante → <b>MRU</b>. '+(v>0?`La droite monte : x augmente, le mobile va dans le sens de l’axe (v = ${fmt(4*v)} m / 4 s = ${v} m/s).`:`La droite <b>descend</b> : x diminue, la pente est négative (v = ${fmt(4*v)} m / 4 s = ${v} m/s) → le mobile va dans le sens <b>opposé</b> à l’axe.`));
+}
+function gAccLin(){
+  const a=sg()*ri(1,3),T=6,v0=a>0?ri(1,5):-a*T+ri(1,3),f=t=>v0+a*t,hi=Math.max(f(0),f(T));
+  return MCQ(SK.acc,'Voici le graphique de la <b>vitesse</b> d’un mobile en fonction du temps. Que peut-on dire de son accélération ?',
+   q=>GR2('v',T,[{f,c:a>0?B:P}],0,hi,undefined,{alt:'v(t) droite inclinée',ann:q?tri(1,f(1),5,f(5),'Δt = 4 s','Δv = '+fmt(4*a)+' m/s',true):[]}),
+   ['Elle est nulle','Elle est constante et non nulle','Elle augmente avec le temps','On ne peut pas savoir'],1,
+   `Sur un graphique <b>v(t)</b>, une droite <b>non horizontale</b> veut dire que v varie de la même quantité chaque seconde : l’accélération est <b>constante et non nulle</b> (c’est la pente : ${fmt(4*a)} m/s en 4 s → ${fmt(a)} m/s²). Attention : une droite inclinée sur x(t) et sur v(t) ne veut pas dire la même chose !`);
+}
+function gAccFlat(){
+  const v=sg()*ri(1,8),T=6;
+  return MCQ(SK.mru,'Voici le graphique v(t) d’un mobile. Que vaut son accélération ?',
+   a=>GR2('v',T,[{f:t=>v,c:v>0?B:P}],Math.min(v,0)-1,Math.max(v,0)+1,undefined,{alt:'v(t) constante',ann:a?[txt(3,v+(v>0?1:-1)*.9,'v constante → a = 0',O)]:[]}),
+   ['a = 0','a = '+fmt(v)+' m/s²','a constante et non nulle','On ne peut pas savoir'],0,
+   `v(t) est horizontale : la vitesse ne change pas, donc <b>a = 0</b>. C’est un MRU à ${fmt(v)} m/s. Ne confonds pas la valeur de v avec celle de a.`);
+}
+function gAconst(){
+  const a=sg()*ri(1,4),T=6;
+  return MCQ(SK.acc,`Voici le graphique de l’<b>accélération</b> d’un mobile : a = ${fmt(a)} m/s², constante. Que peut-on dire de sa vitesse ?`,
+   q=>GR2('a',T,[{f:t=>a,c:V}],Math.min(a,0),Math.max(a,0),1,{alt:'a(t) constante',ann:q?[txt(3,a+(a>0?-.6:.4),`a = ${fmt(a)} m/s² (constante)`,O)]:[]}),
+   [`Elle varie de +${Math.abs(a)} m/s chaque seconde`,`Elle varie de −${Math.abs(a)} m/s chaque seconde`,'Elle est constante','Elle est nulle'],a>0?0:1,
+   `a = Δv / Δt = ${fmt(a)} m/s² : la vitesse <b>varie de ${sgn(a)} m/s à chaque seconde</b>. L’accélération est constante, donc la vitesse change de façon régulière. Un MRU aurait a = 0.`);
+}
+function gParab(o={}){
+  const cv=o.cv===undefined?Math.random()<.5:o.cv,k=pick([.5,1,1.5]),T=6;
+  const f=cv?t=>k*t*t:t=>k*(12*t-t*t),d=cv?t=>2*k*t:t=>2*k*(6-t),hi=36*k;
+  return MCQ(SK.acc,'Voici le graphique x(t) d’un mobile : c’est une <b>parabole</b>. Que peut-on en déduire ?',
+   a=>GR2('x',T,[{f}],0,hi+2,undefined,{alt:'x(t) parabole',ann:a?[tangent(f,d(1),1),tangent(f,d(5),5),txt(4.4,hi*.06,cv?'la pente augmente régulièrement':'la pente diminue régulièrement',O,0,0)]:[]}),
+   ['La vitesse est constante (MRU)','La vitesse change de façon régulière : l’accélération est constante','Le mobile est à l’arrêt','Le mobile fait demi-tour dès le début'],1,
+   `La pente de x(t) donne la vitesse. Ici la pente ${cv?'augmente':'diminue'} de façon régulière : la vitesse change régulièrement → <b>accélération constante</b> (on le verra sous le nom de MRUA).`);
+}
+function gVconst(o={}){
+  const v=(o.dir||sg())*ri(1,6),T=6;
+  return MCQ(SK.sens,'Voici le graphique v(t) d’un mobile. Que peut-on dire ?',
+   a=>GR2('v',T,[{f:t=>v,c:v>0?B:P}],Math.min(v,0)-1,Math.max(v,0)+1,undefined,{alt:'v(t) constante',ann:a?[txt(3,v+(v>0?1:-1)*.9,v>0?'v &gt; 0 : sens de l’axe':'v &lt; 0 : sens opposé à l’axe',O)]:[]}),
+   OPT_MRU,v>0?0:1,
+   `v(t) est une droite <b>horizontale</b> : la vitesse est constante (a = 0), c’est un <b>MRU</b>. Comme v = ${fmt(v)} m/s est <b>${v>0?'positive':'négative'}</b>, le mobile se déplace dans le sens <b>${v>0?'de l’axe':'opposé à l’axe'}</b>. Il n’est pas à l’arrêt : v n’est pas nulle.`);
+}
+function gPente(o={}){
+  const build=(st,t1,dt,x1,dx)=>{
+    const t2=t1+dt,v=dx/dt,x0=x1-v*t1,x2=x1+dx,hi=Math.max(x0,x0+6*v);
+    return NUM(SK.pente,'Voici le graphique x(t) d’un mobile en MRU. Calcule sa vitesse <b>avec son signe</b> à partir de la pente de la droite, en utilisant les deux points marqués.',
+     a=>GR2('x',6,[{f:t=>x0+v*t,c:v>0?B:P}],0,hi,st,{alt:'x(t) droite avec deux points',g:[[t1,x1],[t2,x2]],ann:a?tri(t1,x1,t2,x2,`Δt = ${dt} s`,`Δx = ${fmt(dx)} m`,v<0||t2>=5):[]}),
+     v,'m/s',`v = Δx / Δt = (${fmt(x2)} − ${fmt(x1)}) / (${t2} − ${t1}) = ${fmt(dx)} / ${dt} = <b>${fmt(v)} m/s</b>. `+(v>0?'La droite monte : pente positive, le mobile va dans le sens de l’axe.':'La droite descend : pente négative, le mobile va dans le sens <b>opposé</b> à l’axe.'));
+  };
+  for(let n=0;n<800;n++){
+    const st=pick([2,4,5]),t1=ri(0,3),dt=ri(2,4);if(t1+dt>6)continue;
+    const x1=st*ri(0,5),dx=st*(o.sign||sg())*ri(1,6);if(dx%dt)continue;
+    const v=dx/dt;if(Math.abs(v)>6)continue;
+    const x0=x1-v*t1,xe=x0+6*v;if(x0<0||xe<0||x1+dx<0)continue;
+    if(Math.max(x0,xe,x1,x1+dx)>9*st)continue;
+    return build(st,t1,dt,x1,dx);
+  }
+  return build(4,1,4,4,12);
+}
+function gVmoy(){
+  const k=pick([.5,1]),ts=k===.5?[2,4,6]:[0,2,4,6],st=k===.5?2:4;
+  let t1,t2;do{t1=pick(ts);t2=pick(ts);}while(t2<=t1);
+  const f=t=>k*t*t,ans=k*(t1+t2);
+  return NUM(SK.vm,`Le mobile ci-dessous n’est pas en MRU (la courbe n’est pas une droite). Calcule sa <b>vitesse moyenne</b> entre t = ${t1} s et t = ${t2} s, à partir des deux points marqués.`,
+   a=>GR2('x',6,[{f}],0,36*k,st,{alt:'x(t) parabole avec deux points',g:[[t1,f(t1)],[t2,f(t2)]],ann:a?[seg(t1,f(t1),t2,f(t2),O,0),...tri(t1,f(t1),t2,f(t2),`Δt = ${t2-t1} s`,`Δx = ${fmt(f(t2)-f(t1))} m`,t2>=5)]:[]}),
+   ans,'m/s',`v<sub>moy</sub> = Δx / Δt = (${fmt(f(t2))} − ${fmt(f(t1))}) / (${t2} − ${t1}) = ${fmt(f(t2)-f(t1))} / ${t2-t1} = <b>${fmt(ans)} m/s</b>. C’est la pente de la droite qui <b>relie les deux points</b> (en orange). La vitesse moyenne n’est pas la vitesse à un instant précis.`);
+}
+function gVmoyMCQ(){
+  const k=pick([.5,1]),f=t=>k*t*t,st=k===.5?2:4;
+  return MCQ(SK.vm,'Sur un graphique x(t) qui est une courbe, la vitesse moyenne entre deux instants est…',
+   a=>GR2('x',6,[{f}],0,36*k,st,{alt:'x(t) courbe avec corde',g:[[2,f(2)],[6,f(6)]],ann:a?[seg(2,f(2),6,f(6),O,0),txt(3.6,f(2),'pente = v moyenne',O,6,10,'start')]:[]}),
+   ['la pente de la droite qui relie les deux points','la valeur de x au deuxième instant','la pente de la tangente à la courbe en un point','l’aire sous la courbe'],0,
+   'v<sub>moy</sub> = Δx / Δt : c’est la <b>pente de la droite reliant les deux points</b> (la « corde »). La pente de la tangente, elle, donne la vitesse à <b>un</b> instant précis.');
+}
+function gAD(o={}){
+  const s=o.sign||sg();let m0,m1;
+  do{m0=ri(1,12);m1=ri(1,12);}while(Math.abs(m1-m0)<3||(o.dec===true&&m1>m0)||(o.dec===false&&m1<m0));
+  const v0=s*m0,v1=s*m1,T=6,f=t=>v0+(v1-v0)*t/T,acc=m1>m0,dir=s>0?0:1;
+  const idx=acc?(dir===0?0:1):(dir===0?2:3),lo=Math.min(0,v0,v1),hi=Math.max(0,v0,v1),span=hi-lo;
+  return MCQ(SK.ad,'Voici le graphique v(t) d’un mobile. Que fait-il entre 0 et 6 s ?',
+   a=>GR2('v',T,[{f,c:s>0?B:P}],lo,hi,undefined,{alt:'v(t) droite',ann:a?[txt(3,((v0+v1)/2-lo>hi-(v0+v1)/2)?lo+span*.08:hi-span*.08,`${s>0?'v &gt; 0':'v &lt; 0'} · |v| ${acc?'augmente':'diminue'}`,O)]:[]}),
+   ADOPT,idx,
+   `La vitesse passe de ${fmt(v0)} à ${fmt(v1)} m/s : sans le signe, sa valeur passe de ${m0} à ${m1}, elle <b>${acc?'augmente':'diminue'}</b> → le mobile <b>${acc?'accélère':'décélère'}</b>. `+(s<0?'Comme v est négative, il va dans le sens <b>opposé</b> à l’axe'+(acc?' (la courbe descend, mais il accélère !). ':'. '):'Comme v est positive, il va dans le sens de l’axe. ')+ADEXP);
+}
+function gADx(){
+  const T=6,dec=Math.random()<.5,s=sg();let v0,a;
+  if(dec){a=-s;v0=s*ri(7,9);}else{a=s*pick([1,2]);v0=s*ri(0,2);}
+  const base=t=>v0*t+.5*a*t*t;let mn=0;for(let t=0;t<=T;t+=.25)mn=Math.min(mn,base(t));
+  const x0=Math.ceil(-mn)+2*ri(0,1),f=t=>x0+base(t),vv=t=>v0+a*t;
+  let lo=1e9,hi=-1e9;for(let t=0;t<=T;t+=.25){lo=Math.min(lo,f(t));hi=Math.max(hi,f(t));}
+  const idx=dec?(s>0?2:3):(s>0?0:1);
+  return MCQ(SK.ad,'Voici le graphique x(t) d’un mobile (partie d’une parabole). Que fait-il entre 0 et 6 s ?',
+   q=>GR2('x',T,[{f,c:s>0?B:P}],0,hi+1,undefined,{alt:'x(t) parabole',ann:q?[tangent(f,vv(1),1,.8),tangent(f,vv(5),5,.8),txt(3,hi*.08,dec?'pente de plus en plus faible':'pente de plus en plus forte',O,0,0)]:[]}),
+   ADOPT,idx,
+   `La pente de x(t) donne la vitesse. Ici la pente est de plus en plus ${dec?'faible':'forte'} (en valeur absolue) : la vitesse ${dec?'diminue':'augmente'} → il <b>${dec?'décélère':'accélère'}</b>. Comme x ${s>0?'augmente':'diminue'}, il va dans le sens <b>${s>0?'de l’axe':'opposé à l’axe'}</b>.`);
+}
+function gMeetCalc(o={}){
+  const kind=o.kind||pick(['face','face','pour']),ask=o.ask||pick(['t','x']),ts=ri(2,10);
+  let vA,vB,L,b;
+  if(kind==='face'){vA=ri(2,8);b=ri(1,6);vB=-b;L=ts*(vA+b);}else{vA=ri(3,9);vB=ri(1,vA-2);L=ts*(vA-vB);}
+  const xm=vA*ts,T=ts+Math.max(2,Math.round(ts/2)),tb=kind==='face'?Math.min(T,L/b):T;
+  const hi=Math.max(vA*T,L+Math.max(0,vB)*T);
+  const text=`Deux mobiles roulent sur la même droite, en MRU. <b>A</b> part de x = 0 avec v = +${vA} m/s. <b>B</b> part, au même instant, de x = ${L} m avec v = ${sgn(vB)} m/s `+(kind==='face'?'(il va vers A). ':'(même sens que A). ')+(ask==='t'?'Au bout de combien de temps (en s) se rencontrent-ils ?':'En quelle position x (en m) se rencontrent-ils ?');
+  const exp=kind==='face'
+   ?`Au moment de la rencontre, les deux mobiles sont au <b>même endroit</b> : x<sub>A</sub> = x<sub>B</sub>.<br>x<sub>A</sub> = ${vA}·t et x<sub>B</sub> = ${L} − ${b}·t → ${vA}t = ${L} − ${b}t → ${vA+b}t = ${L} → <b>t = ${ts} s</b>. Position : x = ${vA} × ${ts} = <b>${xm} m</b>.`
+   :`Au moment où A rattrape B, ils sont au <b>même endroit</b> : x<sub>A</sub> = x<sub>B</sub>.<br>x<sub>A</sub> = ${vA}·t et x<sub>B</sub> = ${L} + ${vB}·t → ${vA}t = ${L} + ${vB}t → ${vA-vB}t = ${L} → <b>t = ${ts} s</b>. Position : x = ${vA} × ${ts} = <b>${xm} m</b>.`;
+  return NUM(SK.rc,text,
+   a=>a?GR2('x',T,[{f:t=>vA*t,a:0,b:T,c:B,lab:[T*.8,vA*T*.8+hi*.05,'A',B]},{f:t=>L+vB*t,a:0,b:tb,c:P,lab:[.4,L-hi*.08,'B',P]}],0,hi,undefined,{alt:'rencontre',ann:[dot(ts,xm,`(${ts} s ; ${xm} m)`,-8,-10,O,'end')]}):'',
+   ask==='t'?ts:xm,ask==='t'?'s':'m',exp);
+}
+function gMeetGraph(){
+  for(let n=0;n<800;n++){
+    const ts=ri(2,5),vA=ri(1,4),b=ri(1,4),xs=vA*ts,xb=xs+b*ts,T=Math.min(8,ts+Math.floor(xs/b));
+    if(T<ts+1)continue;
+    const hi=Math.max(xb,vA*T),st=[5,4,2,1].find(s=>xs%s===0&&Math.ceil(hi/s)<=10);if(!st)continue;
+    const set=[`à t = ${ts} s, en x = ${xs} m`];
+    [`à t = ${xs} s, en x = ${ts} m`,`à t = ${ts+1} s, en x = ${vA*(ts+1)} m`,`à t = ${ts-1} s, en x = ${vA*(ts-1)} m`,`à t = ${ts+2} s, en x = ${vA*(ts+2)} m`].forEach(o=>{if(!set.includes(o)&&set.length<4)set.push(o);});
+    return MCQ(SK.rg,'Les droites ci-dessous représentent le mouvement de deux mobiles A (bleu) et B (rose). Où et quand se rencontrent-ils ?',
+     a=>GR2('x',T,[{f:t=>vA*t,c:B,lab:[T*.85,vA*T*.85+hi*.05,'A',B]},{f:t=>xb-b*t,c:P,lab:[.25,xb-hi*.07,'B',P]}],0,hi,st,{alt:'deux droites qui se croisent',ann:a?[dot(ts,xs,'rencontre',0,-12,O,'middle'),seg(ts,0,ts,xs,O,1),seg(0,xs,ts,xs,O,1)]:[]}),
+     set,0,`Les mobiles se rencontrent là où les courbes <b>se croisent</b> : même t <b>et</b> même x. Le point de croisement est à t = ${ts} s, x = ${xs} m. Attention à ne pas inverser t (axe horizontal) et x (axe vertical).`);
+  }
+}
+function gMeetNever(){
+  const vA=ri(1,4),d=ri(1,3)*2,T=8,hi=d+vA*T;let p=ri(2,7),q=ri(2,7);while(q===p)q=ri(2,7);
+  return MCQ(SK.rg,'Les mobiles A (bleu) et B (rose) ont les droites ci-dessous. Se rencontrent-ils ?',
+   a=>GR2('x',T,[{f:t=>vA*t,c:B,lab:[6.3,vA*6.3-hi*.08,'A',B]},{f:t=>d+vA*t,c:P,lab:[5.5,d+vA*5.5+hi*.05,'B',P]}],0,hi,undefined,{alt:'deux droites parallèles',ann:a?[txt(3.6,hi*.95,'même pente = même vitesse',O,0,0)]:[]}),
+   ['Non, jamais : ils ont la même vitesse',`Oui, à t = ${p} s`,`Oui, à t = ${q} s`,'On ne peut pas savoir'],0,
+   `Les deux droites sont <b>parallèles</b> : même pente, donc même vitesse (${vA} m/s). L’écart de ${d} m entre eux ne change jamais : ils ne se rencontrent pas.`);
+}
+function gStop(){
+  const v=ri(1,4),t1=ri(3,5),T=10,xe=v*t1,f=t=>t<t1?v*t:xe;
+  return MCQ(SK.arr,`Voici le graphique x(t) d’un mobile. Que fait-il entre t = ${t1} s et t = ${T-2} s ?`,
+   a=>GR2('x',T,[{f:t=>v*t,a:0,b:t1},{f:t=>xe,a:t1,b:T}],0,xe+1,undefined,{alt:'x(t) montée puis plateau',ann:a?[txt(7,xe+(xe>8?-1.8:.9),'x constant → à l’arrêt',O)]:[]}),
+   ['Il est à l’arrêt','Il continue en MRU','Il accélère','Il revient en arrière'],0,
+   `Entre ${t1} s et ${T-2} s, x reste égal à ${xe} m : la pente est <b>nulle</b>, le mobile est à l’<b>arrêt</b>. Avant, il roulait en MRU à ${v} m/s.`);
+}
+const V='#7C3AED';
+
+/* 10 questions de base : valeurs tirées au hasard à chaque partie */
+const BASE=[()=>gMRUx({dir:1}),gAccLin,()=>gParab({cv:true}),()=>gVconst({dir:-1}),()=>gPente({sign:1}),()=>gPente({sign:-1}),gVmoy,()=>gAD({sign:1,dec:true}),()=>gMeetCalc({kind:'face',ask:'t'}),gMeetGraph];
+/* Générateurs de renforcement (illimités) */
+const GENS=[gMRUx,gAccLin,gAccFlat,gAconst,gParab,gVconst,gPente,gPente,gVmoy,gVmoyMCQ,gAD,gAD,gADx,gMeetCalc,gMeetCalc,gMeetGraph,gMeetNever,gStop];
+let lastGens=[];
+function nextRen(){
+  let g;do{g=pick(GENS);}while(lastGens.includes(g));
+  lastGens=[g,...lastGens].slice(0,3);
+  return g();
+}
+
+/* ============ Moteur du quiz ============ */
+const $=id=>document.getElementById(id), app=$('app');
+let queue,i,res,name='',audio=null;
+const shuffle=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[a[k],a[j]]=[a[j],a[k]];}return a;};
+
+function intro(){
+  app.innerHTML=`<div class="card"><h2>Prêt(e) ?</h2>
+  <p>10 questions sur le mouvement rectiligne : reconnaître un MRU ou une accélération constante, lire un graphique x(t), v(t), a(t), calculer une vitesse, faire se rencontrer deux mobiles.</p>
+  <p>Après chaque réponse, tu vois la correction. <b>Chaque fois que tu te trompes, 3 nouvelles questions de renforcement s’ajoutent</b> (avec des valeurs différentes). À la fin : une surprise 🎆</p>
+  <p>Ton prénom (facultatif) :</p><input class="nom" id="nom" autocomplete="off" maxlength="30" placeholder="Prénom">
+  <button class="go" id="start">Commencer</button>
+  <p style="font-size:.85rem;color:var(--gris)">Mets le son si tu peux. Garde un brouillon et une calculatrice à côté de toi.</p></div>`;
+  $('start').onclick=()=>{name=$('nom').value.trim();unlock();begin();};
+}
+function begin(){queue=BASE.map(g=>({q:g(),ren:false}));lastGens=[];i=0;res=[];show();}
+
+function show(){
+  const it=queue[i],q=it.q,N=queue.length;
+  let h=`<div class="top"><span>${it.ren?'Renforcement':'Question'} ${i+1} / ${N}</span><span>${res.filter(r=>r.ok).length} ✔</span></div>
+  <div class="bar"><i style="width:${i/N*100}%"></i></div><div class="card" id="qc">
+  <span class="tag ${it.ren?'ren':''}">${it.ren?'Renforcement':'Question '+(i+1)}</span><span class="tag" style="background:var(--turq);margin-left:6px">${q.skill}</span>
+  <div class="q">${q.text}</div><div id="fig">${q.fig(false)}</div><div id="ans"></div><div id="fb"></div></div>`;
+  app.innerHTML=h;
+  const ans=$('ans');
+  if(q.type==='mcq'){
+    const ord=shuffle(q.opts.map((t,k)=>k));
+    ans.innerHTML=ord.map(k=>`<button class="opt" data-k="${k}">${q.opts[k]}</button>`).join('');
+    ans.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k===q.ok,+b.dataset.k));
+  }else{
+    ans.innerHTML=`<div class="num"><input id="inp" inputmode="decimal" autocomplete="off" placeholder="Ta réponse"><span>${q.unit}</span></div><button class="go" id="val">Valider</button>`;
+    const go=()=>{
+      const v=parseFloat($('inp').value.replace(/\s/g,'').replace(/[−–]/g,'-').replace(',','.'));
+      if(isNaN(v)){$('inp').focus();$('inp').style.borderColor='var(--rose)';return;}
+      const tol=q.tol??Math.max(Math.abs(q.ans)*0.02,0.02);
+      answer(Math.abs(v-q.ans)<=tol,v);
+    };
+    $('val').onclick=go;$('inp').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+  }
+  window.scrollTo(0,0);
+}
+
+function answer(ok,given){
+  const it=queue[i],q=it.q;let added=0,hint='';
+  res.push({q,ok,ren:it.ren});
+  if(!ok){
+    for(let k=0;k<3;k++)queue.push({q:nextRen(),ren:true});
+    added=3;
+  }
+  if(q.type==='mcq'){
+    document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;const k=+b.dataset.k;if(k===q.ok)b.classList.add('ok');else if(k===given)b.classList.add('ko');});
+  }else{
+    $('inp').disabled=true;$('val').classList.add('hid');
+    if(!ok&&Math.abs(Math.abs(given)-Math.abs(q.ans))<=Math.max(Math.abs(q.ans)*0.02,0.02))hint='<br>⚠ La valeur est bonne mais <b>le signe</b> est faux.';
+  }
+  $('fig').innerHTML=q.fig(true);
+  const last=i===queue.length-1;
+  const corr=q.type==='num'?`<br>Réponse attendue : <b>${fmt(q.ans)} ${q.unit}</b>.`:'';
+  $('fb').innerHTML=`<div class="fb ${ok?'ok':'ko'}" aria-live="polite"><b class="t">${ok?'✅ Bien joué !':'❌ Pas tout à fait.'}</b>${q.exp}${corr}${hint}</div>`+
+   (added?`<div class="add">➕ ${added} question${added>1?'s':''} de renforcement ${added>1?'ont été ajoutées':'a été ajoutée'} à la fin.</div>`:'')+
+   `<button class="go" id="next">${last?'Terminer 🎉':'Question suivante →'}</button>`;
+  $('next').onclick=()=>{ if(last)finish(); else {i++;show();} };
+  $('next').scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+function finish(){
+  unlock();
+  $('bravo').textContent='Bravo'+(name?' '+name:'')+' !';
+  $('sky').style.display='block';
+  gong();fireworks();
+  $('seebilan').onclick=()=>{stopFw();$('sky').style.display='none';bilan();};
+}
+
+function bilan(){
+  const base=res.filter(r=>!r.ren),okb=base.filter(r=>r.ok).length;
+  const ren=res.filter(r=>r.ren),okr=ren.filter(r=>r.ok).length;
+  const rev=[...new Set(res.filter(r=>!r.ok).map(r=>r.q.skill))];
+  app.innerHTML=`<div class="card"><h2>Ton bilan${name?', '+name:''}</h2>
+  <div class="big">${okb} / 10</div><p style="text-align:center;margin-top:0">réussies du premier coup${ren.length?` · renforcement : ${okr} / ${ren.length}`:''}</p>
+  ${rev.length?`<p><b>À revoir :</b></p><ul class="rec">${rev.map(s=>`<li>📌 ${s}</li>`).join('')}</ul>`:'<p><b>Parcours parfait : aucune notion à revoir.</b> 🌟</p>'}
+  <p style="font-size:.9rem;color:var(--gris)">Rappel : sur x(t), la <b>pente</b> donne la vitesse ; sur v(t), une droite non horizontale = <b>accélération constante</b> ; deux mobiles se rencontrent quand x<sub>A</sub> = x<sub>B</sub>.</p>
+  <button class="go" id="again">Recommencer</button><button class="go sec" id="snd">🔔 Rejouer le gong</button></div>`;
+  $('again').onclick=intro;$('snd').onclick=()=>{gong();$('sky').style.display='block';fireworks();};
+}
+
+/* ============ Gong (Web Audio) ============ */
+function unlock(){
+  try{
+    if(!audio){const AC=window.AudioContext||window.webkitAudioContext;if(AC)audio=new AC();}
+    if(audio&&audio.state==='suspended')audio.resume();
+  }catch(e){}
+}
+function gong(){
+  try{
+    unlock();if(!audio)return;
+    const ctx=audio,t0=ctx.currentTime+0.02,master=ctx.createGain();
+    master.gain.value=0.55;master.connect(ctx.destination);
+    const f0=96;
+    [[1,1,7],[1.004,.8,7],[1.5,.5,5.5],[2.0,.55,5],[2.76,.35,4],[3.39,.25,3],[4.15,.18,2.4],[5.4,.12,1.8]].forEach(([r,g,d])=>{
+      const o=ctx.createOscillator(),gn=ctx.createGain();
+      o.type='sine';o.frequency.value=f0*r;
+      gn.gain.setValueAtTime(0.0001,t0);
+      gn.gain.exponentialRampToValueAtTime(g*0.5,t0+0.015);
+      gn.gain.exponentialRampToValueAtTime(0.0001,t0+d);
+      o.connect(gn);gn.connect(master);o.start(t0);o.stop(t0+d+0.1);
+    });
+    const len=ctx.sampleRate*0.25,buf=ctx.createBuffer(1,len,ctx.sampleRate),dd=buf.getChannelData(0);
+    for(let k=0;k<len;k++)dd[k]=(Math.random()*2-1)*Math.pow(1-k/len,3);
+    const ns=ctx.createBufferSource(),bp=ctx.createBiquadFilter(),ng=ctx.createGain();
+    ns.buffer=buf;bp.type='bandpass';bp.frequency.value=700;ng.gain.value=0.4;
+    ns.connect(bp);bp.connect(ng);ng.connect(master);ns.start(t0);
+  }catch(e){}
+}
+
+/* ============ Feu d'artifice (canvas) ============ */
+let fwOn=false;
+function fireworks(){
+  const c=$('fw'),ctx=c.getContext('2d');fwOn=true;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const rs=()=>{c.width=innerWidth*dpr;c.height=innerHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);};
+  rs();window.onresize=rs;
+  let parts=[],last=0;
+  const burst=(x,y)=>{const h=Math.random()*360,n=80;
+    for(let k=0;k<n;k++){const a=Math.random()*6.283,s=Math.random()*4.2+1;
+      parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,h:h+Math.random()*50});}};
+  const frame=t=>{
+    if(!fwOn){ctx.clearRect(0,0,innerWidth,innerHeight);return;}
+    if(t-last>380+Math.random()*350){burst(innerWidth*(.12+Math.random()*.76),innerHeight*(.1+Math.random()*.45));last=t;}
+    ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,0,innerWidth,innerHeight);
+    ctx.globalCompositeOperation='lighter';
+    parts=parts.filter(p=>p.l>0);
+    for(const p of parts){p.vy+=.045;p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy*=.985;p.l-=.011;
+      ctx.fillStyle=`hsla(${p.h},100%,60%,${Math.max(p.l,0)})`;ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,6.283);ctx.fill();}
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+function stopFw(){fwOn=false;}
+
+intro();
+</script>
+</body>
+</html>
