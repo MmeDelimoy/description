@@ -39,7 +39,7 @@ a{color:inherit}
 .pic .i-inks{stroke:#F6EFD9}.pic .i-inkf{fill:#F6EFD9}.pic .i-accs{stroke:#F2C94C}.pic .i-accf{fill:#E7B93B}.pic .i-acc s{stroke:#F2C94C}
 .pic .i-accs,.pic line.i-accs{stroke:#F2C94C}
 .pic .i-goldf{fill:#E7B93B}.pic .i-golds{stroke:#E7B93B}
-.pic .i-t{fill:#1B2A41;font:700 13px var(--sans)}
+.pic .i-t{fill:#1B2A41;font:700 13px var(--sans)}.pic .i-t2,.band .i-t2{fill:#F6EFD9;font:italic 17px var(--serif)}
 .pic svg.il rect[fill^="url"]{color:#fff}
 .pic .i-accf.i-inks{fill:#C2465A}
 .epi{text-align:center;max-width:620px;margin:46px auto 6px;font:italic 1.35rem/1.5 var(--serif);color:#3A4660}
