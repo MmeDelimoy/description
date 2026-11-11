@@ -45,7 +45,7 @@ background:conic-gradient(var(--zc) calc(var(--p)*1%),#DDD3B3 0);box-shadow:0 4p
 .card{background:#FFFDF8;border:1px solid var(--bord);border-radius:16px;padding:18px 18px 20px;box-shadow:0 8px 22px rgba(27,42,65,.08)}
 .card .kk{font:600 .72rem/1.3 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--or2)}
 .card h2{font:400 1.55rem/1.2 var(--serif);margin:4px 0 10px}
-.card p{margin:.55em 0}
+.card p{margin:.55em 0;line-height:1.8}
 .fig{text-align:center;margin:12px 0}
 .fig svg{max-width:100%;height:auto}
 .retiens{background:var(--papier2);border-left:4px solid var(--or);border-radius:0 10px 10px 0;padding:10px 14px;margin:14px 0}
@@ -59,15 +59,15 @@ background:conic-gradient(var(--zc) calc(var(--p)*1%),#DDD3B3 0);box-shadow:0 4p
 .vec{position:relative;display:inline-block;font-style:italic;white-space:nowrap}
 .vec:before{content:"→";position:absolute;left:50%;top:-.56em;transform:translateX(-50%) scale(.75);font-style:normal;line-height:1}
 .q{margin-top:6px}
-.q .qq{font-size:1.06rem;margin:6px 0 4px}
-.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--bord);border-radius:12px;padding:12px 14px;margin:9px 0;font:1rem/1.4 var(--sans);color:var(--encre);cursor:pointer;box-shadow:0 3px 0 var(--bord)}
+.q .qq{font-size:1.06rem;margin:6px 0 4px;line-height:1.95}
+.opt{line-height:1.8;display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--bord);border-radius:12px;padding:12px 14px;margin:9px 0;font:1rem/1.4 var(--sans);color:var(--encre);cursor:pointer;box-shadow:0 3px 0 var(--bord)}
 .opt.sel{border-color:var(--zb);background:#EEF2F9;box-shadow:0 3px 0 var(--zb)}
 .opt.good{border-color:var(--ok);background:#E8F4EC;box-shadow:0 3px 0 var(--ok)}
 .opt.bad{border-color:var(--ko);background:#FBEAEA;box-shadow:0 3px 0 var(--ko)}
 .numrow{display:flex;gap:10px;align-items:center;margin:12px 0}
 .numrow input{flex:1;font:1.25rem var(--sans);padding:11px 12px;border:1.5px solid var(--bord);border-radius:12px;background:#fff;color:var(--encre);min-width:0}
 .numrow .u{font-size:1.05rem;color:var(--gris);min-width:32px}
-.fb{border-radius:12px;padding:12px 14px;margin-top:14px;font-size:.98rem}
+.fb{line-height:1.8;border-radius:12px;padding:12px 14px;margin-top:14px;font-size:.98rem}
 .fb.ok{background:#E8F4EC;border:1px solid #B7DAC3}
 .fb.ko{background:#FBEAEA;border:1px solid #EBC0C0}
 .fb b.h{display:block;font-size:1.05rem;margin-bottom:3px}
@@ -100,6 +100,7 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const rnd=(x,d)=>{const p=Math.pow(10,d==null?1:d);return Math.round(x*p+(x>=0?1e-9:-1e-9))/p;};
 const fr=(x,d)=>{d=d==null?1:d;let v=rnd(x,d);if(v===0)return '0';let s=v.toFixed(d);if(s.indexOf('.')>=0)s=s.replace(/0+$/,'').replace(/\.$/,'');return s.replace('.',',').replace('-','−');};
+const pa=x=>x<0?`(${fr(x)})`:fr(x);
 const sg=n=>n<0?'−':'+';
 const D2R=Math.PI/180;
 const sinD=a=>Math.sin(a*D2R),cosD=a=>Math.cos(a*D2R),atanD=x=>Math.atan(x)/D2R;
@@ -264,12 +265,12 @@ T.A3=[
 ()=>{const n=ri(2,9),d=pick(['droite','gauche','haut','bas']);
   const comp={droite:[n,0],gauche:[-n,0],haut:[0,n],bas:[0,-n]}[d];
   const all=[[n,0],[-n,0],[0,n],[0,-n]];
-  return MC(`Un mobile se déplace vers le <b>${d}</b> à <b>${n} m/s</b> (axe Ox vers la droite, axe Oy vers le haut). Quelles sont les composantes de sa vitesse ?`,pr(comp[0],comp[1]),all.filter(z=>!(z[0]===comp[0]&&z[1]===comp[1])).map(z=>pr(z[0],z[1])),
-  `Vers la ${d==='droite'||d==='gauche'?'':''}${d} : ${d==='droite'||d==='gauche'?'seule v<sub>x</sub> est non nulle':'seule v<sub>y</sub> est non nulle'}, et son signe dépend du sens par rapport à l’axe : ${pr(comp[0],comp[1])}.`);},
+  return MC(`Un mobile se déplace vers <b>${({droite:'la droite',gauche:'la gauche',haut:'le haut',bas:'le bas'})[d]}</b> à <b>${n} m/s</b> (axe Ox vers la droite, axe Oy vers le haut). Quelles sont les composantes de sa vitesse ?`,pr(comp[0],comp[1]),all.filter(z=>!(z[0]===comp[0]&&z[1]===comp[1])).map(z=>pr(z[0],z[1])),
+  `${d==='droite'||d==='gauche'?'Horizontalement':'Verticalement'} : ${d==='droite'||d==='gauche'?'seule v<sub>x</sub> est non nulle':'seule v<sub>y</sub> est non nulle'}, et son signe dépend du sens par rapport à l’axe : ${pr(comp[0],comp[1])}.`);},
 ()=>{const x=ri(-5,5),y=ri(-5,5);if(x===0&&y===0)return T.A3[6]();const which=Math.random()<.5?'x':'y',val=which==='x'?x:y;
   const p=gridQ(-6,6,-6,6,22);p.line(0,0,x,0,'#8A6D1E',1.6,true).line(x,0,x,y,'#8A6D1E',1.6,true).arrow(0,0,x,y,'#7A2E3A',2.8).dot(x,y,'#7A2E3A',3.5);
   return NU(`Le vecteur représenté (1 carreau = 1 m/s) part de l’origine. Lis sa composante <b>v<sub>${which}</sub></b> (avec son signe).`,val,.01,'m/s',
-  `On projette l’extrémité de la flèche sur les axes : v<sub>x</sub> = ${x} m/s et v<sub>y</sub> = ${y} m/s. La composante est négative si la projection est à gauche de O (pour x) ou sous O (pour y).`,p.svg(),0);},
+  `On projette l’extrémité de la flèche sur les axes : v<sub>x</sub> = ${fr(x)} m/s et v<sub>y</sub> = ${fr(y)} m/s. La composante est négative si la projection est à gauche de O (pour x) ou sous O (pour y).`,p.svg(),0);},
 ()=>{const v=ri(8,30),b=ri(20,70),x=v*sinD(b);
   return NU(`Un projectile part à <b>${v} m/s</b>. Son vecteur vitesse fait un angle de <b>${b}°</b> avec la <b>verticale</b>. Calcule sa composante <b>horizontale</b> v<sub>x</sub> (au dixième).`,x,.06,'m/s',
   `Attention : l’angle est mesuré par rapport à la verticale, donc le côté horizontal est le côté <i>opposé</i> à l’angle. v<sub>x</sub> = v sin ${b}° = ${v} × ${fr(sinD(b),3)} ≈ ${fr(x,1)} m/s (et non v cos).`);}
@@ -279,7 +280,7 @@ T.A3=[
 T.A4=[
 ()=>{const t=pick(TR),e=Math.random()<.5,x=(e?t[0]:t[1])*pick([1,1,-1]),y=(e?t[1]:t[0])*pick([1,-1]);
   return NU(`Un vecteur a pour composantes <b>(${fr(x)} ; ${fr(y)})</b> (en m/s). Calcule sa norme.`,t[2],.06,'m/s',
-  `v = √(v<sub>x</sub>² + v<sub>y</sub>²) = √(${x}² + ${y}²) = √${x*x+y*y} = ${t[2]} m/s.`);},
+  `v = √(v<sub>x</sub>² + v<sub>y</sub>²) = √(${pa(x)}² + ${pa(y)}²) = √${x*x+y*y} = ${t[2]} m/s.`);},
 ()=>{const x=ri(1,8),y=ri(1,8),a=atanD(y/x);
   return NU(`Un vecteur a pour composantes <b>(${x} ; ${y})</b>. Calcule l’angle α qu’il fait avec l’axe Ox (en degrés, au dixième).`,a,.6,'°',
   `tan α = v<sub>y</sub> / v<sub>x</sub> = ${y} / ${x} = ${fr(y/x,3)}, donc α = arctan(${fr(y/x,3)}) ≈ ${fr(a,1)}°. Les deux composantes sont positives : 1ᵉʳ quadrant, aucune correction.`);},
@@ -288,13 +289,13 @@ T.A4=[
   `Signes (${sg(x)} ; ${sg(y)}) : c’est le quadrant ${['I','II','III','IV'][q-1]}. Dans l’ordre : I (+ +), II (− +), III (− −), IV (+ −).`,'',true);},
 ()=>{const x=-ri(1,8),y=ri(1,8),t=atanD(y/x),a=180+t;
   return NU(`Un vecteur a pour composantes <b>(${fr(x)} ; ${fr(y)})</b>. Calcule l’angle α qu’il fait avec l’axe Ox, compris entre 0° et 360° (au dixième).`,a,.6,'°',
-  `La calculatrice donne arctan(${y}/${fr(x)}) = ${fr(t,1)}°. Mais v<sub>x</sub> < 0 et v<sub>y</sub> > 0 : le vecteur est dans le 2ᵉ quadrant. On ajoute 180° : α = 180° + (${fr(t,1)}°) = ${fr(a,1)}°.`);},
+  `La calculatrice donne arctan(${y}/${fr(x)}) = ${fr(t,1)}°. Mais v<sub>x</sub> &lt; 0 et v<sub>y</sub> &gt; 0 : le vecteur est dans le 2ᵉ quadrant. On ajoute 180° : α = 180° + (${fr(t,1)}°) = ${fr(a,1)}°.`);},
 ()=>{const x=-ri(1,8),y=-ri(1,8),t=atanD(y/x),a=180+t;
   return NU(`Un vecteur a pour composantes <b>(${fr(x)} ; ${fr(y)})</b>. Calcule l’angle α qu’il fait avec l’axe Ox, compris entre 0° et 360° (au dixième).`,a,.6,'°',
   `La calculatrice donne arctan(${fr(y)}/${fr(x)}) = arctan(${fr(y/x,3)}) = ${fr(t,1)}°. Mais les deux composantes sont négatives : 3ᵉ quadrant. On ajoute 180° : α = 180° + ${fr(t,1)}° = ${fr(a,1)}°.`);},
 ()=>{const x=ri(2,8),y=-ri(1,8),t=atanD(y/x);
   return MC(`Un vecteur a pour composantes <b>(${x} ; ${fr(y)})</b>. Ta calculatrice donne arctan(${fr(y)}/${x}) = <b>${fr(t,1)}°</b>. Quelle est la direction du vecteur ?`,`${fr(t,1)}°, soit ${fr(360+t,1)}° (4ᵉ quadrant)`,[`${fr(180+t,1)}°`,`${fr(-t,1)}°`,`${fr(180-t,1)}°`],
-  `v<sub>x</sub> > 0 et v<sub>y</sub> < 0 : 4ᵉ quadrant. La valeur de la calculatrice (${fr(t,1)}°) est déjà correcte : c’est un angle négatif (sous l’axe Ox), équivalent à ${fr(360+t,1)}°.`);},
+  `v<sub>x</sub> &gt; 0 et v<sub>y</sub> &lt; 0 : 4ᵉ quadrant. La valeur de la calculatrice (${fr(t,1)}°) est déjà correcte : c’est un angle négatif (sous l’axe Ox), équivalent à ${fr(360+t,1)}°.`);},
 ()=>{const a=ri(2,9),b=ri(2,9),c=hyp(a,b);
   return NU(`Un vecteur a pour composantes <b>(−${a} ; −${b})</b>. Calcule sa norme (au dixième).`,c,.06,'',
   `Les carrés rendent les nombres positifs : ‖v‖ = √((−${a})² + (−${b})²) = √(${a*a} + ${b*b}) = √${a*a+b*b} ≈ ${fr(c,1)}. Une norme est toujours positive.`);}
@@ -303,15 +304,15 @@ T.A4=[
 /* ---------- A5 Addition et soustraction ---------- */
 const ab=()=>{const r=()=>ri(-9,9);return [r(),r(),r(),r()];};
 T.A5=[
-()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>x</b> de ${V('a')} + ${V('b')}.`,ax+bx,.01,'',`On additionne composante par composante : ${fr(ax)} + (${fr(bx)}) = ${fr(ax+bx)}.`,'',0);},
-()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>y</b> de ${V('a')} + ${V('b')}.`,ay+by,.01,'',`${fr(ay)} + (${fr(by)}) = ${fr(ay+by)}.`,'',0);},
-()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>x</b> de ${V('b')} − ${V('a')}.`,bx-ax,.01,'',`On soustrait composante par composante, <i>dans cet ordre</i> : ${fr(bx)} − (${fr(ax)}) = ${fr(bx-ax)}.`,'',0);},
-()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>y</b> de ${V('b')} − ${V('a')}.`,by-ay,.01,'',`${fr(by)} − (${fr(ay)}) = ${fr(by-ay)}.`,'',0);},
+()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>x</b> de ${V('a')} + ${V('b')}.`,ax+bx,.01,'',`On additionne composante par composante : ${fr(ax)} + ${pa(bx)} = ${fr(ax+bx)}.`,'',0);},
+()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>y</b> de ${V('a')} + ${V('b')}.`,ay+by,.01,'',`${fr(ay)} + ${pa(by)} = ${fr(ay+by)}.`,'',0);},
+()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>x</b> de ${V('b')} − ${V('a')}.`,bx-ax,.01,'',`On soustrait composante par composante, <i>dans cet ordre</i> : ${fr(bx)} − ${pa(ax)} = ${fr(bx-ax)}.`,'',0);},
+()=>{const [ax,ay,bx,by]=ab();return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la composante <b>y</b> de ${V('b')} − ${V('a')}.`,by-ay,.01,'',`${fr(by)} − ${pa(ay)} = ${fr(by-ay)}.`,'',0);},
 ()=>MC(`Un mobile passe du point A (vecteur position ${V('r')}<sub>A</sub>) au point B (vecteur position ${V('r')}<sub>B</sub>). Quel calcul donne le vecteur qui va de A vers B ?`,`${V('r')}<sub>B</sub> − ${V('r')}<sub>A</sub>`,[`${V('r')}<sub>A</sub> − ${V('r')}<sub>B</sub>`,`${V('r')}<sub>A</sub> + ${V('r')}<sub>B</sub>`,`‖${V('r')}<sub>B</sub>‖ − ‖${V('r')}<sub>A</sub>‖`],
   `Un vecteur « de A vers B » se calcule toujours : <b>arrivée − départ</b>, c’est-à-dire ${V('r')}<sub>B</sub> − ${V('r')}<sub>A</sub>. Intervertir donne le vecteur opposé (de B vers A).`),
 ()=>{let [ax,ay,bx,by]=ab();let sx=ax+bx,sy=ay+by;if(sx===0&&sy===0){ax+=1;sx=ax+bx;}const n=hyp(sx,sy);
   return NU(`Soit <b>${V('a')} = (${fr(ax)} ; ${fr(ay)})</b> et <b>${V('b')} = (${fr(bx)} ; ${fr(by)})</b>. Calcule la <b>norme</b> de ${V('a')} + ${V('b')} (au dixième).`,n,.06,'',
-  `D’abord les composantes : ${V('a')} + ${V('b')} = (${fr(sx)} ; ${fr(sy)}). Puis la norme : √(${sx}² + ${sy}²) = √${sx*sx+sy*sy} ≈ ${fr(n,1)}.`);},
+  `D’abord les composantes : ${V('a')} + ${V('b')} = (${fr(sx)} ; ${fr(sy)}). Puis la norme : √(${pa(sx)}² + ${pa(sy)}²) = √${sx*sx+sy*sy} ≈ ${fr(n,1)}.`);},
 ()=>{const t=pick(SM),p=t[0],q=t[1];
   return MC(`Soit ${V('a')} = (${p} ; 0) et ${V('b')} = (0 ; ${q}). Quelle est la norme de ${V('a')} + ${V('b')} ?`,String(t[2]),[String(p+q),String(Math.abs(q-p)),String(p*q)],
   `${V('a')} + ${V('b')} = (${p} ; ${q}) donc sa norme vaut √(${p}² + ${q}²) = ${t[2]}. Ce n’est pas ${p} + ${q} : on n’additionne pas les normes de vecteurs de directions différentes.`);}
@@ -321,7 +322,7 @@ T.A5=[
 
 /* ---------- B1 Repère ---------- */
 T.B1=[
-()=>{const x=ri(-5,6),y=ri(-4,5);return TP(`Place le point <b>M (${fr(x)} ; ${fr(y)})</b> : touche l’intersection du quadrillage qui convient, puis valide. (1 carreau = 1 m)`,x,y,[-6,7,-5,6],`L’abscisse (${fr(x)}) se lit sur l’axe Ox : ${x>=0?'à droite':'à gauche'} de O ; l’ordonnée (${fr(y)}) sur l’axe Oy : ${y>=0?'au-dessus':'au-dessous'} de O.`);},
+()=>{const x=ri(-5,6),y=ri(-4,5);return TP(`Place le point <b>M (${fr(x)} ; ${fr(y)})</b> : touche l’intersection du quadrillage qui convient, puis valide. (1 carreau = 1 m)`,x,y,[-6,7,-5,6],`L’abscisse ${pa(x)} se lit sur l’axe Ox : ${x>=0?'à droite':'à gauche'} de O ; l’ordonnée ${pa(y)} sur l’axe Oy : ${y>=0?'au-dessus':'au-dessous'} de O.`);},
 ()=>{const x=ri(-5,6),y=ri(-4,5);const p=gridQ(-6,7,-5,6,24);p.dot(x,y,'#7A2E3A',5).txt(x,y,'M',10,-8);
   return NU(`Lis l’<b>abscisse x</b> du point M (1 carreau = 1 m).`,x,.01,'m',`On descend ou on monte verticalement de M jusqu’à l’axe Ox : x = ${fr(x)} m.`,p.svg(),0);},
 ()=>{const x=ri(-5,6),y=ri(-4,5);const p=gridQ(-6,7,-5,6,24);p.dot(x,y,'#7A2E3A',5).txt(x,y,'M',10,-8);
@@ -334,9 +335,9 @@ T.B1=[
 ()=>MC(`On décrit le même mouvement avec deux repères d’origines différentes. Qu’est-ce qui <b>ne change pas</b> ?`,`La trajectoire : la forme de la ligne parcourue`,[`Les coordonnées du mobile`,`Le vecteur position du mobile`,`Les signes des coordonnées`],
   `Le choix du repère n’influence pas le mouvement réel, donc ni la trajectoire, ni le déplacement entre deux positions. En revanche, les coordonnées et le vecteur position, qui se mesurent depuis l’origine, changent.`),
 ()=>{const x=ri(1,8),y=ri(1,8),ox=ri(1,x+2),oy=ri(1,y+2);
-  return NU(`Dans un repère d’origine O, un point M a pour coordonnées <b>(${x} ; ${y})</b>. On choisit une nouvelle origine O′, située au point <b>(${ox} ; ${oy})</b> de l’ancien repère (axes parallèles). Quelle est la <b>nouvelle abscisse</b> de M ?`,x-ox,.01,'m',`On repart de O′ : x′ = x − x<sub>O′</sub> = ${x} − ${ox} = ${x-ox} m.`,'',0);},
+  return NU(`Dans un repère d’origine O, un point M a pour coordonnées <b>(${x} ; ${y})</b>. On choisit une nouvelle origine O′, située au point <b>(${ox} ; ${oy})</b> de l’ancien repère (axes parallèles). Quelle est la <b>nouvelle abscisse</b> de M ?`,x-ox,.01,'m',`On repart de O′ : x′ = x − x<sub>O′</sub> = ${x} − ${ox} = ${fr(x-ox)} m.`,'',0);},
 ()=>{const x=ri(1,8),y=ri(1,8),ox=ri(1,x+2),oy=ri(1,y+2);
-  return NU(`Dans un repère d’origine O, un point M a pour coordonnées <b>(${x} ; ${y})</b>. On choisit une nouvelle origine O′, située au point <b>(${ox} ; ${oy})</b> de l’ancien repère (axes parallèles). Quelle est la <b>nouvelle ordonnée</b> de M ?`,y-oy,.01,'m',`y′ = y − y<sub>O′</sub> = ${y} − ${oy} = ${y-oy} m.`,'',0);},
+  return NU(`Dans un repère d’origine O, un point M a pour coordonnées <b>(${x} ; ${y})</b>. On choisit une nouvelle origine O′, située au point <b>(${ox} ; ${oy})</b> de l’ancien repère (axes parallèles). Quelle est la <b>nouvelle ordonnée</b> de M ?`,y-oy,.01,'m',`y′ = y − y<sub>O′</sub> = ${y} − ${oy} = ${fr(y-oy)} m.`,'',0);},
 ()=>MC(`Un ballon est lancé depuis le sol, il monte puis retombe. Quel repère simplifie le plus la description ?`,`Origine au point de lancer, Ox horizontal, Oy vertical vers le haut`,[`Origine au sommet de la trajectoire, Ox incliné`,`Origine très loin du lancer, axes inclinés`,`Aucun repère n’est nécessaire`],
   `On place l’origine au point de départ et on choisit des axes horizontal et vertical : les composantes de la vitesse et de la position sont alors faciles à interpréter (v<sub>y</sub> positif quand le ballon monte).`)
 ];
@@ -385,13 +386,13 @@ T.B3=[
 const twoPts=()=>{let x1,y1,x2,y2;do{x1=ri(-4,4);y1=ri(-3,3);x2=ri(-4,4);y2=ri(-3,3);}while(x1===x2&&y1===y2);return [x1,y1,x2,y2];};
 const dispFig=(x1,y1,x2,y2)=>{const p=gridQ(-5,5,-4,4,26);p.arrow(x1,y1,x2,y2,'#7A2E3A',2.8).dot(x1,y1,'#1F3A5F',5).dot(x2,y2,'#1F3A5F',5).txt(x1,y1,'P₁',-12,-8).txt(x2,y2,'P₂',12,-8);return p.svg();};
 T.B4=[
-()=>{const [x1,y1,x2,y2]=twoPts();return NU(`Un mobile passe de <b>P₁ (${fr(x1)} ; ${fr(y1)})</b> à <b>P₂ (${fr(x2)} ; ${fr(y2)})</b> (en m). Calcule la composante <b>Δx</b> du déplacement Δ${V('r')}.`,x2-x1,.01,'m',`Δx = x₂ − x₁ = ${fr(x2)} − (${fr(x1)}) = ${fr(x2-x1)} m.`,dispFig(x1,y1,x2,y2),0);},
-()=>{const [x1,y1,x2,y2]=twoPts();return NU(`Un mobile passe de <b>P₁ (${fr(x1)} ; ${fr(y1)})</b> à <b>P₂ (${fr(x2)} ; ${fr(y2)})</b> (en m). Calcule la composante <b>Δy</b> du déplacement Δ${V('r')}.`,y2-y1,.01,'m',`Δy = y₂ − y₁ = ${fr(y2)} − (${fr(y1)}) = ${fr(y2-y1)} m.`,dispFig(x1,y1,x2,y2),0);},
+()=>{const [x1,y1,x2,y2]=twoPts();return NU(`Un mobile passe de <b>P₁ (${fr(x1)} ; ${fr(y1)})</b> à <b>P₂ (${fr(x2)} ; ${fr(y2)})</b> (en m). Calcule la composante <b>Δx</b> du déplacement Δ${V('r')}.`,x2-x1,.01,'m',`Δx = x₂ − x₁ = ${fr(x2)} − ${pa(x1)} = ${fr(x2-x1)} m.`,dispFig(x1,y1,x2,y2),0);},
+()=>{const [x1,y1,x2,y2]=twoPts();return NU(`Un mobile passe de <b>P₁ (${fr(x1)} ; ${fr(y1)})</b> à <b>P₂ (${fr(x2)} ; ${fr(y2)})</b> (en m). Calcule la composante <b>Δy</b> du déplacement Δ${V('r')}.`,y2-y1,.01,'m',`Δy = y₂ − y₁ = ${fr(y2)} − ${pa(y1)} = ${fr(y2-y1)} m.`,dispFig(x1,y1,x2,y2),0);},
 ()=>{const [x1,y1,x2,y2]=twoPts();const dx=x2-x1,dy=y2-y1,n=hyp(dx,dy);return NU(`Un mobile passe de <b>P₁ (${fr(x1)} ; ${fr(y1)})</b> à <b>P₂ (${fr(x2)} ; ${fr(y2)})</b> (en m). Calcule la <b>norme</b> du déplacement ‖Δ${V('r')}‖ (au dixième).`,n,.06,'m',`Δ${V('r')} = (${fr(dx)} ; ${fr(dy)}) puis ‖Δ${V('r')}‖ = √(${dx*dx} + ${dy*dy}) ≈ ${fr(n,1)} m.`,dispFig(x1,y1,x2,y2));},
 ()=>MC(`Un mobile passe de la position ${V('r')}<sub>1</sub> à la position ${V('r')}<sub>2</sub>. Son vecteur déplacement est…`,`Δ${V('r')} = ${V('r')}<sub>2</sub> − ${V('r')}<sub>1</sub>`,[`Δ${V('r')} = ${V('r')}<sub>1</sub> − ${V('r')}<sub>2</sub>`,`Δ${V('r')} = ${V('r')}<sub>1</sub> + ${V('r')}<sub>2</sub>`,`Δ${V('r')} = ‖${V('r')}<sub>2</sub>‖ − ‖${V('r')}<sub>1</sub>‖`],
   `Δ${V('r')} = ${V('r')}<sub>final</sub> − ${V('r')}<sub>initial</sub> : la flèche part de la position de départ et pointe sur la position d’arrivée.`),
 ()=>{const x1=ri(-3,3),y1=ri(-2,2),dx=ri(-3,3),dy=ri(-3,3);if(dx===0&&dy===0)return T.B4[4]();
-  return TP(`Un mobile est en <b>P₁ (${fr(x1)} ; ${fr(y1)})</b>. Son déplacement est Δ${V('r')} = <b>(${fr(dx)} ; ${fr(dy)})</b>. Touche la position finale P₂, puis valide.`,x1+dx,y1+dy,[-7,7,-6,6],`P₂ = P₁ + Δ${V('r')} = (${fr(x1)} + (${fr(dx)}) ; ${fr(y1)} + (${fr(dy)})) = (${fr(x1+dx)} ; ${fr(y1+dy)}).`,p=>p.dot(x1,y1,'#1F3A5F',5).txt(x1,y1,'P₁',-12,-8));},
+  return TP(`Un mobile est en <b>P₁ (${fr(x1)} ; ${fr(y1)})</b>. Son déplacement est Δ${V('r')} = <b>(${fr(dx)} ; ${fr(dy)})</b>. Touche la position finale P₂, puis valide.`,x1+dx,y1+dy,[-7,7,-6,6],`P₂ = P₁ + Δ${V('r')} = (${fr(x1)} + ${pa(dx)} ; ${fr(y1)} + ${pa(dy)}) = (${fr(x1+dx)} ; ${fr(y1+dy)}).`,p=>p.dot(x1,y1,'#1F3A5F',5).txt(x1,y1,'P₁',-12,-8));},
 ()=>{const dx=pick([-4,-3,-2,2,3,4]),dy=pick([-3,-2,2,3]);const h=dx>0?'vers la droite':'vers la gauche',v=dy>0?'vers le haut':'vers le bas';
   const good=`${h} et ${v}`;const bads=[];for(const a of ['vers la droite','vers la gauche'])for(const b of ['vers le haut','vers le bas'])if(`${a} et ${b}`!==good)bads.push(`${a} et ${b}`);
   return MC(`Le déplacement d’un mobile est Δ${V('r')} = <b>(${fr(dx)} ; ${fr(dy)})</b> (axe Ox vers la droite, axe Oy vers le haut). Dans quel sens s’est-il déplacé ?`,good,bads,`Δx ${dx>0?'> 0':'< 0'} : ${h}. Δy ${dy>0?'> 0':'< 0'} : ${v}.`);},
@@ -424,10 +425,10 @@ T.B5=[
 T.B6=[
 ()=>MC(`Sur une chronophotographie, comment estimer le plus correctement la vitesse du mobile à un instant donné ?`,`Par la vitesse moyenne entre deux images voisines (Δt = τ)`,[`Par la vitesse moyenne entre la première et la dernière image`,`En divisant la distance totale par la durée totale`,`En mesurant la taille de l’image du mobile`],
   `Plus l’intervalle de temps Δt est court, plus la vitesse moyenne ressemble à la vitesse à un instant précis. On prend donc deux images voisines.`),
-()=>{const t=pick(SM),e=Math.random()<.5,dx=(e?t[0]:t[1]),dy=(e?t[1]:t[0]),tau=pick([0.1,0.2,0.5]),k=ri(3,12);
-  return NU(`Entre les <b>images ${k} et ${k+1}</b> (τ = ${fr(tau,1)} s), le mobile se déplace de Δ${V('r')} = (${dx} ; ${dy}) m. Estime la <b>norme de sa vitesse</b> à cet instant.`,t[2]/tau,.06,'m/s',`‖Δ${V('r')}‖ = ${t[2]} m en Δt = ${fr(tau,1)} s : v ≈ ${t[2]} / ${fr(tau,1)} = ${fr(t[2]/tau,2)} m/s.`);},
-()=>{const tau=pick([0.1,0.2,0.5]),k=ri(3,12),dx=ri(1,5),dy=ri(-4,4),w=pick(['x','y']);const val=(w==='x'?dx:dy)/tau;
-  return NU(`Entre les <b>images ${k} et ${k+1}</b> (τ = ${fr(tau,1)} s), le déplacement est Δ${V('r')} = (${dx} ; ${fr(dy)}) m. Estime la composante <b>v<sub>${w}</sub></b> de la vitesse à cet instant.`,val,.06,'m/s',`v<sub>${w}</sub> ≈ Δ${w} / τ = ${fr(w==='x'?dx:dy)} / ${fr(tau,1)} = ${fr(val,2)} m/s.`);},
+()=>{const t=pick(SM),e=Math.random()<.5,dx=(e?t[0]:t[1])/10,dy=(e?t[1]:t[0])/10,tau=pick([0.1,0.2,0.5]),k=ri(3,12);
+  return NU(`Entre les <b>images ${k} et ${k+1}</b> (τ = ${fr(tau,1)} s), le mobile se déplace de Δ${V('r')} = (${fr(dx)} ; ${fr(dy)}) m. Estime la <b>norme de sa vitesse</b> à cet instant.`,t[2]/10/tau,.06,'m/s',`‖Δ${V('r')}‖ = ${fr(t[2]/10,2)} m en Δt = ${fr(tau,1)} s : v ≈ ${fr(t[2]/10,2)} / ${fr(tau,1)} = ${fr(t[2]/10/tau,2)} m/s.`);},
+()=>{const tau=pick([0.1,0.2,0.5]),k=ri(3,12),dx=ri(1,5)/10,dy=ri(-4,4)/10,w=pick(['x','y']);const val=(w==='x'?dx:dy)/tau;
+  return NU(`Entre les <b>images ${k} et ${k+1}</b> (τ = ${fr(tau,1)} s), le déplacement est Δ${V('r')} = (${fr(dx)} ; ${fr(dy)}) m. Estime la composante <b>v<sub>${w}</sub></b> de la vitesse à cet instant.`,val,.06,'m/s',`v<sub>${w}</sub> ≈ Δ${w} / τ = ${fr(w==='x'?dx:dy)} / ${fr(tau,1)} = ${fr(val,2)} m/s.`);},
 ()=>{const k=ri(5,12),far=ri(4,7);
   return MC(`Pour estimer la vitesse du mobile à peu près à l’image ${k}, quel intervalle est le <b>meilleur</b> choix ?`,`Entre les images ${k} et ${k+1}`,[`Entre les images ${k} et ${k+far}`,`Entre les images ${k-far>0?k-far:1} et ${k+far}`,`Entre l’image 1 et la dernière image`],
     `Plus l’intervalle est court, mieux la vitesse moyenne représente la vitesse instantanée : on prend deux images voisines.`);},
@@ -462,8 +463,8 @@ T.B7=[
 /* ---------- B8 Variation du vecteur vitesse ---------- */
 const v12=()=>[ri(-8,8),ri(-8,8),ri(-8,8),ri(-8,8)];
 T.B8=[
-()=>{const [ax,ay,bx,by]=v12();return NU(`Un mobile a une vitesse ${V('v')}<sub>1</sub> = <b>(${fr(ax)} ; ${fr(ay)})</b> m/s, puis ${V('v')}<sub>2</sub> = <b>(${fr(bx)} ; ${fr(by)})</b> m/s. Calcule la composante <b>Δv<sub>x</sub></b>.`,bx-ax,.01,'m/s',`Δv<sub>x</sub> = v<sub>2x</sub> − v<sub>1x</sub> = ${fr(bx)} − (${fr(ax)}) = ${fr(bx-ax)} m/s.`,'',0);},
-()=>{const [ax,ay,bx,by]=v12();return NU(`Un mobile a une vitesse ${V('v')}<sub>1</sub> = <b>(${fr(ax)} ; ${fr(ay)})</b> m/s, puis ${V('v')}<sub>2</sub> = <b>(${fr(bx)} ; ${fr(by)})</b> m/s. Calcule la composante <b>Δv<sub>y</sub></b>.`,by-ay,.01,'m/s',`Δv<sub>y</sub> = v<sub>2y</sub> − v<sub>1y</sub> = ${fr(by)} − (${fr(ay)}) = ${fr(by-ay)} m/s.`,'',0);},
+()=>{const [ax,ay,bx,by]=v12();return NU(`Un mobile a une vitesse ${V('v')}<sub>1</sub> = <b>(${fr(ax)} ; ${fr(ay)})</b> m/s, puis ${V('v')}<sub>2</sub> = <b>(${fr(bx)} ; ${fr(by)})</b> m/s. Calcule la composante <b>Δv<sub>x</sub></b>.`,bx-ax,.01,'m/s',`Δv<sub>x</sub> = v<sub>2x</sub> − v<sub>1x</sub> = ${fr(bx)} − ${pa(ax)} = ${fr(bx-ax)} m/s.`,'',0);},
+()=>{const [ax,ay,bx,by]=v12();return NU(`Un mobile a une vitesse ${V('v')}<sub>1</sub> = <b>(${fr(ax)} ; ${fr(ay)})</b> m/s, puis ${V('v')}<sub>2</sub> = <b>(${fr(bx)} ; ${fr(by)})</b> m/s. Calcule la composante <b>Δv<sub>y</sub></b>.`,by-ay,.01,'m/s',`Δv<sub>y</sub> = v<sub>2y</sub> − v<sub>1y</sub> = ${fr(by)} − ${pa(ay)} = ${fr(by-ay)} m/s.`,'',0);},
 ()=>{let [ax,ay,bx,by]=v12();if(ax===bx&&ay===by)bx+=3;const dx=bx-ax,dy=by-ay,n=hyp(dx,dy);return NU(`Un mobile a une vitesse ${V('v')}<sub>1</sub> = <b>(${fr(ax)} ; ${fr(ay)})</b> m/s, puis ${V('v')}<sub>2</sub> = <b>(${fr(bx)} ; ${fr(by)})</b> m/s. Calcule la <b>norme</b> de Δ${V('v')} (au dixième).`,n,.06,'m/s',`Δ${V('v')} = (${fr(dx)} ; ${fr(dy)}) et ‖Δ${V('v')}‖ = √(${dx*dx} + ${dy*dy}) ≈ ${fr(n,1)} m/s.`);},
 ()=>MC(`La variation du vecteur vitesse entre un instant 1 et un instant 2 est…`,`Δ${V('v')} = ${V('v')}<sub>2</sub> − ${V('v')}<sub>1</sub>`,[`Δ${V('v')} = ${V('v')}<sub>1</sub> − ${V('v')}<sub>2</sub>`,`Δ${V('v')} = ‖${V('v')}<sub>2</sub>‖ − ‖${V('v')}<sub>1</sub>‖`,`Δ${V('v')} = ${V('v')}<sub>1</sub> + ${V('v')}<sub>2</sub>`],
   `Comme pour le déplacement : final − initial. Et on soustrait des <i>vecteurs</i>, pas seulement leurs normes.`),
@@ -478,15 +479,15 @@ T.B8=[
 
 /* ---------- B9 Accélération moyenne ---------- */
 T.B9=[
-()=>{const dt=pick([2,4,5,0.5,0.2]),dv=Math.round(ri(-12,12)*dt),w='x';
+()=>{const dt=pick([2,4,5,0.5,0.2]),dv=Math.round(ri(-5,5)*dt*10)/10,w='x';
   return NU(`Entre deux instants séparés de <b>Δt = ${fr(dt)} s</b>, la variation de vitesse est Δ${V('v')} = <b>(${fr(dv)} ; ${fr(ri(-3,3))})</b> m/s. Calcule la composante <b>a<sub>moy,x</sub></b> de l’accélération moyenne.`,dv/dt,.06,'m/s²',`${V('a')}<sub>moy</sub> = Δ${V('v')} / Δt, donc a<sub>moy,x</sub> = ${fr(dv)} / ${fr(dt)} = ${fr(dv/dt,2)} m/s².`);},
-()=>{const dt=pick([2,4,5,0.5,0.2]),dv=Math.round(ri(-12,12)*dt);
+()=>{const dt=pick([2,4,5,0.5,0.2]),dv=Math.round(ri(-5,5)*dt*10)/10;
   return NU(`Entre deux instants séparés de <b>Δt = ${fr(dt)} s</b>, la variation de vitesse est Δ${V('v')} = <b>(${fr(ri(-3,3))} ; ${fr(dv)})</b> m/s. Calcule la composante <b>a<sub>moy,y</sub></b>.`,dv/dt,.06,'m/s²',`a<sub>moy,y</sub> = Δv<sub>y</sub> / Δt = ${fr(dv)} / ${fr(dt)} = ${fr(dv/dt,2)} m/s².`);},
 ()=>{const t=pick(SM),k=pick([1,2]),dx=t[0]*k*pick([1,-1]),dy=t[1]*k*pick([1,-1]),dt=pick([2,4,5]),n=t[2]*k/dt;
   return NU(`Entre deux instants séparés de <b>Δt = ${dt} s</b>, Δ${V('v')} = <b>(${fr(dx)} ; ${fr(dy)})</b> m/s. Calcule la <b>norme</b> de l’accélération moyenne.`,n,.06,'m/s²',`‖Δ${V('v')}‖ = √(${dx*dx} + ${dy*dy}) = ${t[2]*k} m/s, puis ‖${V('a')}<sub>moy</sub>‖ = ${t[2]*k} / ${dt} = ${fr(n,2)} m/s².`);},
 ()=>MC(`Quelle est l’unité de l’accélération dans le Système international ?`,`m/s²`,[`m/s`,`m²/s`,`s/m²`],`L’accélération est une variation de vitesse (m/s) par unité de temps (s) : (m/s)/s = m/s².`),
 ()=>MC(`Le vecteur accélération moyenne ${V('a')}<sub>moy</sub> = Δ${V('v')} / Δt a…`,`la même direction et le même sens que Δ${V('v')}`,[`la même direction et le même sens que ${V('v')}<sub>1</sub>`,`la direction de la trajectoire, toujours`,`la direction opposée à Δ${V('v')}`],
-  `Δt > 0 : ${V('a')}<sub>moy</sub> et Δ${V('v')} sont dans la même direction et le même sens. Attention : ce n’est pas forcément celui de la vitesse (virage, freinage).`),
+  `Δt &gt; 0 : ${V('a')}<sub>moy</sub> et Δ${V('v')} sont dans la même direction et le même sens. Attention : ce n’est pas forcément celui de la vitesse (virage, freinage).`),
 ()=>{const tau=pick([0.1,0.2,0.5]),n1=ri(3,9),n2=n1+ri(3,8);
   return NU(`Sur une chronophotographie (τ = <b>${fr(tau,1)} s</b>), on a estimé la vitesse vers l’<b>image ${n1}</b> et vers l’<b>image ${n2}</b>. Quelle durée Δt utiliser pour calculer l’accélération moyenne entre les deux ?`,(n2-n1)*tau,.0011,'s',`Δt = (${n2} − ${n1}) × ${fr(tau,1)} = ${fr((n2-n1)*tau,2)} s.`,'',2);},
 ()=>{const acc=Math.random()<.5;
@@ -502,10 +503,10 @@ function mkChrono(){
   const xs=[],ys=[];for(let n=0;n<N;n++){xs.push(1+vx*n);ys.push(b*n-n*n);}
   return {vx,b,tau,N,xs,ys,svg:chronoSvg(xs,ys,1+vx*(N-1)+1,Math.max(...ys)+1,{c:vx===1?32:22})};
 }
-const pairV=(c,k)=>({x:(c.xs[k]-c.xs[k-1])/c.tau,y:(c.ys[k]-c.ys[k-1])/c.tau});
+const pairV=(c,k)=>({x:(c.xs[k-1]-c.xs[k-2])/c.tau,y:(c.ys[k-1]-c.ys[k-2])/c.tau});
 T.B10=[
 ()=>{const c=mkChrono(),k=ri(1,c.N),w=pick(['x','y']);const val=w==='x'?c.xs[k-1]:c.ys[k-1];
-  return NU(`Chronophotographie d’un ballon (1 carreau = 1 m). Lis la coordonnée <b>${w}</b> de l’<b>image ${k}</b> (en m).`,val,.01,'m',`On lit la position de l’image ${k} sur le quadrillage : (${c.xs[k-1]} ; ${c.ys[k-1]}), donc ${w} = ${val} m.`,c.svg,0);},
+  return NU(`Chronophotographie d’un ballon (1 carreau = 1 m). Lis la coordonnée <b>${w}</b> de l’<b>image ${k}</b> (en m).`,val,.01,'m',`On lit la position de l’image ${k} sur le quadrillage : (${fr(c.xs[k-1])} ; ${fr(c.ys[k-1])}), donc ${w} = ${fr(val)} m.`,c.svg,0);},
 ()=>{const c=mkChrono(),k=ri(1,c.N-3),k2=k+pick([2,3]);const dx=c.xs[k2-1]-c.xs[k-1],dy=c.ys[k2-1]-c.ys[k-1],n=hyp(dx,dy);
   return NU(`Chronophotographie d’un ballon (1 carreau = 1 m). Calcule la <b>norme du déplacement</b> ‖Δ${V('r')}‖ entre l’<b>image ${k}</b> et l’<b>image ${k2}</b> (au dixième).`,n,.06,'m',`Positions : (${c.xs[k-1]} ; ${c.ys[k-1]}) et (${c.xs[k2-1]} ; ${c.ys[k2-1]}). Δ${V('r')} = (${fr(dx)} ; ${fr(dy)}) donc ‖Δ${V('r')}‖ = √(${dx*dx} + ${dy*dy}) ≈ ${fr(n,1)} m.`,c.svg);},
 ()=>{const c=mkChrono(),k=ri(1,c.N-3),k2=k+pick([2,3]);const dx=c.xs[k2-1]-c.xs[k-1],dy=c.ys[k2-1]-c.ys[k-1],dt=(k2-k)*c.tau,n=hyp(dx,dy)/dt;
@@ -544,7 +545,7 @@ cart(nm){nm=nm||'v';return {html:`<div class="lab"><div class="t">À toi de joue
  init(){bindSliders(['wx','wy'],()=>{const x=gv('wx'),y=gv('wy'),n=hyp(x,y);
   const p=gridQ(-6,6,-6,6,22);p.line(0,0,x,0,'#8A6D1E',2,true).line(x,0,x,y,'#8A6D1E',2,true).arrow(0,0,x,y,'#7A2E3A',3);$('wfig').innerHTML=p.svg();
   let a=x===0&&y===0?0:(Math.atan2(y,x)/D2R+360)%360;const t=x===0?null:atanD(y/x);
-  $('wro').innerHTML=`Norme : √(${x}² + ${y}²) = <b>${fr(n,2)}</b><br>Angle avec Ox (0° à 360°) : <b>${fr(a,1)}°</b>`+(t!==null&&x<0?`<br><span class="sm">La calculatrice donne arctan(${y}/${x}) = ${fr(t,1)}° ; comme x < 0, on ajoute 180°.</span>`:'');});}};},
+  $('wro').innerHTML=`Norme : √(${x}² + ${y}²) = <b>${fr(n,2)}</b><br>Angle avec Ox (0° à 360°) : <b>${fr(a,1)}°</b>`+(t!==null&&x<0?`<br><span class="sm">La calculatrice donne arctan(${y}/${x}) = ${fr(t,1)}° ; comme x &lt; 0, on ajoute 180°.</span>`:'');});}};},
 two(mode,A,B,R){return {html:`<div class="lab"><div class="t">À toi de jouer</div>${slider('w1','${A}ₓ'.replace('${A}',A),-5,5,1,3)}${slider('w2',A+'<sub>y</sub>',-5,5,1,1)}${slider('w3',B+'ₓ',-5,5,1,-1)}${slider('w4',B+'<sub>y</sub>',-5,5,1,3)}<div id="wfig" class="fig"></div><div class="ro" id="wro"></div></div>`,
  init(){bindSliders(['w1','w2','w3','w4'],()=>{const ax=gv('w1'),ay=gv('w2'),bx=gv('w3'),by=gv('w4');const p=gridQ(-10,10,-10,10,16);p.axes(5);
   if(mode==='sum'){p.arrow(0,0,ax,ay,'#1F3A5F',2.4).arrow(ax,ay,ax+bx,ay+by,'#1F5F5B',2.4).arrow(0,0,ax+bx,ay+by,'#7A2E3A',3);
@@ -569,9 +570,9 @@ const STEPS=[
 {id:'A2',z:'A',n:'Sin, cos, tan',kick:'Zone A · Prérequis 2',title:'Sinus, cosinus et tangente',
  cap:()=>`<p>Dans un triangle rectangle, on repère un angle aigu α. Le côté <b>opposé</b> est en face de α ; le côté <b>adjacent</b> touche α (c’est un des côtés de l’angle droit) ; le troisième est l’<b>hypoténuse</b>.</p>${fp(triSvg('adjacent','opposé','hypoténuse',true))}${RET(`<b>SOH-CAH-TOA</b><br>sin α = opposé / hypoténuse<br>cos α = adjacent / hypoténuse<br>tan α = opposé / adjacent`)}<p>Pour <i>trouver un angle</i> à partir de deux côtés, on utilise la fonction réciproque : α = arctan(opposé / adjacent), ou arcsin, ou arccos (touches sin⁻¹, cos⁻¹, tan⁻¹).</p><p><b>Calculatrice : mode DEG (degrés)</b>, pas RAD. C’est l’erreur la plus fréquente.</p>`},
 {id:'A3',z:'A',n:'Décomposer un vecteur',kick:'Zone A · Prérequis 3',title:'Décomposer un vecteur',
- cap:()=>`<p>Un vecteur de norme v qui fait un angle α avec l’axe Ox (mesuré à partir de Ox, dans le sens inverse des aiguilles d’une montre) se décompose en deux <b>composantes</b> : sa projection sur Ox et sa projection sur Oy.</p>${RET(`<b>v<sub>x</sub> = v cos α</b> &nbsp;&nbsp; <b>v<sub>y</sub> = v sin α</b><br>Les signes sortent tout seuls de la calculatrice : v<sub>x</sub> < 0 si le vecteur va vers la gauche, v<sub>y</sub> < 0 s’il va vers le bas.`)}<p>Piège classique : si l’angle est donné par rapport à la <b>verticale</b>, le côté horizontal devient le côté <i>opposé</i> : v<sub>x</sub> = v sin β.</p>`,wid:()=>WID.polar()},
+ cap:()=>`<p>Un vecteur de norme v qui fait un angle α avec l’axe Ox (mesuré à partir de Ox, dans le sens inverse des aiguilles d’une montre) se décompose en deux <b>composantes</b> : sa projection sur Ox et sa projection sur Oy.</p>${RET(`<b>v<sub>x</sub> = v cos α</b> &nbsp;&nbsp; <b>v<sub>y</sub> = v sin α</b><br>Les signes sortent tout seuls de la calculatrice : v<sub>x</sub> &lt; 0 si le vecteur va vers la gauche, v<sub>y</sub> &lt; 0 s’il va vers le bas.`)}<p>Piège classique : si l’angle est donné par rapport à la <b>verticale</b>, le côté horizontal devient le côté <i>opposé</i> : v<sub>x</sub> = v sin β.</p>`,wid:()=>WID.polar()},
 {id:'A4',z:'A',n:'Norme et angle',kick:'Zone A · Prérequis 4',title:'Retrouver la norme et l’angle',
- cap:()=>`<p>On fait le chemin inverse : on connaît les composantes (v<sub>x</sub> ; v<sub>y</sub>) et on cherche la norme et la direction.</p>${RET(`<b>v = √(v<sub>x</sub>² + v<sub>y</sub>²)</b><br><b>tan α = v<sub>y</sub> / v<sub>x</sub></b>, mais attention au quadrant !`)}<p>La calculatrice donne toujours un angle entre −90° et +90°. Si <b>v<sub>x</sub> < 0</b> (2ᵉ ou 3ᵉ quadrant), il faut ajouter 180° pour obtenir le bon angle. Pour savoir où l’on est, regarde toujours les <b>signes</b> des composantes.</p>`,wid:()=>WID.cart()},
+ cap:()=>`<p>On fait le chemin inverse : on connaît les composantes (v<sub>x</sub> ; v<sub>y</sub>) et on cherche la norme et la direction.</p>${RET(`<b>v = √(v<sub>x</sub>² + v<sub>y</sub>²)</b><br><b>tan α = v<sub>y</sub> / v<sub>x</sub></b>, mais attention au quadrant !`)}<p>La calculatrice donne toujours un angle entre −90° et +90°. Si <b>v<sub>x</sub> &lt; 0</b> (2ᵉ ou 3ᵉ quadrant), il faut ajouter 180° pour obtenir le bon angle. Pour savoir où l’on est, regarde toujours les <b>signes</b> des composantes.</p>`,wid:()=>WID.cart()},
 {id:'A5',z:'A',n:'Additionner, soustraire',kick:'Zone A · Prérequis 5',title:'Additionner et soustraire des vecteurs',
  cap:()=>`<p>On additionne ou on soustrait des vecteurs <b>composante par composante</b>.</p>${RET(`(a + b)<sub>x</sub> = a<sub>x</sub> + b<sub>x</sub> &nbsp;&nbsp; (b − a)<sub>x</sub> = b<sub>x</sub> − a<sub>x</sub><br>Même chose pour les composantes y.`)}<p>L’<b>ordre</b> compte pour la soustraction : le vecteur « de A vers B » est <b>B − A</b> (arrivée moins départ). Et la norme de a + b n’est généralement pas ‖a‖ + ‖b‖ : on additionne d’abord les composantes, puis on calcule la norme.</p>`,wid:()=>WID.two('sum','a','b','')},
 {id:'B1',z:'B',n:'Le repère',kick:'Zone B · Chapitre',title:'Se repérer : le repère',
