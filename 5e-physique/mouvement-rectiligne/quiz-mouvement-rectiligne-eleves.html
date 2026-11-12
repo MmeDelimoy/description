@@ -160,9 +160,9 @@ function gParab(o={}){
   const cv=o.cv===undefined?Math.random()<.5:o.cv,k=pick([.5,1,1.5]),T=6;
   const f=cv?t=>k*t*t:t=>k*(12*t-t*t),d=cv?t=>2*k*t:t=>2*k*(6-t),hi=36*k;
   return MCQ(SK.acc,'Voici le graphique x(t) d’un mobile : c’est une <b>parabole</b>. Que peut-on en déduire ?',
-   a=>GR2('x',T,[{f}],0,hi+2,undefined,{alt:'x(t) parabole',ann:a?[tangent(f,d(1),1),tangent(f,d(5),5),txt(4.4,hi*.06,cv?'la pente augmente régulièrement':'la pente diminue régulièrement',O,0,0)]:[]}),
+   a=>GR2('x',T,[{f}],0,hi+2,undefined,{alt:'x(t) parabole',ann:a?[tangent(f,d(1),1),tangent(f,d(5),5),txt(4.4,hi*.06,'parabole',O,0,0)]:[]}),
    ['La vitesse est constante (MRU)','La vitesse change de façon régulière : l’accélération est constante','Le mobile est à l’arrêt','Le mobile fait demi-tour dès le début'],1,
-   `La pente de x(t) donne la vitesse. Ici la pente ${cv?'augmente':'diminue'} de façon régulière : la vitesse change régulièrement → <b>accélération constante</b> (on le verra sous le nom de MRUA).`);
+   `Ce n’est pas une droite, donc la vitesse n’est pas constante : ce n’est pas un MRU. Un graphique x(t) en forme de <b>parabole</b> est la signature d’un mouvement à <b>accélération constante</b> : c’est un <b>MRUA</b>. (À l’œil, on ne peut pas vérifier que la pente change « régulièrement » : c’est la forme de parabole qui permet de conclure.) ${cv?'La parabole s’ouvre vers le haut : le mobile accélère.':'La parabole s’ouvre vers le bas : le mobile ralentit.'}`);
 }
 function gVconst(o={}){
   const v=(o.dir||sg())*ri(1,6),T=6;
