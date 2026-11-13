@@ -86,3 +86,10 @@ a.chap:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(27,42,65,.13
 .note{margin:22px 0 0;padding:14px 18px;border-left:3px solid var(--or);background:var(--papier2);font-size:.95rem}
 footer{margin:48px auto 0;padding-top:22px;border-top:1px solid var(--bord);text-align:center;color:var(--gris);font-size:.85rem}
 footer .emb{display:block;margin:0 auto 8px;color:var(--or2)}
+
+.vid{margin:12px 0 0;background:#FFFDF8;border:1px solid var(--bord);box-shadow:0 3px 10px rgba(27,42,65,.05)}
+.vid video{display:block;width:100%;height:auto;background:#000}
+.vid figcaption{padding:12px 16px}
+.vid .k{font:700 .68rem var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--or2)}
+.vid b{display:block;font:400 1.2rem/1.25 var(--serif);margin:2px 0}
+.vid small{color:#5A5F6C;font-size:.9rem}
