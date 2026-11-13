@@ -1,6 +1,6 @@
 
 :root{--papier:#FAF6EC;--papier2:#F3ECDA;--encre:#1B2A41;--or:#B8932F;--or2:#8A6D1E;--bord:#E2D8BC;--gris:#6B6A62;
---c5:#1F3A5F;--c6:#1F5F5B;--cm:#7A2E3A;
+--c5:#1F3A5F;--c6:#1F5F5B;--cm:#7A2E3A;--cf:#5E4A78;
 --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
 --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 *{box-sizing:border-box}
@@ -22,7 +22,8 @@ a{color:inherit}
 .hero p.lede{font:italic 1.2rem/1.5 var(--serif);margin:0 auto;max-width:560px;color:#3A4660}
 /* ----- cartes de cours ----- */
 .courses{display:grid;gap:22px;grid-template-columns:1fr;margin-top:-26px;position:relative}
-@media(min-width:860px){.courses{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:700px){.courses{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1180px){.courses{grid-template-columns:repeat(4,1fr)}}
 .course{display:flex;flex-direction:column;text-decoration:none;background:#FFFDF8;border:1px solid var(--bord);box-shadow:0 10px 28px rgba(27,42,65,.10);transition:transform .2s,box-shadow .2s}
 .course:hover,.course:focus-visible{transform:translateY(-4px);box-shadow:0 16px 34px rgba(27,42,65,.16)}
 .course .pic{color:#fff;padding:10px 10px 0}
@@ -33,8 +34,8 @@ a{color:inherit}
 .course p{margin:0 0 12px;color:#444A58;font-size:.97rem}
 .course .go{font:600 .8rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--tone)}
 .course .go:after{content:" →"}
-.t5{--tone:var(--c5)}.t6{--tone:var(--c6)}.tm{--tone:var(--cm)}
-.t5 .pic{background:var(--c5)}.t6 .pic{background:var(--c6)}.tm .pic{background:var(--cm)}
+.t5{--tone:var(--c5)}.t6{--tone:var(--c6)}.tm{--tone:var(--cm)}.tf{--tone:var(--cf)}
+.t5 .pic{background:var(--c5)}.t6 .pic{background:var(--c6)}.tm .pic{background:var(--cm)}.tf .pic{background:var(--cf)}
 /* couleurs des illustrations : traits clairs sur fond de cours */
 .pic .i-inks{stroke:#F6EFD9}.pic .i-inkf{fill:#F6EFD9}.pic .i-accs{stroke:#F2C94C}.pic .i-accf{fill:#E7B93B}.pic .i-acc s{stroke:#F2C94C}
 .pic .i-accs,.pic line.i-accs{stroke:#F2C94C}
