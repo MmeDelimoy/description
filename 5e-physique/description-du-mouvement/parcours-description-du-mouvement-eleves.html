@@ -524,6 +524,13 @@ T.B10=[
   return MC(`Sur cette chronophotographie d’un ballon lancé, vers où est dirigée l’accélération moyenne ?`,`Vers le bas (sens négatif de Oy)`,[`Vers le haut (sens positif de Oy)`,`Vers la droite, comme le mouvement horizontal`,`Elle est nulle`],
     `Horizontalement, les images sont régulièrement espacées : v<sub>x</sub> est constante. Verticalement, la montée ralentit puis la descente accélère vers le bas : Δv<sub>y</sub> est négatif, donc ${V('a')} est dirigée vers le bas.`,c.svg);}
 ];
+/* ================= Parcours raccourci : prérequis regroupés ================= */
+{const P=(id,ix)=>ix.map(i=>T[id][i]);
+ const nA1=P('A1',[0,1,4,5]).concat(P('A2',[0,1,2,3,4,6]));
+ const nA2=P('A3',[0,1,3,5,6]).concat(P('A4',[0,1,3]),P('A5',[0,2,4,5]));
+ const nB1=P('B1',[0,1,3,4,5,7]).concat(P('B2',[0,1,3,4,7]));
+ const nB2=P('B3',[0,1,2,3,4]).concat(P('B4',[0,1,2,3,4,6]));
+ T.A1=nA1;T.A2=nA2;T.B1=nB1;T.B2=nB2;}
 /* ================= Widgets interactifs des capsules ================= */
 function slider(id,label,min,max,step,val){return `<label><span class="n">${label}</span><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"><b id="${id}v" style="min-width:42px;text-align:right">${fr(val)}</b></label>`;}
 function bindSliders(ids,fn){ids.forEach(i=>{const e=$(i);e.oninput=()=>{$(i+'v').textContent=fr(parseFloat(e.value));fn();};});fn();}
@@ -565,47 +572,38 @@ const figVel=()=>{const p=gridQ(0,10,0,6,26);const pts=[[1,1],[3,3],[5,4],[7,3],
 const figChrono=()=>{const xs=[],ys=[];for(let n=0;n<7;n++){xs.push(1+2*n);ys.push(5*n-n*n);}return chronoSvg(xs,ys,14,8,{c:22,line:true});};
 
 const STEPS=[
-{id:'A1',z:'A',n:'Pythagore',kick:'Zone A · Prérequis 1',title:'Le théorème de Pythagore',
- cap:()=>`<p>Dans un <b>triangle rectangle</b>, le côté opposé à l’angle droit s’appelle l’<b>hypoténuse</b> : c’est le plus long des trois côtés.</p>${fp(triSvg('a','b','c'))}<p>Le théorème de Pythagore relie les trois longueurs :</p>${RET(`<b>c² = a² + b²</b><br>Pour l’hypoténuse : c = √(a² + b²). Pour un côté de l’angle droit : a = √(c² − b²).`)}<p>En physique, c’est l’outil pour trouver la <b>norme d’un vecteur</b> à partir de ses composantes, ou une distance sur un plan : 3 m vers l’est puis 4 m vers le nord, c’est 5 m en ligne droite, pas 7 m.</p>`,wid:()=>WID.pyth()},
-{id:'A2',z:'A',n:'Sin, cos, tan',kick:'Zone A · Prérequis 2',title:'Sinus, cosinus et tangente',
- cap:()=>`<p>Dans un triangle rectangle, on repère un angle aigu α. Le côté <b>opposé</b> est en face de α ; le côté <b>adjacent</b> touche α (c’est un des côtés de l’angle droit) ; le troisième est l’<b>hypoténuse</b>.</p>${fp(triSvg('adjacent','opposé','hypoténuse',true))}${RET(`<b>SOH-CAH-TOA</b><br>sin α = opposé / hypoténuse<br>cos α = adjacent / hypoténuse<br>tan α = opposé / adjacent`)}<p>Pour <i>trouver un angle</i> à partir de deux côtés, on utilise la fonction réciproque : α = arctan(opposé / adjacent), ou arcsin, ou arccos (touches sin⁻¹, cos⁻¹, tan⁻¹).</p><p><b>Calculatrice : mode DEG (degrés)</b>, pas RAD. C’est l’erreur la plus fréquente.</p>`},
-{id:'A3',z:'A',n:'Décomposer un vecteur',kick:'Zone A · Prérequis 3',title:'Décomposer un vecteur',
- cap:()=>`<p>Un vecteur de norme v qui fait un angle α avec l’axe Ox (mesuré à partir de Ox, dans le sens inverse des aiguilles d’une montre) se décompose en deux <b>composantes</b> : sa projection sur Ox et sa projection sur Oy.</p>${RET(`<b>v<sub>x</sub> = v cos α</b> &nbsp;&nbsp; <b>v<sub>y</sub> = v sin α</b><br>Les signes sortent tout seuls de la calculatrice : v<sub>x</sub> &lt; 0 si le vecteur va vers la gauche, v<sub>y</sub> &lt; 0 s’il va vers le bas.`)}<p>Piège classique : si l’angle est donné par rapport à la <b>verticale</b>, le côté horizontal devient le côté <i>opposé</i> : v<sub>x</sub> = v sin β.</p>`,wid:()=>WID.polar()},
-{id:'A4',z:'A',n:'Norme et angle',kick:'Zone A · Prérequis 4',title:'Retrouver la norme et l’angle',
- cap:()=>`<p>On fait le chemin inverse : on connaît les composantes (v<sub>x</sub> ; v<sub>y</sub>) et on cherche la norme et la direction.</p>${RET(`<b>v = √(v<sub>x</sub>² + v<sub>y</sub>²)</b><br><b>tan α = v<sub>y</sub> / v<sub>x</sub></b>, mais attention au quadrant !`)}<p>La calculatrice donne toujours un angle entre −90° et +90°. Si <b>v<sub>x</sub> &lt; 0</b> (2ᵉ ou 3ᵉ quadrant), il faut ajouter 180° pour obtenir le bon angle. Pour savoir où l’on est, regarde toujours les <b>signes</b> des composantes.</p>`,wid:()=>WID.cart()},
-{id:'A5',z:'A',n:'Additionner, soustraire',kick:'Zone A · Prérequis 5',title:'Additionner et soustraire des vecteurs',
- cap:()=>`<p>On additionne ou on soustrait des vecteurs <b>composante par composante</b>.</p>${RET(`(a + b)<sub>x</sub> = a<sub>x</sub> + b<sub>x</sub> &nbsp;&nbsp; (b − a)<sub>x</sub> = b<sub>x</sub> − a<sub>x</sub><br>Même chose pour les composantes y.`)}<p>L’<b>ordre</b> compte pour la soustraction : le vecteur « de A vers B » est <b>B − A</b> (arrivée moins départ). Et la norme de a + b n’est généralement pas ‖a‖ + ‖b‖ : on additionne d’abord les composantes, puis on calcule la norme.</p>`,wid:()=>WID.two('sum','a','b','')},
-{id:'B1',z:'B',n:'Le repère',kick:'Zone B · Chapitre',title:'Se repérer : le repère',
- cap:()=>`<p>Pour décrire où se trouve un mobile, on choisit un <b>repère</b> : une origine O, deux axes (Ox, Oy) et une unité. La position d’un point est alors donnée par ses <b>coordonnées</b> (x ; y).</p>${fp(figGrid())}${RET(`Le choix du repère est libre : on le choisit pour simplifier le problème (par exemple l’origine au point de lancer, Ox horizontal, Oy vertical vers le haut). <b>Changer de repère change les coordonnées, pas le mouvement.</b>`)}`},
-{id:'B2',z:'B',n:'Vecteur position',kick:'Zone B · Chapitre',title:'Le vecteur position',
- cap:()=>`<p>Le <b>vecteur position</b> d’un mobile M est le vecteur ${V('r')} = ${V('OM')}. Son origine est O (l’origine du repère), son extrémité est le mobile. Ses composantes sont exactement les coordonnées de M :</p>${RET(`${V('r')} = (x ; y) &nbsp;&nbsp; ‖${V('r')}‖ = √(x² + y²) = distance OM`)}<p>Quand le mobile se déplace, l’origine du vecteur reste en O et c’est l’extrémité qui suit le mobile. Le vecteur position <b>dépend du repère</b> choisi.</p>`,wid:()=>WID.cart('r')},
-{id:'B3',z:'B',n:'Trajectoire, déplacement',kick:'Zone B · Chapitre',title:'Trajectoire, distance et déplacement',
- cap:()=>`<p>La <b>trajectoire</b> est l’ensemble des positions successives du mobile. La <b>distance parcourue</b> est la longueur de cette trajectoire. Le <b>déplacement</b> est la flèche qui relie la position de départ à celle d’arrivée.</p>${fp(figTraj())}${RET(`Sur la figure : distance parcourue = 6 + 4 = 10 m, mais ‖Δ${V('r')}‖ = √(6² + 4²) ≈ 7,2 m.<br>On a toujours <b>distance ≥ ‖Δ${V('r')}‖</b>.`)}<p>Si le mobile revient à son point de départ, son déplacement est nul, même s’il a beaucoup parcouru.</p>`},
-{id:'B4',z:'B',n:'Vecteur déplacement',kick:'Zone B · Chapitre',title:'Le vecteur déplacement',
- cap:()=>`<p>Si le mobile passe de la position ${V('r')}<sub>1</sub> à la position ${V('r')}<sub>2</sub>, son vecteur déplacement est :</p>${RET(`<b>Δ${V('r')} = ${V('r')}<sub>2</sub> − ${V('r')}<sub>1</sub></b><br>Δx = x₂ − x₁ &nbsp;&nbsp; Δy = y₂ − y₁`)}<p>Contrairement au vecteur position, <b>le déplacement ne dépend pas du repère</b> : si l’origine change, ${V('r')}<sub>1</sub> et ${V('r')}<sub>2</sub> changent de la même façon et leur différence reste la même. Sur la figure du widget, le vecteur rouge est le déplacement.</p>`,wid:()=>WID.two('diff','r₁','r₂','Δr')},
-{id:'B5',z:'B',n:'Vitesse moyenne',kick:'Zone B · Chapitre',title:'La vitesse moyenne',
+{id:'A1',z:'A',n:'Triangle rectangle',kick:'Zone A · Prérequis 1',title:'Le triangle rectangle',need:1,
+ cap:()=>`${fp(triSvg('adjacent','opposé','hypoténuse',true))}${RET(`<b>Pythagore</b> : hypoténuse² = a² + b² (pour un côté de l’angle droit, on soustrait).<br><b>SOH-CAH-TOA</b> : sin α = opp / hyp &nbsp; cos α = adj / hyp &nbsp; tan α = opp / adj<br>Pour trouver un angle : sin⁻¹, cos⁻¹, tan⁻¹. <b>Calculatrice en mode DEG.</b>`)}`,wid:()=>WID.pyth()},
+{id:'A2',z:'A',n:'Vecteurs',kick:'Zone A · Prérequis 2',title:'Les vecteurs en composantes',need:1,
+ cap:()=>`${RET(`<b>Décomposer</b> : v<sub>x</sub> = v cos α &nbsp; v<sub>y</sub> = v sin α (α mesuré depuis Ox).<br><b>Recomposer</b> : v = √(v<sub>x</sub>² + v<sub>y</sub>²) ; tan α = v<sub>y</sub> / v<sub>x</sub>, et si v<sub>x</sub> &lt; 0, on ajoute 180°.<br><b>Additionner, soustraire</b> : composante par composante. De A vers B : <b>B − A</b>.`)}`,wid:()=>WID.polar()},
+{id:'B1',z:'B',n:'Repère et position',kick:'Zone B · Chapitre',title:'Le repère et le vecteur position',need:1,
+ cap:()=>`${fp(figGrid())}${RET(`Un <b>repère</b> : une origine O, deux axes Ox et Oy, une unité. Un point a des <b>coordonnées</b> (x ; y).<br>Le <b>vecteur position</b> ${V('r')} = ${V('OM')} va de O au mobile : ${V('r')} = (x ; y) et ‖${V('r')}‖ = √(x² + y²).<br>Changer de repère change les coordonnées et ${V('r')}, pas le mouvement.`)}`},
+{id:'B2',z:'B',n:'Trajectoire, déplacement',kick:'Zone B · Chapitre',title:'Trajectoire, distance et déplacement',need:1,
+ cap:()=>`${fp(figTraj())}${RET(`<b>Trajectoire</b> : la ligne suivie. <b>Distance</b> : sa longueur (ici 6 + 4 = 10 m).<br><b>Déplacement</b> : Δ${V('r')} = ${V('r')}<sub>2</sub> − ${V('r')}<sub>1</sub>, soit Δx = x₂ − x₁ et Δy = y₂ − y₁ (ici ‖Δ${V('r')}‖ = √(6² + 4²) ≈ 7,2 m).<br>Toujours distance ≥ ‖Δ${V('r')}‖. Le déplacement ne dépend pas du repère.`)}`,wid:()=>WID.two('diff','r₁','r₂','Δr')},
+{id:'B5',lab:'B3',z:'B',n:'Vitesse moyenne',kick:'Zone B · Chapitre',title:'La vitesse moyenne',
  cap:()=>`<p>La vitesse moyenne est le déplacement divisé par la durée :</p>${RET(`<b>${V('v')}<sub>moy</sub> = Δ${V('r')} / Δt</b> &nbsp;&nbsp; (en m/s)<br>Même direction et même sens que Δ${V('r')} ; norme = ‖Δ${V('r')}‖ / Δt.`)}<p>Sur une <b>chronophotographie</b>, deux images consécutives sont séparées par la même durée τ. Entre l’image n₁ et l’image n₂ : Δt = (n₂ − n₁) × τ.</p><p>Conversion utile : <b>1 m/s = 3,6 km/h</b>.</p><p>Attention : si le mobile revient à son point de départ, le <i>vecteur</i> vitesse moyenne est nul (Δ${V('r')} = ${V('0')}).</p>`},
-{id:'B6',z:'B',n:'Vitesse instantanée',kick:'Zone B · Chapitre',title:'La vitesse à un instant donné',
+{id:'B6',lab:'B4',z:'B',n:'Vitesse instantanée',kick:'Zone B · Chapitre',title:'La vitesse à un instant donné',
  cap:()=>`<p>Le compteur d’une voiture indique la vitesse <i>à cet instant</i>. Pour l’estimer sur une chronophotographie, on calcule la vitesse moyenne sur un intervalle <b>le plus court possible</b> : entre deux images voisines.</p>${fp(figVel())}${RET(`Entre les images 2 et 3 : ${V('v')} ≈ Δ${V('r')} / τ (flèche rouge).<br>Le vecteur vitesse est <b>tangent à la trajectoire</b>, dans le sens du mouvement.`)}`},
-{id:'B7',z:'B',n:'Le vecteur vitesse',kick:'Zone B · Chapitre',title:'Le vecteur vitesse',
+{id:'B7',lab:'B5',z:'B',n:'Le vecteur vitesse',kick:'Zone B · Chapitre',title:'Le vecteur vitesse',
  cap:()=>`<p>Un vecteur vitesse a quatre caractéristiques : son <b>point d’application</b> (le mobile), sa <b>direction</b> (la tangente à la trajectoire), son <b>sens</b> (celui du mouvement) et sa <b>norme</b> (en m/s).</p>${RET(`On le dessine avec une <b>échelle</b> : par exemple 1 cm ↔ 2 m/s. Une flèche de 3 cm représente 6 m/s.<br>Norme : ‖${V('v')}‖ = √(v<sub>x</sub>² + v<sub>y</sub>²).`)}<p>Un vecteur est constant seulement si sa direction, son sens <i>et</i> sa norme sont constants. Dans un virage à vitesse « constante » (norme), le vecteur vitesse change.</p>`},
-{id:'B8',z:'B',n:'Variation de vitesse',kick:'Zone B · Chapitre',title:'La variation du vecteur vitesse',
+{id:'B8',lab:'B6',z:'B',n:'Variation de vitesse',kick:'Zone B · Chapitre',title:'La variation du vecteur vitesse',
  cap:()=>`<p>Comme pour le déplacement, on prend « final moins initial » :</p>${RET(`<b>Δ${V('v')} = ${V('v')}<sub>2</sub> − ${V('v')}<sub>1</sub></b>, composante par composante.`)}<p>Δ${V('v')} est non nul dès que la norme <i>ou</i> la direction de la vitesse change. En ligne droite : si le mobile accélère, Δ${V('v')} a le sens de ${V('v')} ; s’il ralentit, Δ${V('v')} est opposé à ${V('v')}.</p>`,wid:()=>WID.two('diff','v₁','v₂','Δv')},
-{id:'B9',z:'B',n:'Accélération moyenne',kick:'Zone B · Chapitre',title:'L’accélération moyenne',
+{id:'B9',lab:'B7',z:'B',n:'Accélération moyenne',kick:'Zone B · Chapitre',title:'L’accélération moyenne',
  cap:()=>`<p>L’accélération mesure la rapidité avec laquelle la vitesse (le vecteur !) change :</p>${RET(`<b>${V('a')}<sub>moy</sub> = Δ${V('v')} / Δt</b> &nbsp;&nbsp; (en m/s²)<br>Même direction et même sens que Δ${V('v')}.`)}<p>Sur une chronophotographie, on estime d’abord deux vitesses (entre des images voisines), on calcule Δ${V('v')}, puis on divise par la durée entre les deux estimations.</p><p>En ligne droite, ${V('a')} est de même sens que ${V('v')} si le mobile accélère, de sens opposé s’il freine.</p>`},
-{id:'B10',z:'B',n:'Bilan : chronophoto',kick:'Zone B · Bilan',title:'Bilan : lire une chronophotographie',
+{id:'B10',lab:'B8',z:'B',n:'Bilan : chronophoto',kick:'Zone B · Bilan',title:'Bilan : lire une chronophotographie',
  cap:()=>`<p>Tu as maintenant tous les outils. Sur une chronophotographie, on enchaîne :</p>${fp(figChrono())}${RET(`1. Lire les <b>positions</b> (repère à choisir).<br>2. Déplacement : Δ${V('r')} = ${V('r')}<sub>2</sub> − ${V('r')}<sub>1</sub>.<br>3. Vitesse : ${V('v')} ≈ Δ${V('r')} / τ entre deux images voisines.<br>4. Variation : Δ${V('v')} = ${V('v')}<sub>2</sub> − ${V('v')}<sub>1</sub>.<br>5. Accélération moyenne : Δ${V('v')} / Δt.`)}<p>Ici (lancer d’un ballon), les images sont régulièrement espacées horizontalement, mais pas verticalement.</p>`}
 ];
 const ZONES={A:{name:'Zone A · Prérequis',sub:'Les outils de mathématiques dont tu auras besoin : Pythagore, trigonométrie, composantes et vecteurs.',col:'var(--za)'},
              B:{name:'Zone B · Description du mouvement',sub:'Le chapitre : repère, position, déplacement, vitesse et accélération.',col:'var(--zb)'}};
 
 /* ================= Sauvegarde locale ================= */
-const KEY='parcours-description-mouvement-v1';
+const KEY='parcours-description-mouvement-v2',KEY1='parcours-description-mouvement-v1';
 let S={};
-function load(){try{S=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){S={};}}
+function load(){try{const r=localStorage.getItem(KEY);if(r){S=JSON.parse(r)||{};}else{const o=JSON.parse(localStorage.getItem(KEY1)||'{}')||{};S={};['B5','B6','B7','B8','B9','B10'].forEach(k=>{if(o[k])S[k]=o[k];});}}catch(e){S={};}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function st(id){if(!S[id]){S[id]={ok:T[id].map(()=>0),seen:T[id].map(()=>0),due:T[id].map(()=>0)};}return S[id];}
-function retired(id){const s=st(id);return s.ok.filter(k=>k>=2).length;}
+const NEED=id=>((STEPS.find(x=>x.id===id)||{}).need||2);
+function retired(id){const s=st(id),m=NEED(id);return s.ok.filter(k=>k>=m).length;}
 function pct(id){return Math.round(100*retired(id)/T[id].length);}
 function isDone(id){return retired(id)===T[id].length;}
 
@@ -613,7 +611,7 @@ function isDone(id){return retired(id)===T[id].length;}
 const SESSION=4;
 function compose(id){
   const s=st(id),n=T[id].length;
-  const act=[...Array(n).keys()].filter(i=>s.ok[i]<2);
+  const m=NEED(id),act=[...Array(n).keys()].filter(i=>s.ok[i]<m);
   const due=shuffle(act.filter(i=>s.due[i])),uns=shuffle(act.filter(i=>!s.seen[i])),oth=shuffle(act.filter(i=>s.seen[i]&&!s.due[i]));
   const size=Math.min(SESSION,act.length);const minNew=Math.floor(size/2)+1;
   let list=[];
@@ -649,7 +647,7 @@ function home(){
     let d='';pts.forEach((p,i)=>{const x=p[0],y=p[1]/H*100;d+=(i?` C ${pts[i-1][0]},${(pts[i-1][1]+rh*.5)/H*100} ${x},${(p[1]-rh*.5)/H*100} ${x},${y}`:`M ${x},${y}`);});
     html+=`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="#D9CFA9" stroke-width="3" stroke-dasharray="1.2 2.2" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>`;
     zs.forEach((s,i)=>{const dn=isDone(s.id),p=pct(s.id);
-      html+=`<button class="node ${dn?'done':''}" style="left:${pts[i][0]}%;top:${pts[i][1]}px;--zc:${Z.col}" onclick="openStep('${s.id}')" aria-label="${s.title}"><div class="c" style="--p:${p}"><span>${dn?'✓':s.id}</span></div><small>${s.n}${!dn&&p>0?` · ${p} %`:''}</small></button>`;});
+      html+=`<button class="node ${dn?'done':''}" style="left:${pts[i][0]}%;top:${pts[i][1]}px;--zc:${Z.col}" onclick="openStep('${s.id}')" aria-label="${s.title}"><div class="c" style="--p:${p}"><span>${dn?'✓':(s.lab||s.id)}</span></div><small>${s.n}${!dn&&p>0?` · ${p} %`:''}</small></button>`;});
     html+=`</div>`;
   });
   html+=`<p class="sm" style="text-align:center;margin-top:24px">Tu peux commencer où tu veux, mais la zone A aide beaucoup pour la zone B. Ta progression est enregistrée sur cet appareil.</p><button class="reset" id="rst">Effacer ma progression</button>`;
