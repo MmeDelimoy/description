@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Repère, signes et MRU</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;padding:12px;background:#f5f5f5;color:#222;line-height:1.45}
+h1{font-size:1.25rem;margin:4px 0 2px}
+.sub{color:#555;font-size:.92rem;margin:0 0 10px}
+#container{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+#left{flex:1 1 560px;min-width:0}
+#controls{flex:0 1 340px;display:flex;flex-direction:column;gap:10px;min-width:260px;width:100%;max-width:400px}
+.box{background:#fff;border:1px solid #ccc;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+canvas{display:block;width:100%;height:auto}
+#scene{touch-action:pan-y;cursor:grab}
+.panel{background:#fff;border:1px solid #ccc;padding:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-size:.92em}
+.panel p{margin:.4em 0}
+.panel h2{font-size:.95rem;margin:0 0 6px}
+button{padding:8px 12px;border-radius:4px;border:1px solid #888;background:#eee;cursor:pointer;margin:2px 2px 2px 0;font:inherit}
+button:hover{background:#ddd}
+button.main{background:#0074D9;color:#fff;border-color:#0058a3}
+button.main:hover{background:#0063b8}
+.small{font-size:.82em;color:#555}
+label.sl{display:block;margin:8px 0 2px}
+input[type=range]{width:100%}
+.row2{display:flex;gap:10px;flex-wrap:wrap}
+.row2 .box{flex:1 1 260px;min-width:0}
+.res{font-size:1rem;line-height:1.8}
+.res b.neg{color:#c0392b}.res b.pos{color:#1b7f3b}
+.eq{font-size:1.1rem;background:#f5f8ff;border:1px solid #cfe0ff;border-radius:6px;padding:6px 8px;margin:6px 0;text-align:center}
+.tip{background:#fffbe6;border:1px solid #f0e2a0;border-radius:6px;padding:6px 8px;font-size:.88em}
+#test{margin:16px auto 0;max-width:1180px}
+#test .panel{padding:14px 16px}
+.qtxt{font-size:1.05rem;line-height:1.8;margin:6px 0}
+.fig{text-align:center;margin:8px 0}.fig svg{max-width:100%;height:auto}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid #bbb;border-radius:8px;padding:10px 12px;margin:7px 0;font:inherit;line-height:1.5}
+.opt.good{border-color:#2e7d4f;background:#e8f4ec}.opt.bad{border-color:#a63a3a;background:#fbeaea}
+.numrow{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}
+.numrow input{font:1.1rem system-ui;padding:8px 10px;border:1.5px solid #bbb;border-radius:8px;width:9em}
+.fb{border-radius:8px;padding:10px 12px;margin:10px 0;line-height:1.7}
+.fb.ok{background:#e8f4ec;border:1px solid #b7dac3}.fb.ko{background:#fbeaea;border:1px solid #ebc0c0}
+.bar{height:10px;background:#e3e3e3;border-radius:6px;overflow:hidden;margin:6px 0 10px}.bar i{display:block;height:100%;background:#2e7d4f;width:0;transition:width .3s}
+i.v{position:relative;font-style:italic;white-space:nowrap}
+</style>
+</head>
+<body>
+<div style="max-width:1180px;margin:0 auto">
+<h1>Repère, signes et mouvement rectiligne uniforme</h1>
+<p class="sub">Le mouvement du point rouge ne change pas : c’est ton choix de repère qui change les nombres. Manipule, puis teste-toi en bas de la page.</p>
+</div>
+<div id="container">
+ <div id="left">
+  <div class="box"><canvas id="scene" width="800" height="260"></canvas></div>
+  <div class="panel" style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button id="playBtn" class="main">▶ Play</button>
+    <button id="resetBtn">⟲ Réinitialiser</button>
+    <label style="flex:1 1 180px;display:flex;gap:8px;align-items:center">t&nbsp;= <input id="tSlider" type="range" min="0" max="8" step="0.1" value="0"><span id="tTxt" style="min-width:3.8em">0,0 s</span></label>
+  </div>
+  <div class="row2" id="graphs" style="margin-top:10px">
+    <div class="box"><canvas id="gx" width="480" height="320"></canvas></div>
+    <div class="box"><canvas id="gv" width="480" height="320"></canvas></div>
+  </div>
+ </div>
+ <div id="controls">
+  <div class="panel">
+    <h2>1. La situation (physique)</h2>
+    <p class="small">Cela ne dépend pas de ton repère : c’est ce qu’un caméraman verrait.</p>
+    <label class="sl">Départ : à <b id="u0Txt"></b> du bord gauche de la route <input id="u0" type="range" min="1" max="31" step="1" value="6"></label>
+    <label class="sl">Vitesse : <b id="vuTxt"></b> <input id="vu" type="range" min="-3" max="3" step="0.5" value="1.5"></label>
+  </div>
+  <div class="panel">
+    <h2>2. Ton repère</h2>
+    <p><button id="flipBtn">Sens de l’axe : →</button></p>
+    <p><button id="treeBtn">Origine à l’arbre</button> <button id="startBtn">Origine au départ</button></p>
+    <label class="sl">Origine O : <input id="uO" type="range" min="0" max="32" step="1" value="12"></label>
+    <p class="small">Tu peux aussi attraper le point rouge O sur l’axe et le glisser.</p>
+  </div>
+  <div class="panel res">
+    <h2>3. Ce que tu obtiens dans ton repère</h2>
+    <div id="out"></div>
+  </div>
+  <div class="tip">À essayer : retourne l’axe. Que deviennent <i>x</i>₀ et <i>v</i> ? Puis déplace l’origine sans retourner l’axe : que garde-t-on ?</div>
+ </div>
+</div>
+
+<div id="test"><div class="panel" id="testPanel"></div></div>
+
+<script>
+/* ================== Outils ================== */
+const $=id=>document.getElementById(id);
+const f=n=>{let s=String(+(+n).toFixed(2)).replace('.',',').replace('-','−');return s==='−0'?'0':s;};
+const fs=n=>(n>0?'+':'')+f(n);
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const sgnCls=n=>n<0?'neg':'pos';
+function niceStep(range){const raw=range/6;for(const s of [1,2,4,5,10,20,50]){if(s>=raw)return s;}return 100;}
+function niceRange(lo,hi){if(hi-lo<2){hi+=1;lo-=1;}const st=niceStep(hi-lo);return {lo:Math.floor(lo/st)*st,hi:Math.ceil(hi/st)*st,st};}
+
+/* ================== Animation ================== */
+const NARROW=innerWidth<640;
+const ROAD=32, S=NARROW?15:25, TMAX=8, YR=NARROW?185:165, FK=NARROW?1.25:1;
+const st={u0:6,vu:1.5,uO:12,s:1,t:0,playing:false,last:0};
+const TREE=12;
+const cv=$('scene'),cx=cv.getContext('2d');
+if(NARROW){cv.width=480;cv.height=300;}
+
+function Tend(){let T=TMAX;if(st.vu>0)T=Math.min(T,(ROAD-st.u0)/st.vu);else if(st.vu<0)T=Math.min(T,st.u0/(-st.vu));return Math.floor(T*10)/10;}
+function uAt(t){return st.u0+st.vu*t;}
+function xAt(t){return st.s*(uAt(t)-st.uO);}
+function x0(){return st.s*(st.u0-st.uO);}
+function vv(){return st.s*st.vu;}
+
+function arrow(c,x1,y1,x2,y2,col,w){const h=10,a=Math.atan2(y2-y1,x2-x1);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w||2;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-h*Math.cos(a-Math.PI/6),y2-h*Math.sin(a-Math.PI/6));c.lineTo(x2-h*Math.cos(a+Math.PI/6),y2-h*Math.sin(a+Math.PI/6));c.closePath();c.fill();}
+
+function drawScene(){
+  const W=cv.width,H=cv.height;cx.clearRect(0,0,W,H);
+  cx.strokeStyle='#e0e0e0';cx.lineWidth=1;
+  for(let x=0;x<=W;x+=40){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();}
+  for(let y=0;y<=H;y+=40){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
+  // route
+  cx.fillStyle='#d9d9d9';cx.fillRect(0,YR+8,W,16);
+  // arbre
+  const tx=TREE*S;cx.fillStyle='#7a5230';cx.fillRect(tx-4,YR-26,8,34);cx.fillStyle='#5a9a4a';cx.beginPath();cx.arc(tx,YR-42,22,0,7);cx.fill();
+  // axe
+  const oy=YR+40;
+  cx.strokeStyle='#000';cx.fillStyle='#000';cx.lineWidth=1.5;cx.beginPath();cx.moveTo(0,oy);cx.lineTo(W,oy);cx.stroke();
+  cx.font=((11*FK)+'px '+'system-ui,sans-serif');cx.textAlign='center';
+  for(let k=0;k<=ROAD;k++){const px=k*S;const x=st.s*(k-st.uO);
+    cx.beginPath();cx.moveTo(px,oy-4);cx.lineTo(px,oy+4);cx.stroke();
+    if((NARROW?k%4===0:k%2===0)&&x!==0)cx.fillText(f(x),px,oy+18*FK);}
+  // sens de l'axe
+  if(st.s>0)arrow(cx,W-70,oy+32,W-8,oy+32,'#000',2);else arrow(cx,70,oy+32,8,oy+32,'#000',2);
+  cx.textAlign=st.s>0?'right':'left';cx.font='italic '+(14*FK)+'px Georgia,serif';cx.fillText('x (m)',st.s>0?W-76:76,oy+37);
+  // origine
+  cx.fillStyle='#ff0000';cx.beginPath();cx.arc(st.uO*S,oy,7*FK,0,7);cx.fill();
+  cx.fillStyle='#000';cx.font='bold '+(13*FK)+'px system-ui';cx.textAlign='center';cx.fillText('O',st.uO*S,oy-12);
+  // positions chaque seconde
+  const T=Tend();
+  for(let k=0;k<=Math.floor(T);k++){const px=uAt(k)*S;cx.fillStyle='#aaa';cx.beginPath();cx.arc(px,YR+16,3,0,7);cx.fill();}
+  // mobile
+  const px=uAt(st.t)*S;
+  cx.fillStyle='#ff0000';cx.beginPath();cx.arc(px,YR+16,8,0,7);cx.fill();
+  // ligne de rappel vers l'axe
+  cx.strokeStyle='#ff0000';cx.setLineDash([4,4]);cx.lineWidth=1;cx.beginPath();cx.moveTo(px,YR+24);cx.lineTo(px,oy);cx.stroke();cx.setLineDash([]);
+  // flèche vitesse physique
+  if(st.vu!==0){const L=st.vu*38*(S/25);arrow(cx,px,YR-6,px+L,YR-6,'#FF4136',3);}
+  // x courant
+  cx.fillStyle='#c00';cx.font='bold '+(13*FK)+'px system-ui';cx.textAlign='center';cx.fillText('x = '+f(xAt(st.t))+' m',px,YR-16);
+  // chrono
+  cx.fillStyle='rgba(255,255,255,.92)';cx.strokeStyle='#000';cx.lineWidth=1;cx.fillRect(10,10,128*FK,44*FK);cx.strokeRect(10,10,128*FK,44*FK);
+  cx.fillStyle='#000';cx.textAlign='left';cx.font=((12*FK)+'px '+'system-ui');cx.fillText('Chrono',18,10+17*FK);cx.fillText('t = '+f(st.t)+' s',18,10+35*FK);
+}
+
+function graph(c,w,h,title,col,fn,ylab,lo,hi,stp,T,t){
+  c.clearRect(0,0,w,h);c.fillStyle='#fff';c.fillRect(0,0,w,h);
+  const L=56,R=14,Tp=30,B=40;const pw=w-L-R,ph=h-Tp-B;
+  const X=tt=>L+tt/TMAX*pw,Y=y=>Tp+(hi-y)/(hi-lo)*ph;
+  c.strokeStyle='#e2e2e2';c.lineWidth=1;
+  for(let k=0;k<=TMAX;k++){c.beginPath();c.moveTo(X(k),Tp);c.lineTo(X(k),Tp+ph);c.stroke();}
+  for(let y=lo;y<=hi+1e-9;y+=stp){c.beginPath();c.moveTo(L,Y(y));c.lineTo(L+pw,Y(y));c.stroke();}
+  c.strokeStyle='#666';c.lineWidth=1.2;c.strokeRect(L,Tp,pw,ph);
+  c.fillStyle='#333';c.font='11px system-ui';c.textAlign='center';
+  for(let k=0;k<=TMAX;k+=1)c.fillText(k,X(k),Tp+ph+14);
+  c.font='italic 12px Georgia,serif';c.fillText('t (s)',L+pw/2,h-6);
+  c.textAlign='right';c.font='11px system-ui';
+  for(let y=lo;y<=hi+1e-9;y+=stp)c.fillText(f(y),L-6,Y(y)+4);
+  c.save();c.translate(12,Tp+ph/2);c.rotate(-Math.PI/2);c.textAlign='center';c.font='italic 12px Georgia,serif';c.fillText(ylab,0,0);c.restore();
+  c.textAlign='left';c.font='bold 13px system-ui';c.fillStyle='#222';c.fillText(title,L,18);
+  if(lo<0&&hi>0){c.strokeStyle='#000';c.lineWidth=1.8;c.beginPath();c.moveTo(L,Y(0));c.lineTo(L+pw,Y(0));c.stroke();}
+  c.strokeStyle=col;c.lineWidth=2.6;c.beginPath();c.moveTo(X(0),Y(fn(0)));c.lineTo(X(T),Y(fn(T)));c.stroke();
+  c.fillStyle='#ff0000';c.beginPath();c.arc(X(t),Y(fn(t)),5.5,0,7);c.fill();
+  c.fillStyle=col;c.beginPath();c.arc(X(0),Y(fn(0)),3.5,0,7);c.fill();
+}
+function drawGraphs(){
+  const T=Tend();
+  const a=x0(),b=xAt(T);
+  const rx=niceRange(Math.min(a,b,0),Math.max(a,b,0));
+  graph($('gx').getContext('2d'),480,320,'x(t) : position','#d33',tt=>xAt(tt),'x (m)',rx.lo,rx.hi,rx.st,T,st.t);
+  const v=vv();const rv=niceRange(Math.min(v,0)-1,Math.max(v,0)+1);
+  graph($('gv').getContext('2d'),480,320,'v(t) : vitesse','#0074D9',tt=>v,'v (m/s)',rv.lo,rv.hi,rv.st,T,st.t);
+}
+function eqText(a,v){
+  let s='x(t) = ';
+  if(a!==0)s+=f(a)+' '+(v<0?'−':'+')+' '+f(Math.abs(v))+'·t'; else s+=f(v)+'·t';
+  return s;
+}
+function drawOut(){
+  const a=x0(),v=vv(),T=Tend();
+  let sens=v>0?'dans le sens <b>positif</b> de l’axe':v<0?'dans le sens <b>négatif</b> de l’axe':'(il ne bouge pas)';
+  $('out').innerHTML=
+   '<div><i>x</i>₀ = <b class="'+(a===0?'':sgnCls(a))+'">'+f(a)+' m</b></div>'+
+   '<div><i>v</i> = <b class="'+(v===0?'':sgnCls(v))+'">'+f(v)+' m/s</b></div>'+
+   '<div class="eq">'+eqText(a,v)+'</div>'+
+   '<div class="small">Dans ce repère, le mobile se déplace '+sens+'.</div>';
+  $('u0Txt').textContent=f(st.u0)+' m';
+  $('vuTxt').textContent=st.vu===0?'0 m/s (arrêt)':f(Math.abs(st.vu))+' m/s vers la '+(st.vu>0?'droite':'gauche');
+  $('flipBtn').textContent='Sens de l’axe : '+(st.s>0?'→ (vers la droite)':'← (vers la gauche)');
+  $('tSlider').max=T;$('tSlider').value=st.t;$('tTxt').textContent=f(st.t)+' s';
+  $('uO').value=st.uO;
+}
+function redraw(){const T=Tend();if(st.t>T)st.t=T;drawScene();drawGraphs();drawOut();}
+
+$('u0').oninput=e=>{st.u0=+e.target.value;st.t=0;redraw();};
+$('vu').oninput=e=>{st.vu=+e.target.value;st.t=0;redraw();};
+$('uO').oninput=e=>{st.uO=+e.target.value;redraw();};
+$('flipBtn').onclick=()=>{st.s=-st.s;redraw();};
+$('treeBtn').onclick=()=>{st.uO=TREE;redraw();};
+$('startBtn').onclick=()=>{st.uO=st.u0;redraw();};
+$('tSlider').oninput=e=>{st.playing=false;$('playBtn').textContent='▶ Play';st.t=+e.target.value;redraw();};
+$('resetBtn').onclick=()=>{Object.assign(st,{u0:6,vu:1.5,uO:12,s:1,t:0,playing:false});$('u0').value=6;$('vu').value=1.5;$('playBtn').textContent='▶ Play';redraw();};
+$('playBtn').onclick=()=>{
+  if(st.playing){st.playing=false;$('playBtn').textContent='▶ Play';return;}
+  if(st.t>=Tend()-1e-6)st.t=0;st.playing=true;st.last=performance.now();$('playBtn').textContent='❚❚ Pause';
+};
+function tick(now){
+  if(st.playing){const dt=(now-st.last)/1000;st.last=now;st.t+=dt;const T=Tend();if(st.t>=T){st.t=T;st.playing=false;$('playBtn').textContent='▶ Play';}redraw();}
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+/* glisser l'origine */
+let drag=false;
+function cpos(e){const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height};}
+cv.addEventListener('pointerdown',e=>{const p=cpos(e);const oy=YR+40;if(Math.hypot(p.x-st.uO*S,p.y-oy)<30){drag=true;cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing';}});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const p=cpos(e);st.uO=Math.max(0,Math.min(ROAD,Math.round(p.x/S)));redraw();});
+const endDrag=()=>{drag=false;cv.style.cursor='grab';};
+cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+if(NARROW){$('controls').after($('graphs'));$('graphs').style.cssText='margin:10px 0;width:100%';}
+redraw();
+
+/* ================== Test ================== */
+function svgGraph(x0v,v,T,opt){
+  opt=opt||{};const lo=-12,hi=12,W=360,H=260,L=44,B=28,Tp=10,R=12;const pw=W-L-R,ph=H-Tp-B;
+  const X=t=>L+t/6*pw,Y=y=>Tp+(hi-y)/(hi-lo)*ph;let s='';
+  for(let k=0;k<=6;k++)s+=`<line x1="${X(k)}" y1="${Tp}" x2="${X(k)}" y2="${Tp+ph}" stroke="#e2e2e2"/>`;
+  for(let y=lo;y<=hi;y+=2)s+=`<line x1="${L}" y1="${Y(y)}" x2="${L+pw}" y2="${Y(y)}" stroke="#e2e2e2"/>`;
+  s+=`<rect x="${L}" y="${Tp}" width="${pw}" height="${ph}" fill="none" stroke="#777"/>`;
+  s+=`<line x1="${L}" y1="${Y(0)}" x2="${L+pw}" y2="${Y(0)}" stroke="#000" stroke-width="1.8"/>`;
+  for(let k=0;k<=6;k++)s+=`<text x="${X(k)}" y="${Tp+ph+14}" font-size="11" text-anchor="middle">${k}</text>`;
+  for(let y=lo;y<=hi;y+=4)s+=`<text x="${L-6}" y="${Y(y)+4}" font-size="11" text-anchor="end">${String(y).replace('-','−')}</text>`;
+  s+=`<text x="${L+pw/2}" y="${H-4}" font-size="12" font-style="italic" text-anchor="middle">t (s)</text>`;
+  s+=`<text x="12" y="${Tp+ph/2}" font-size="12" font-style="italic" text-anchor="middle" transform="rotate(-90 12 ${Tp+ph/2})">x (m)</text>`;
+  s+=`<line x1="${X(0)}" y1="${Y(x0v)}" x2="${X(T)}" y2="${Y(x0v+v*T)}" stroke="#d33" stroke-width="3"/>`;
+  s+=`<circle cx="${X(0)}" cy="${Y(x0v)}" r="4" fill="#d33"/><circle cx="${X(T)}" cy="${Y(x0v+v*T)}" r="4" fill="#d33"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="graphique x(t)">${s}</svg>`;
+}
+function svgRoad(posRel,s,vdir){ /* posRel: position du mobile par rapport à O (droite>0) ; s: sens de l'axe ; vdir: -1/0/+1 mouvement physique */
+  const W=420,H=120,y=70,ox=210,px=ox+posRel*18;let t='';
+  t+=`<line x1="10" y1="${y}" x2="${W-10}" y2="${y}" stroke="#000" stroke-width="2"/>`;
+  t+=`<circle cx="${ox}" cy="${y}" r="6" fill="#f00"/><text x="${ox}" y="${y+24}" font-size="13" text-anchor="middle" font-weight="bold">O</text>`;
+  t+=`<circle cx="${px}" cy="${y-14}" r="8" fill="#f00" stroke="#900"/>`;
+  t+=`<text x="${px}" y="${y-30}" font-size="12" text-anchor="middle">mobile</text>`;
+  if(vdir)t+=`<line x1="${px}" y1="${y-14}" x2="${px+vdir*50}" y2="${y-14}" stroke="#FF4136" stroke-width="3"/><polygon points="${px+vdir*50},${y-14} ${px+vdir*40},${y-20} ${px+vdir*40},${y-8}" fill="#FF4136"/>`;
+  const ax=s>0?[300,380]:[120,40];
+  t+=`<line x1="${ax[0]}" y1="${y+40}" x2="${ax[1]}" y2="${y+40}" stroke="#0074D9" stroke-width="3"/><polygon points="${ax[1]},${y+40} ${ax[1]-(s>0?10:-10)},${y+34} ${ax[1]-(s>0?10:-10)},${y+46}" fill="#0074D9"/>`;
+  t+=`<text x="${(ax[0]+ax[1])/2}" y="${y+34}" font-size="13" font-style="italic" fill="#0074D9" text-anchor="middle">axe x (sens positif)</text>`;
+  return `<svg viewBox="0 0 ${W} ${H+10}" width="${W}" role="img" aria-hidden="true">${t}</svg>`;
+}
+const MC=(q,good,bads,expl,svg)=>({t:'mcq',q,svg:svg||'',opts:shuffle([{x:good,ok:1}].concat(bads.map(b=>({x:b,ok:0})))),expl});
+const NU=(q,ans,unit,expl,svg)=>({t:'num',q,ans,unit,svg:svg||'',expl});
+const eq=(a,v)=>eqText(a,v);
+
+const TPL=[
+ /* 0 */ ()=>{const d=ri(2,9),sg=pick([-1,1]),s=pick([-1,1]);const ans=s*sg*d;
+   return NU(`Le mobile est à ${d} m <b>${sg>0?'à droite':'à gauche'}</b> de l’origine O. L’axe <i>x</i> est orienté <b>vers la ${s>0?'droite':'gauche'}</b>. Quelle est la position initiale <i>x</i>₀ du mobile ?`,ans,'m',
+   `Le mobile est ${sg>0?'à droite':'à gauche'} de O et l’axe pointe vers la ${s>0?'droite':'gauche'} : ${sg===s?'ils sont du même côté, donc <i>x</i>₀ est <b>positive</b>':'ils sont opposés, donc <i>x</i>₀ est <b>négative</b>'}. <i>x</i>₀ = ${fs(ans)} m.`,svgRoad(sg*d,s,0));},
+ /* 1 */ ()=>{const sp=pick([1,1.5,2,2.5,3,4]),dir=pick([-1,1]),s=pick([-1,1]);const ans=s*dir*sp;
+   return NU(`Le mobile se déplace <b>vers la ${dir>0?'droite':'gauche'}</b> à ${f(sp)} m/s. L’axe <i>x</i> est orienté <b>vers la ${s>0?'droite':'gauche'}</b>. Quelle est la vitesse <i>v</i> du mobile dans ce repère (avec son signe) ?`,ans,'m/s',
+   `Le mobile va ${dir>0?'à droite':'à gauche'} et l’axe pointe ${s>0?'à droite':'à gauche'} : ${dir===s?'même sens, donc <i>v</i> est <b>positive</b>':'sens opposés, donc <i>v</i> est <b>négative</b>'}. <i>v</i> = ${fs(ans)} m/s.`,svgRoad(0,s,dir));},
+ /* 2 */ ()=>{const var1=Math.random()<.5;
+   if(var1)return MC('Un mobile roule à vitesse constante. On <b>déplace l’origine O</b> du repère, mais on <b>garde le même sens</b> pour l’axe. Que deviennent <i>x</i>₀ et <i>v</i> ?','<i>x</i>₀ change, <i>v</i> ne change pas',['<i>x</i>₀ et <i>v</i> changent tous les deux','<i>x</i>₀ ne change pas, <i>v</i> change','Rien ne change'],'Déplacer l’origine décale toutes les positions (donc <i>x</i>₀ change), mais la vitesse est un écart de position divisé par une durée : elle ne change pas tant que le sens de l’axe est le même.');
+   return MC('Un mobile roule à vitesse constante. On <b>retourne l’axe</b> (sens opposé), l’origine O reste au même endroit. Que deviennent <i>x</i>₀ et <i>v</i> ?','<i>x</i>₀ et <i>v</i> changent tous les deux de signe',['<i>x</i>₀ change de signe, <i>v</i> ne change pas','<i>x</i>₀ ne change pas, <i>v</i> change de signe','Rien ne change'],'Retourner l’axe oppose toutes les positions et toutes les vitesses : <i>x</i>₀ et <i>v</i> changent de signe (mais gardent la même valeur absolue).');},
+ /* 3 */ ()=>{const a=pick([-8,-6,-5,-4,-3,-2,2,3,4,5,6,8]),v=pick([-3,-2.5,-2,-1.5,-1,1,1.5,2,2.5,3]),t=ri(2,8);const ans=a+v*t;
+   return NU(`Dans un repère, un mobile a pour équation horaire <b>${eq(a,v)}</b> (<i>x</i> en m, <i>t</i> en s). Quelle est sa position à <i>t</i> = ${t} s ?`,ans,'m',
+   `<i>x</i>(${t}) = ${f(a)} ${v<0?'−':'+'} ${f(Math.abs(v))} × ${t} = ${f(a)} ${v<0?'−':'+'} ${f(Math.abs(v)*t)} = <b>${f(ans)} m</b>.`);},
+ /* 4 */ ()=>{let a,v;do{a=ri(-6,6);v=pick([-2,-1,1,2]);}while(a===0||Math.abs(a+6*v)>12);
+   const good=eq(a,v);const c=[eq(-a,v),eq(a,-v),'x(t) = '+f(v)+' '+(a<0?'−':'+')+' '+f(Math.abs(a))+'·t'];
+   const bads=[...new Set(c)].filter(x=>x!==good).slice(0,3);
+   return MC('Voici le graphique de la position <i>x</i> en fonction du temps pour un mobile. Quelle est son équation horaire ?',good,bads,
+   `L’ordonnée à l’origine donne <i>x</i>₀ = ${f(a)} m. La droite ${v>0?'monte':'descend'} de ${f(Math.abs(v))} m chaque seconde : <i>v</i> = ${f(v)} m/s. Donc <b>${good}</b>.`,svgGraph(a,v,6));},
+ /* 5 */ ()=>{let a,v;do{a=ri(-6,6);v=pick([-2,-1.5,-1,-0.5,0.5,1,1.5,2]);}while(Math.abs(a+6*v)>12);
+   return NU('Lis le graphique de <i>x</i>(<i>t</i>) : quelle est la vitesse du mobile ? Donne la valeur <b>avec son signe</b>.',v,'m/s',
+   `La vitesse est la pente de la droite : (<i>x</i>(6) − <i>x</i>(0)) / (6 − 0) = (${f(a+6*v)} − ${pa(a)}) / 6 = <b>${f(v)} m/s</b>.`,svgGraph(a,v,6));},
+ /* 6 */ ()=>{const k=pick(['up','down','flat']);const a=ri(-5,5);const v=k==='up'?pick([1,2]):k==='down'?pick([-1,-2]):0;
+   const good=k==='up'?'Il se déplace dans le sens positif de l’axe':k==='down'?'Il se déplace dans le sens négatif de l’axe':'Il est à l’arrêt';
+   const bads=['Il se déplace dans le sens positif de l’axe','Il se déplace dans le sens négatif de l’axe','Il est à l’arrêt','Il accélère'].filter(x=>x!==good);
+   return MC('Dans ce repère, que fait le mobile ?',good,bads.slice(0,3),k==='up'?'La droite monte : <i>x</i> augmente, donc <i>v</i> &gt; 0. Le mobile va dans le sens positif de l’axe.':k==='down'?'La droite descend : <i>x</i> diminue, donc <i>v</i> &lt; 0. Le mobile va dans le sens négatif de l’axe.':'La droite est horizontale : <i>x</i> ne change pas, <i>v</i> = 0. Le mobile est à l’arrêt.',svgGraph(a,v,6));},
+ /* 7 */ ()=>{const v=pick([-3,-2,-1.5,1.5,2,3]),a=ri(-8,8),tt=ri(1,8),xt=a+v*tt;
+   return NU(`Un mobile a pour équation horaire <b>${eq(a,v)}</b>. À quel instant passe-t-il par la position <i>x</i> = ${f(xt)} m ?`,tt,'s',
+   `On résout ${f(xt)} = ${f(a)} ${v<0?'−':'+'} ${f(Math.abs(v))}·<i>t</i>. Donc ${f(Math.abs(v))}·<i>t</i> = ${f(Math.abs(v)*tt)}, soit <i>t</i> = <b>${f(tt)} s</b>.`);},
+ /* 8 */ ()=>{const X=pick([2,2.5,3,4,5]);
+   return MC(`Lina place l’origine à l’arbre et oriente l’axe vers la droite : elle trouve <i>v</i> = +${f(X)} m/s. Max garde la même origine mais oriente l’axe vers la gauche. Que trouve-t-il pour la vitesse du même mobile ?`,`−${f(X)} m/s`,[`+${f(X)} m/s`,'0 m/s',`−${f(X/2)} m/s`],'Le mobile n’a pas changé. Mais avec l’axe retourné, le mobile va maintenant dans le sens négatif de l’axe : <i>v</i> change de signe. Les deux ont raison, dans leur repère.');},
+ /* 9 */ ()=>{if(Math.random()<.5)return MC('Sur le graphique de <i>x</i>(<i>t</i>) d’un MRU, quelle propriété de la droite donne la vitesse ?','Sa pente (son inclinaison)',['Son ordonnée à l’origine','Sa longueur','Le point où elle croise l’axe horizontal'],'La pente de la droite <i>x</i>(<i>t</i>) est Δ<i>x</i>/Δ<i>t</i> : c’est la vitesse. Plus la droite est raide, plus la vitesse est grande en valeur absolue.');
+   return MC('Sur le graphique de <i>x</i>(<i>t</i>) d’un MRU, que représente l’ordonnée à l’origine (la valeur de <i>x</i> quand <i>t</i> = 0) ?','La position initiale <i>x</i>₀',['La vitesse <i>v</i>','L’accélération <i>a</i>','La distance totale parcourue'],'Quand <i>t</i> = 0, <i>x</i>(0) = <i>x</i>₀ : c’est la position où se trouve le mobile au début du chrono.');}
+];
+function pa(x){return x<0?'('+f(x)+')':f(x);}
+
+const KEY='mru_repere_progress_v1',NQ=4;
+let prog={};try{prog=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){prog={};}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(prog));}catch(e){}};
+let S_={queue:[],cur:null,q:null,total:0,done:0,firstTry:0,tried:{}};
+function startSession(){
+  let ids=TPL.map((_,i)=>i);
+  const fresh=ids.filter(i=>(prog[i]||0)<2);
+  let pool=fresh.length>=NQ?fresh:ids;
+  pool=shuffle(pool).sort((a,b)=>(prog[a]||0)-(prog[b]||0));
+  S_={queue:pool.slice(0,NQ),cur:null,q:null,total:NQ,done:0,firstTry:0,tried:{}};
+  nextQ();
+}
+function nextQ(){
+  if(!S_.queue.length){return endSession();}
+  S_.cur=S_.queue.shift();S_.q=TPL[S_.cur]();renderQ();
+}
+function renderQ(){
+  const q=S_.q;let h=`<h2>Teste-toi</h2><div class="bar"><i style="width:${S_.done/S_.total*100}%"></i></div>`;
+  h+=`<div class="qtxt">${q.q}</div>`;if(q.svg)h+=`<div class="fig">${q.svg}</div>`;
+  if(q.t==='mcq'){q.opts.forEach((o,i)=>{h+=`<button class="opt" data-i="${i}">${o.x}</button>`;});}
+  else{h+=`<div class="numrow"><input id="ans" inputmode="decimal" autocomplete="off" placeholder="ta réponse"> <span>${q.unit}</span> <button class="main" id="valid">Valider</button></div>`;}
+  h+='<div id="fb"></div>';$('testPanel').innerHTML=h;
+  if(q.t==='mcq')document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  else{$('valid').onclick=()=>{const raw=$('ans').value.trim();if(!raw)return;const v=parseFloat(raw.replace(/\s/g,'').replace(',','.').replace('−','-'));if(isNaN(v)){$('fb').innerHTML='<div class="fb ko">Écris un nombre (avec son signe si nécessaire).</div>';return;}answer(v);};
+    $('ans').onkeydown=e=>{if(e.key==='Enter')$('valid').click();};}
+}
+function answer(a){
+  const q=S_.q;let ok;
+  if(q.t==='mcq'){ok=!!q.opts[a].ok;document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i].ok)b.classList.add('good');else if(i===a)b.classList.add('bad');});}
+  else{ok=Math.abs(a-q.ans)<0.051;$('valid').disabled=true;$('ans').disabled=true;}
+  const id=S_.cur;
+  if(ok){prog[id]=(prog[id]||0)+1;save();S_.done++;if(!S_.tried[id])S_.firstTry++;}
+  else{S_.tried[id]=1;S_.queue.push(id);}
+  const ansTxt=q.t==='num'?`<div>Réponse attendue : <b>${f(q.ans)} ${q.unit}</b></div>`:'';
+  $('fb').innerHTML=`<div class="fb ${ok?'ok':'ko'}"><b>${ok?'Bien joué !':'Pas tout à fait.'}</b>${ok?'':ansTxt}<div>${q.expl}</div>${ok?'':'<div class="small">Une question de ce type reviendra avec d’autres nombres.</div>'}<button class="main" id="nx">Suivant →</button></div>`;
+  $('nx').onclick=nextQ;$('nx').focus();
+}
+function endSession(){
+  const mast=TPL.filter((_,i)=>(prog[i]||0)>=2).length;
+  $('testPanel').innerHTML=`<h2>Série terminée</h2><div class="bar"><i style="width:100%"></i></div><p class="qtxt"><b>${S_.firstTry} / ${S_.total}</b> réussies du premier coup.</p><p class="small">Types de questions maîtrisés (réussis 2 fois) : ${mast} sur ${TPL.length}.</p><button class="main" id="again">Une nouvelle série</button> <button id="rst">Remettre à zéro</button>`;
+  $('again').onclick=startSession;$('rst').onclick=()=>{prog={};save();startSession();};
+}
+startSession();
+</script>
+</body>
+</html>
