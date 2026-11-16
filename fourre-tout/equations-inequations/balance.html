@@ -99,15 +99,19 @@ function fh(f){return FR(f.n,f.d)}
 function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
 function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
 function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
-function RS(rel){return {'>':'>','>=':'≥','<':'<','<=':'≤'}[rel]}
+function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
+var LT='&lt;',GT='&gt;';
+/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
+function ng(n){return n<0?'('+N(n)+')':N(n)}
+function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
 function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
 function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
 function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
 /* éléments de réponse */
 function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
-function setEq(vals){return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
+function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
 function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
-function setHtml(parts){if(!parts.length)return 'S = ∅';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
+function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
 function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
 /* analyse du signe d'un produit/quotient de facteurs du 1er degré
    factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
@@ -131,13 +135,15 @@ function analyse(factors,K,rel){
 function sg(s){return s>0?'+':s<0?M:'0'}
 function tableHtml(an,show,hl,resLab){
   var k=an.roots.length,rows=[];
+  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
   an.factors.forEach(function(f){var r=F(-f.b,f.a);
     rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
   rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
   var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
   for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
   h+='</tr>';
-  rows.forEach(function(r,ri){if(ri>=show&&!(r.res&&show>an.factors.length))return;if(r.res&&show<=an.factors.length)return;
+  var nr=rows.length-1;
+  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
     h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
     for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
       if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
@@ -159,7 +165,7 @@ function nline(an,parts){
 function mk(o){
   var seen={};seen[o.ok.h]=1;var ws=[];
   o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
-  ws=shuffle(ws).slice(0,3);
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
   var all=shuffle([{h:o.ok.h,f:o.ok.f,ok:true}].concat(ws.map(function(w){return{h:w.h,f:w.f,ok:false}})));
   return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q};
 }
@@ -167,7 +173,7 @@ function mk(o){
 function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
 /* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
 function distract(an,extra){
-  var v=[];
+  var v=[];(extra||[]).forEach(function(p){v.push(p)});
   var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
   var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
   v.push(flipBr(an.parts));                                                           // crochets inversés
@@ -177,7 +183,6 @@ function distract(an,extra){
   v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
   v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
   [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
-  (extra||[]).forEach(function(p){v.push(p)});
   var seen={},out=[];seen[setHtml(an.parts)]=1;
   v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
   return out;
@@ -215,10 +220,10 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
   function nextQ(){
     for(var t=0;t<60;t++){
       if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
-      var g=gens[bag.pop()],q;try{q=g()}catch(e){continue}
-      if(q&&!asked[q.key]){asked[q.key]=1;return q}
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
     }
-    var g2=gens[R(0,gens.length-1)];return g2();
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
   }
   function show(){
     if(done>=planned)return end();
@@ -230,14 +235,19 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
     root.innerHTML=h;
     var bs=root.querySelectorAll('.ch');
     Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
   }
   function answer(i,bs){
     var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
     done++;
     if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
-    else{wrong++;planned+=PEN;$('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider ce point.</div>'}
+    else{wrong++;planned+=PEN;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
     $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
     $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
   }
   function end(){
     setMastered(itemId,true);
@@ -251,36 +261,54 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
 var GENS=[];
 /* ---------- QUIZ ---------- */
 function eqQ(qh,x,lhs,rhs,cands,why){var o=numOpts(x,cands);return mk({q:qh,ok:o.ok,wr:o.wr,why:why,truth:function(t){return Math.abs(lhs(t)-rhs(t))<EPS}})}
-GENS.push(function(){var a=pick([2,3,4,5,6,7]),x=R(-6,9),b=pick([-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9]),c=a*x+b;
-  return eqQ('Résous : <b>'+lin(a,b)+' = '+N(c)+'</b>',x,function(t){return a*t+b},function(){return c},[c-b,-x,(c+b)%a===0?(c+b)/a:x+b],
-   lin(a,b)+' = '+N(c)+' ⇒ '+a+'x = '+N(c)+(b<0?' + ':' − ')+Math.abs(b)+' = '+N(c-b)+' ⇒ x = '+N(x)+'.')});
-GENS.push(function(){var a=R(2,6),c=R(1,5);if(a===c)c=a+1;var x=R(-7,8),b=R(-8,8),d=(a-c)*x+b;if(b===0)b=3,d=(a-c)*x+b;
-  return eqQ('Résous : <b>'+lin(a,b)+' = '+lin(c,d)+'</b>',x,function(t){return a*t+b},function(t){return c*t+d},[(d-b)/(a-c)===x?x+1:0,-x,(b+d)%(a+c)===0?(b+d)/(a+c):x+2],
-   'Les x d’un côté, les nombres de l’autre : ('+a+' − '+N(c)+')x = '+N(d)+' − '+N(b)+', donc x = '+N(x)+'.')});
+function intIf(n,d,alt){return (d!==0&&n%d===0)?n/d:alt}
+/* « c − b = résultat », sans écrire « 0 − b » */
+function mv(c,b){return (c===0?'':N(c)+(b<0?' + ':' '+M+' ')+Math.abs(b)+' = ')+N(c-b)}
+var NZ=[-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9];
+/* ax + b = c */
+GENS.push(function(){var a=pick([2,3,4,5,6,7]),x=R(-6,9),b=pick(NZ),c=a*x+b;
+  return eqQ('Résous : <b>'+lin(a,b)+' = '+N(c)+'</b>',x,function(t){return a*t+b},function(){return c},[c-b,intIf(c+b,a,-x),-x],
+   'On défait d’abord le « '+(b<0?M:'+')+' '+Math.abs(b)+' » : '+a+'x = '+mv(c,b)+'. Puis on divise les deux côtés par '+a+' : <b>x = '+N(x)+'</b>.')});
+/* ax + b = cx + d */
+GENS.push(function(){var a=R(2,6),c=R(1,5);if(a===c)c=a+1;var x=R(-7,8),b=pick([-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8]),d=(a-c)*x+b,k=a-c;
+  return eqQ('Résous : <b>'+lin(a,b)+' = '+lin(c,d)+'</b>',x,function(t){return a*t+b},function(t){return c*t+d},[intIf(d+b,k,d-b),intIf(d-b,a+c,-x),d-b],
+   'On enlève '+lin(c,0)+' des deux côtés : '+lin(k,b)+' = '+N(d)+'. On '+(b<0?'ajoute':'enlève')+' '+Math.abs(b)+' des deux côtés : '+(k===1?'<b>x = '+N(x)+'</b>.':lin(k,0)+' = '+N(d-b)+'. On divise par '+ng(k)+' : <b>x = '+N(x)+'</b>.'))});
+/* a(x + b) = c */
 GENS.push(function(){var a=pick([2,3,4,5]),b=pick([-6,-5,-4,-3,-2,2,3,4,5,6]),x=R(-6,8),c=a*(x+b);
-  return eqQ('Résous : <b>'+a+'(x '+(b<0?'−':'+')+' '+Math.abs(b)+') = '+N(c)+'</b>',x,function(t){return a*(t+b)},function(){return c},[x+2*b,c-b,c/a],
-   'Le '+a+' multiplie toute la parenthèse : on divise <b>les deux côtés</b> par '+a+' (x '+(b<0?'−':'+')+' '+Math.abs(b)+' = '+N(x+b)+') puis on défait le '+(b<0?'−':'+')+Math.abs(b)+'. x = '+N(x)+'.')});
-GENS.push(function(){var a=pick([2,3,4,5]),b=R(-6,6),k=R(-4,6),c=b+k,x=a*k;
-  return eqQ('Résous : <b>'+frs('x',a)+' '+(b<0?'−':'+')+' '+Math.abs(b)+' = '+N(c)+'</b>',x,function(t){return t/a+b},function(){return c},[k,-x,a*c+b],
-   'D’abord on défait le '+(b<0?'−':'+')+Math.abs(b)+' : x/'+a+' = '+N(k)+'. Puis on multiplie les deux côtés par '+a+' : x = '+N(x)+'.')});
-GENS.push(function(){var a=pick([2,3,4,5]),x=R(-6,7),b=R(-8,8),c=-a*x+b;
-  return eqQ('Résous : <b>'+lin(-a,b)+' = '+N(c)+'</b>',x,function(t){return -a*t+b},function(){return c},[-x,(c-b)/a,x+b],
-   N(-a)+'x = '+N(c)+(b<0?' + ':' − ')+Math.abs(b)+' = '+N(c-b)+'. On divise par '+N(-a)+' : x = '+N(x)+'.')});
+  return eqQ('Résous : <b>'+a+par(-b)+' = '+N(c)+'</b>',x,function(t){return a*(t+b)},function(){return c},[x+b,intIf(c-b,a,c-b),x+2*b],
+   'Le '+a+' multiplie toute la parenthèse : on divise <b>les deux côtés</b> par '+a+', ce qui donne '+lin(1,b)+' = '+N(x+b)+'. Puis on défait le « '+(b<0?M:'+')+' '+Math.abs(b)+' » : <b>x = '+N(x)+'</b>.')});
+/* x/a + b = c */
+GENS.push(function(){var a=pick([2,3,4,5]),b=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]),k=R(-4,6),c=b+k,x=a*k;
+  return eqQ('Résous : <b>'+frs('x',a)+' '+(b<0?M:'+')+' '+Math.abs(b)+' = '+N(c)+'</b>',x,function(t){return t/a+b},function(){return c},[k,a*c-b,a*(c+b)],
+   'D’abord on défait le « '+(b<0?M:'+')+' '+Math.abs(b)+' » : '+frs('x',a)+' = '+N(k)+'. Puis on multiplie les deux côtés par '+a+' : <b>x = '+N(x)+'</b>.')});
+/* −ax + b = c */
+GENS.push(function(){var a=pick([2,3,4,5]),x=R(-6,7),b=pick([-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8]),c=-a*x+b;
+  return eqQ('Résous : <b>'+lin(-a,b)+' = '+N(c)+'</b>',x,function(t){return -a*t+b},function(){return c},[-x,intIf(c+b,-a,x+1),c-b],
+   N(-a)+'x = '+mv(c,b)+'. On divise les deux côtés par '+N(-a)+' (attention au signe) : <b>x = '+N(x)+'</b>.')});
+/* solution fractionnaire */
+GENS.push(function(){var a,n,b;do{a=pick([2,3,4,5,6]);n=pick([-9,-7,-5,-4,-3,-2,-1,1,2,3,4,5,7,9])}while(n%a===0||Math.abs(n)===1);b=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]);var c=n+b,sol=F(n,a);
+  function ch(f){return {h:'x = '+fh(f),f:fset([f])}}
+  return mk({q:'Résous : <b>'+lin(a,b)+' = '+N(c)+'</b>',ok:ch(sol),wr:[ch(F(a,n)),ch(F(n)),ch(F(c+b,a)),ch(F(-n,a)),ch(F(n+1,a)),ch(F(n-1,a))],
+   truth:function(t){return Math.abs(a*t+b-c)<EPS},
+   why:a+'x = '+mv(c,b)+'. On divise par '+a+' : x = '+fh(sol)+'. La solution n’est pas toujours un entier : on divise le nombre de droite par le coefficient de x (et pas l’inverse).'})});
+/* première étape */
 GENS.push(function(){var a=pick([2,3,4,5]),b=R(2,9),c=a*R(1,6)+b;
   return qcm('Pour résoudre <b>'+a+'x + '+b+' = '+c+'</b>, quelle est la meilleure première étape ?',
    'Soustraire '+b+' <b>des deux côtés</b>',
    ['Diviser seulement '+a+'x par '+a+' : x + '+b+' = '+c,'Soustraire '+b+' seulement à gauche','Ajouter '+b+' des deux côtés'],
    'On défait dans l’ordre inverse : d’abord le « + '+b+' » (en l’enlevant partout), ensuite le « × '+a+' » (en divisant <b>tout</b> par '+a+').')});
-GENS.push(function(){var a=pick([2,3,4,5]),k=R(2,5),b=R(2,9),c=a*k;
-  return qcm('Pour <b>'+a+'x + '+b+' = '+(c+b)+'</b>, Tom écrit : « x + '+b+' = '+k+' ». Quelle est son erreur ?',
-   'Il a divisé '+a+'x et '+(c+b)+' par '+a+' mais <b>pas le '+b+'</b>',
-   ['Il aurait dû multiplier par '+a,'On n’a pas le droit de diviser','Il n’y a pas d’erreur'],
-   'Diviser un côté, c’est diviser <b>tous</b> ses termes. Mieux vaut d’abord enlever '+b+' : '+a+'x = '+c+', puis diviser par '+a+'.')});
+/* l'erreur de Tom : il ne divise pas tous les termes */
+GENS.push(function(){var a=pick([2,3,4,5]),k=R(2,6),b;do{b=R(2,9)}while(b%a===0);var c=a*k;
+  return qcm('Pour <b>'+a+'x + '+b+' = '+c+'</b>, Tom divise par '+a+' et écrit : « x + '+b+' = '+k+' ». Quelle est son erreur ?',
+   'Il a divisé '+a+'x et '+c+' par '+a+', mais <b>pas le '+b+'</b>',
+   ['Il aurait dû multiplier par '+a,'On n’a pas le droit de diviser une équation par '+a,'Il n’y a pas d’erreur'],
+   'Diviser un côté, c’est diviser <b>tous</b> ses termes : on obtiendrait x + '+FR(b,a)+' = '+k+'. Plus simple : d’abord enlever '+b+' des deux côtés ('+a+'x = '+N(c-b)+'), puis diviser par '+a+'.')});
+/* parenthèse */
 GENS.push(function(){var a=pick([2,3,4]),b=pick([2,3,4,5,6]),x=R(1,8);
-  return qcm('Pour <b>'+a+'(x + '+b+') = '+a*(x+b)+'</b>, quelle étape est correcte ?',
+  return qcm('Pour <b>'+a+'(x + '+b+') = '+a*(x+b)+'</b>, quelle première étape est correcte ?',
    'Diviser les deux côtés par '+a+' (ou distribuer le '+a+')',
-   ['Soustraire '+b+' des deux côtés (le '+b+' est dans la parenthèse)','Diviser seulement '+a*(x+b)+' par '+a,'Enlever la parenthèse sans rien changer'],
-   'Le '+a+' multiplie <b>toute</b> la parenthèse : la priorité des opérations impose de le gérer avant le '+b+'.')});
+   ['Soustraire '+b+' des deux côtés : '+a+'x = '+(a*(x+b)-b),'Diviser seulement le '+a*(x+b)+' par '+a,'Enlever la parenthèse : '+a+'x + '+b+' = '+a*(x+b)],
+   'Le '+a+' multiplie <b>toute</b> la parenthèse. On ne peut pas enlever le '+b+' directement : il est dans la parenthèse, donc lui aussi multiplié par '+a+'.')});
 /* ---------- ANIMATION ---------- */
 function cw(c){if(c.g){var w=8;c.g.forEach(function(ch,i){w+=cw(ch)+(i?4:0)});return w}return(c.t==='n'&&String(Math.abs(c.v)).length>=2)?34:26}
 function drawChip(c,x,by){

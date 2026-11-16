@@ -76,9 +76,10 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 <p>Suis l’animation. Le bouton « Un autre exemple » alterne entre la <b>forme simple</b> (x² = un nombre) et la <b>forme à ranger</b> (des x² et des x des deux côtés).</p>
 <div id="quad"></div></div>
 <div class="card key"><b>À retenir</b>
-<ul class="pts"><li><b>x² = k</b> (k &gt; 0) a <b>deux</b> solutions : −√k et √k. Si k &lt; 0, aucune.</li>
+<ul class="pts"><li><b>x² = k</b> (k &gt; 0) a <b>deux</b> solutions : −√k et √k. Si k = 0, une seule : 0. Si k &lt; 0, aucune.</li>
 <li>Si l’expression est compliquée : on <b>distribue</b> s’il y a des parenthèses, puis on met <b>tout du même côté</b> pour avoir 0 à droite.</li>
-<li>On factorise, puis un produit est nul si l’un des facteurs est nul.</li>
+<li>On factorise (ou on calcule Δ), puis un produit est nul si l’un des facteurs est nul.</li>
+<li>On ne <b>divise jamais par x</b> : on perdrait la solution x = 0.</li>
 <li>Pour une inéquation, on étudie le signe de la forme factorisée (tableau de signes ou courbe).</li></ul></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
 <h2>Quiz : 10 questions</h2>
@@ -103,15 +104,19 @@ function fh(f){return FR(f.n,f.d)}
 function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
 function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
 function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
-function RS(rel){return {'>':'>','>=':'≥','<':'<','<=':'≤'}[rel]}
+function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
+var LT='&lt;',GT='&gt;';
+/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
+function ng(n){return n<0?'('+N(n)+')':N(n)}
+function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
 function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
 function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
 function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
 /* éléments de réponse */
 function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
-function setEq(vals){return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
+function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
 function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
-function setHtml(parts){if(!parts.length)return 'S = ∅';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
+function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
 function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
 /* analyse du signe d'un produit/quotient de facteurs du 1er degré
    factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
@@ -135,13 +140,15 @@ function analyse(factors,K,rel){
 function sg(s){return s>0?'+':s<0?M:'0'}
 function tableHtml(an,show,hl,resLab){
   var k=an.roots.length,rows=[];
+  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
   an.factors.forEach(function(f){var r=F(-f.b,f.a);
     rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
   rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
   var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
   for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
   h+='</tr>';
-  rows.forEach(function(r,ri){if(ri>=show&&!(r.res&&show>an.factors.length))return;if(r.res&&show<=an.factors.length)return;
+  var nr=rows.length-1;
+  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
     h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
     for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
       if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
@@ -163,7 +170,7 @@ function nline(an,parts){
 function mk(o){
   var seen={};seen[o.ok.h]=1;var ws=[];
   o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
-  ws=shuffle(ws).slice(0,3);
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
   var all=shuffle([{h:o.ok.h,f:o.ok.f,ok:true}].concat(ws.map(function(w){return{h:w.h,f:w.f,ok:false}})));
   return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q};
 }
@@ -171,7 +178,7 @@ function mk(o){
 function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
 /* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
 function distract(an,extra){
-  var v=[];
+  var v=[];(extra||[]).forEach(function(p){v.push(p)});
   var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
   var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
   v.push(flipBr(an.parts));                                                           // crochets inversés
@@ -181,7 +188,6 @@ function distract(an,extra){
   v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
   v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
   [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
-  (extra||[]).forEach(function(p){v.push(p)});
   var seen={},out=[];seen[setHtml(an.parts)]=1;
   v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
   return out;
@@ -219,10 +225,10 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
   function nextQ(){
     for(var t=0;t<60;t++){
       if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
-      var g=gens[bag.pop()],q;try{q=g()}catch(e){continue}
-      if(q&&!asked[q.key]){asked[q.key]=1;return q}
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
     }
-    var g2=gens[R(0,gens.length-1)];return g2();
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
   }
   function show(){
     if(done>=planned)return end();
@@ -234,14 +240,19 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
     root.innerHTML=h;
     var bs=root.querySelectorAll('.ch');
     Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
   }
   function answer(i,bs){
     var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
     done++;
     if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
-    else{wrong++;planned+=PEN;$('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider ce point.</div>'}
+    else{wrong++;planned+=PEN;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
     $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
     $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
   }
   function end(){
     setMastered(itemId,true);
@@ -253,52 +264,78 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
 }
 
 var GENS=[];
-function sq2(m){return m*m}
-GENS.push(function(){var m=R(2,9),k=m*m,neg=Math.random()<.25,kk=neg?-k:k;
-  var vals=neg?[]:[F(-m),F(m)];
-  return mk({q:'Résous : <b>x² = '+N(kk)+'</b>',ok:{h:setEq(vals),f:fset(vals)},wr:neg?[{h:setEq([F(-m),F(m)]),f:fset([F(-m),F(m)])},{h:setEq([F(m)]),f:fset([F(m)])},{h:setEq([F(k)]),f:fset([F(k)])}]:[{h:setEq([F(m)]),f:fset([F(m)])},{h:setEq([F(k)]),f:fset([F(k)])},{h:setEq([F(-m)]),f:fset([F(-m)])},{h:setEq([]),f:fset([])}],
-   truth:function(x){return Math.abs(x*x-kk)<EPS},why:neg?'Un carré n’est jamais négatif : <b>pas de solution</b>.':'Deux nombres ont pour carré '+k+' : '+m+' <b>et</b> '+N(-m)+'.'})});
+function tableFb(an,lab){return '<br>'+tableHtml(an,99,true,lab)}
+function zone(rel){return (rel==='<'||rel==='<=')?'<b>entre</b> les racines':'<b>à l’extérieur</b> des racines'}
+function incl(rel){return (rel==='<='||rel==='>=')?'Racines incluses (inégalité large).':'Racines exclues (inégalité stricte).'}
+/* x² = k (carré parfait, ou négatif, ou 0) */
+GENS.push(function(){var m=R(2,9),k=m*m,t=Math.random(),neg=t<.25,zero=!neg&&t<.33,kk=neg?-k:(zero?0:k);
+  var vals=neg?[]:(zero?[F(0)]:[F(-m),F(m)]);
+  function ch(v){return {h:setEq(v),f:fset(v)}}
+  var wr=neg?[ch([F(-m),F(m)]),ch([F(-m)]),ch([F(m)]),ch([F(k)])]:(zero?[ch([]),{h:'S = ℝ',f:function(){return true}},ch([F(-1),F(1)])]:[ch([F(m)]),ch(k%2?[F(k)]:[F(k/2)]),ch([F(-m)]),ch([])]);
+  return mk({q:'Résous : <b>x² = '+N(kk)+'</b>',ok:ch(vals),wr:wr,
+   truth:function(x){return Math.abs(x*x-kk)<EPS},why:neg?'Un carré n’est jamais négatif : <b>pas de solution</b>.':(zero?'Le seul nombre dont le carré vaut 0 est 0 : <b>une seule</b> solution.':'Deux nombres ont pour carré '+k+' : '+m+' <b>et</b> '+N(-m)+' (ne pas oublier la solution négative).')})});
+/* x² = n (pas un carré parfait) */
+GENS.push(function(){var n=pick([2,3,5,6,7,10,11,13]),r='√'+n;
+  function c(h,f){return {h:h,f:f}}
+  return mk({q:'Résous : <b>x² = '+n+'</b>',ok:c('S = {'+M+r+' ; '+r+'}',function(x){return Math.abs(x*x-n)<EPS}),
+   wr:[c('S = {'+r+'}',function(x){return Math.abs(x-Math.sqrt(n))<EPS}),c('S = ∅',function(){return false}),c('S = {'+M+FR(n,2)+' ; '+FR(n,2)+'}',function(x){return Math.abs(Math.abs(x)-n/2)<EPS}),c('S = {'+M+n+' ; '+n+'}',function(x){return Math.abs(Math.abs(x)-n)<EPS})],
+   truth:function(x){return Math.abs(x*x-n)<EPS},
+   why:n+' n’est pas un carré parfait, mais il est positif : il y a quand même <b>deux</b> solutions, '+r+' et '+M+r+' (on laisse la racine carrée telle quelle).'})});
+/* x² rel k */
 GENS.push(function(){var m=R(2,7),k=m*m,rel=pick(['>','>=','<','<=']);
-  var an=analyse([{a:1,b:-m,p:1},{a:1,b:m,p:1}],1,rel),ex=analyse([{a:1,b:-m,p:1}],1,rel).parts;
+  var an=analyse([{a:1,b:m,p:1},{a:1,b:-m,p:1}],1,rel),ex=analyse([{a:1,b:-m,p:1}],1,rel).parts;
   return mk({q:'Résous : <b>x² '+RS(rel)+' '+k+'</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[ex]),
    truth:function(x){return relOK(rel,x*x-k)},
-   why:'x² = '+k+' en x = '+N(-m)+' et x = '+m+'. '+((rel==='<'||rel==='<=')?'x² est plus petit que '+k+' <b>entre</b> les deux racines.':'x² est plus grand que '+k+' <b>à l’extérieur</b> des deux racines.')})});
+   why:'x² = '+k+' pour x = '+N(-m)+' et x = '+m+'. '+((rel==='<'||rel==='<=')?'x² est plus petit que '+k+' <b>entre</b> ces deux valeurs.':'x² est plus grand que '+k+' <b>à l’extérieur</b> de ces deux valeurs (ne pas oublier les x plus petits que '+N(-m)+').')+' '+incl(rel)})});
+/* x² rel nombre négatif */
 GENS.push(function(){var m=R(1,6),k=m*m,rel=pick(['>','>=','<','<=']),ok=(rel==='>'||rel==='>=');
   var all=function(){return true},none=function(){return false};
   var wr=[{h:'S = ∅',f:none},{h:'S = ℝ',f:all},{h:setEq([F(-m),F(m)]),f:fset([F(-m),F(m)])},{h:'S = ]'+N(-m)+' ; '+m+'[',f:function(x){return x>-m+EPS&&x<m-EPS}}];
   var okc=ok?wr[1]:wr[0];wr=wr.filter(function(w){return w!==okc});
   return mk({q:'Résous : <b>x² '+RS(rel)+' '+N(-k)+'</b>',ok:okc,wr:wr,truth:function(x){return relOK(rel,x*x+k)},
-   why:'Un carré est toujours ≥ 0 donc toujours supérieur à un nombre négatif : '+(ok?'tous les réels conviennent.':'aucun réel ne convient.')})});
+   why:'Un carré est toujours ≥ 0, donc toujours plus grand que '+N(-k)+' : '+(ok?'<b>tous</b> les réels conviennent.':'<b>aucun</b> réel ne convient.')})});
+/* x² = kx : ne pas diviser par x */
+GENS.push(function(){var k=pick([-9,-8,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9]);
+  function ch(v){return {h:setEq(v),f:fset(v)}}
+  return mk({q:'Résous : <b>x² = '+lin(k,0)+'</b>',ok:ch([F(0),F(k)]),wr:[ch([F(k)]),ch([F(-k),F(k)]),ch([F(0)]),ch([F(0),F(-k)])],
+   truth:function(x){return Math.abs(x*x-k*x)<EPS},
+   why:'On range : x² '+(k<0?'+':M)+' '+Math.abs(k)+'x = 0, puis on met x en évidence : x'+par(k)+' = 0. Donc x = 0 <b>ou</b> x = '+N(k)+'. Si on divise par x, on <b>perd la solution 0</b>.'})});
 function quad(){var p,q;do{p=R(-6,5);q=p+R(1,6)}while(p+q===0);var A=pick([1,1,2]),d=pick([0,1,2]),e=R(-4,4),f=R(-6,6);
   return {p:p,q:q,A:A,d:d,e:e,f:f,a:d+A,b:e-A*(p+q),c:f+A*p*q}}
-GENS.push(function(){var o=quad();
-  var L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);if((+(o.d!==0)+(o.e!==0)+(o.f!==0))<2)return GENS[3]();
+function quad2(){var o;do{o=quad()}while((+(o.d!==0)+(o.e!==0)+(o.f!==0))<2||Math.abs(o.b)>16||Math.abs(o.c)>30);return o}
+function facH(o){return (o.A>1?o.A:'')+par(o.p)+par(o.q)}
+/* ranger */
+GENS.push(function(){var o=quad2();
+  var L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);
   var okh=poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q)+' = 0';
-  var wr=[];[[1,1,1],[1,1,-1],[1,-1,1],[-1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]].forEach(function(s){wr.push(poly2(o.a-s[0]*o.d,o.b-s[1]*o.e,o.c-s[2]*o.f)+' = 0')});
+  var wr=[];[[1,-1,1],[1,1,-1],[-1,1,1],[1,-1,-1],[-1,-1,1],[-1,1,-1]].forEach(function(s){wr.push(poly2(o.a-s[0]*o.d,o.b-s[1]*o.e,o.c-s[2]*o.f)+' = 0')});
   wr=wr.filter(function(w){return w!==okh});
-  return qcm('Mets sous la forme \u00ab ax\u00b2 + bx + c = 0 \u00bb : <b>'+L+' = '+Rr+'</b>',okh,wr,
-   'On passe <b>tout</b> du m\u00eame c\u00f4t\u00e9 en soustrayant le membre de droite terme \u00e0 terme : x\u00b2 avec x\u00b2, x avec x, nombres avec nombres.')});
-GENS.push(function(){var o=quad(),L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);if((+(o.d!==0)+(o.e!==0)+(o.f!==0))<2)return GENS[4]();
+  return qcm('Mets sous la forme « ax² + bx + c = 0 » : <b>'+L+' = '+Rr+'</b>',okh,wr,
+   'On soustrait <b>tout</b> le membre de droite, terme à terme, en changeant le signe de <b>chacun</b> de ses termes : x² avec x², x avec x, nombres avec nombres.')});
+/* équation à ranger */
+GENS.push(function(){var o=quad2(),L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);
   var ok=[F(o.p),F(o.q)];
-  return mk({q:'Résous : <b>'+L+' = '+Rr+'</b>',ok:{h:setEq(ok),f:fset(ok)},wr:[{h:setEq([F(-o.p),F(-o.q)]),f:fset([F(-o.p),F(-o.q)])},{h:setEq([F(o.p+o.q)]),f:fset([F(o.p+o.q)])},{h:setEq([F(o.p*o.q)]),f:fset([F(o.p*o.q)])},{h:setEq([F(o.p),F(-o.q)]),f:fset([F(o.p),F(-o.q)])}],
+  function ch(v){return {h:setEq(v),f:fset(v)}}
+  return mk({q:'Résous : <b>'+L+' = '+Rr+'</b>',ok:ch(ok),wr:[ch([F(-o.p),F(-o.q)]),ch([F(o.p),F(-o.q)]),ch([F(o.p+o.q)]),ch([F(o.p*o.q)]),ch([F(-o.p),F(o.q)])],
    truth:function(x){return Math.abs((o.a*x*x+o.b*x+o.c)-(o.d*x*x+o.e*x+o.f))<EPS},
-   why:'On range : '+poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q)+' = 0, soit '+(o.A>1?o.A+'':'')+'(x '+(o.p<0?'+':'−')+' '+Math.abs(o.p)+')(x '+(o.q<0?'+':'−')+' '+Math.abs(o.q)+') = 0. Un produit est nul si l’un des facteurs est nul : x = '+N(o.p)+' ou x = '+N(o.q)+'.'})});
-GENS.push(function(){var o=quad(),rel=pick(['>','>=','<','<=']),L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);if((+(o.d!==0)+(o.e!==0)+(o.f!==0))<2)return GENS[5]();
+   why:'On range : '+poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q)+' = 0. On factorise (ou on utilise Δ) : '+facH(o)+' = 0. Un produit est nul si l’un des facteurs est nul : x = '+N(o.p)+' ou x = '+N(o.q)+'.'})});
+/* inéquation à ranger */
+GENS.push(function(){var o=quad2(),rel=pick(['>','>=','<','<=']),L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f);
   var an=analyse([{a:1,b:-o.p,p:1},{a:1,b:-o.q,p:1}],o.A,rel),ex=analyse([{a:1,b:o.p,p:1},{a:1,b:o.q,p:1}],o.A,rel).parts;
   return mk({q:'Résous : <b>'+L+' '+RS(rel)+' '+Rr+'</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[ex]),
    truth:function(x){return relOK(rel,(o.a*x*x+o.b*x+o.c)-(o.d*x*x+o.e*x+o.f))},
-   why:'On range : '+poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q)+' '+RS(rel)+' 0. Les racines sont '+N(o.p)+' et '+N(o.q)+'. Le coefficient de x² est positif : le trinôme est '+((rel==='<'||rel==='<=')?'négatif <b>entre</b> les racines.':'positif <b>à l’extérieur</b> des racines.')})});
-GENS.push(function(){var u=R(-6,6),v=R(-6,6);if(u===v)v=u+3;var rel=pick(['>','>=','<','<=']);
+   why:'On range : '+poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q)+' '+RS(rel)+' 0, soit '+facH(o)+' '+RS(rel)+' 0. Racines : '+N(o.p)+' et '+N(o.q)+'. Le coefficient de x² est positif : le trinôme est '+((rel==='<'||rel==='<=')?'négatif <b>entre</b> les racines.':'positif <b>à l’extérieur</b> des racines.')+' '+incl(rel)+tableFb(an,'Produit')})});
+/* forme factorisée */
+GENS.push(function(){var u,v;do{u=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]);v=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6])}while(u===v);var rel=pick(['>','>=','<','<=']);
   var an=analyse([{a:1,b:u,p:1},{a:1,b:v,p:1}],1,rel),ex=analyse([{a:1,b:-u,p:1},{a:1,b:-v,p:1}],1,rel).parts;
-  var Pa=function(w){return '(x '+(w<0?'−':'+')+' '+Math.abs(w)+')'};
-  if(u===0||v===0)return GENS[6]();
-  return mk({q:'Résous : <b>'+Pa(u)+Pa(v)+' '+RS(rel)+' 0</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[ex]),
-   truth:function(x){return relOK(rel,(x+u)*(x+v))},why:'Racines : x = '+N(-u)+' et x = '+N(-v)+'. Attention au signe : x + '+u+' = 0 donne x = '+N(-u)+'.'})});
-GENS.push(function(){var a=R(2,5),b=R(1,4),c=R(2,12),rel=pick(['>=','<=','>','<']);
-  return qcm('Pour résoudre <b>x² + '+b+'x '+RS(rel)+' '+c+'</b>, quelle est la bonne première étape ?',
-   'Tout passer du même côté pour avoir 0 à droite : x² + '+b+'x − '+c+' '+RS(rel)+' 0',
+  return mk({q:'Résous : <b>'+par(-u)+par(-v)+' '+RS(rel)+' 0</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[ex]),
+   truth:function(x){return relOK(rel,(x+u)*(x+v))},why:'Racines : '+lin(1,u)+' = 0 donne x = '+N(-u)+' (attention au signe) et '+lin(1,v)+' = 0 donne x = '+N(-v)+'. Le produit est '+((rel==='<'||rel==='<=')?'négatif <b>entre</b> les racines.':'positif <b>à l’extérieur</b> des racines.')+' '+incl(rel)+tableFb(an,'Produit')})});
+/* première étape */
+GENS.push(function(){var b=R(1,4),c=R(2,12),rel=pick(['>=','<=','>','<']),L=poly2(1,b,0);
+  return qcm('Pour résoudre <b>'+L+' '+RS(rel)+' '+c+'</b>, quelle est la bonne première étape ?',
+   'Tout passer du même côté pour avoir 0 à droite : '+poly2(1,b,-c)+' '+RS(rel)+' 0',
    ['Diviser par x des deux côtés','Prendre la racine carrée des deux membres','Remplacer le signe par = et oublier l’inégalité'],
-   'Pour un produit de facteurs on a besoin de <b>0 d’un côté</b>. Diviser par x est dangereux : x peut être négatif (le sens change) ou nul.')});
+   'Pour étudier un signe, on a besoin de <b>0 d’un côté</b>. Diviser par x est dangereux : x peut être négatif (le sens change) ou nul.')});
 /* ----- animation ----- */
 function fnGraph(fn,xa,xb,ya,yb,hl,parts,roots){
   var W=330,H=210,pl=26,pr=10,pt=10,pb=26;
@@ -316,26 +353,26 @@ function fnGraph(fn,xa,xb,ya,yb,hl,parts,roots){
 var qIdx=-1;
 function quadSteps(again){
   if(again||qIdx<0)qIdx++;
-  if(qIdx%2===0){var m=R(2,4),k=m*m,rel=pick(['<','>','<=','>=']),an=analyse([{a:1,b:-m,p:1},{a:1,b:m,p:1}],1,rel);
+  if(qIdx%2===0){var m=R(2,4),k=m*m,rel=pick(['<','>','<=','>=']),an=analyse([{a:1,b:m,p:1},{a:1,b:-m,p:1}],1,rel);
     var inside=(rel==='<'||rel==='<=');
     return [
      {eq:'x² '+RS(rel)+' '+k,vis:'',txt:'<b>Forme simple</b> : x² d’un côté, un nombre de l’autre. Pas besoin de tout ranger : on réfléchit avec la courbe y = x².'},
      {eq:'x² = '+k+' ⇒ x = '+N(-m)+' ou x = '+m,vis:fnGraph(function(x){return x*x},-m-1.5,m+1.5,-1,k+4,[k],[],[-m,m]),txt:'D’abord l’équation : la courbe coupe la droite y = '+k+' en <b>deux</b> points, x = '+N(-m)+' et x = '+m+' (attention : pas seulement '+m+').'},
-     {eq:'x² '+RS(rel)+' '+k+' ⇒ '+setHtml(an.parts),vis:fnGraph(function(x){return x*x},-m-1.5,m+1.5,-1,k+4,[k],an.parts,[-m,m]),txt:inside?'On cherche où la courbe est <b>sous</b> la droite : c’est <b>entre</b> les deux racines.':'On cherche où la courbe est <b>au-dessus</b> de la droite : c’est <b>à l’extérieur</b> des deux racines.'+' '+((rel==='<='||rel==='>=')?'Les racines sont incluses (≤ ou ≥).':'Les racines sont exclues (< ou >).')}];
+     {eq:'x² '+RS(rel)+' '+k+' ⇒ '+setHtml(an.parts),vis:fnGraph(function(x){return x*x},-m-1.5,m+1.5,-1,k+4,[k],an.parts,[-m,m]),txt:(inside?'On cherche où la courbe est <b>sous</b> la droite : c’est <b>entre</b> les deux racines.':'On cherche où la courbe est <b>au-dessus</b> de la droite : c’est <b>à l’extérieur</b> des deux racines.')+' '+((rel==='<='||rel==='>=')?'Les racines sont incluses (≤ ou ≥).':'Les racines sont exclues ('+LT+' ou '+GT+').')}];
   }
   var o=quad();if(o.d===0)o.d=1,o.a=1+o.A,o.b=o.e-o.A*(o.p+o.q),o.c=o.f+o.A*o.p*o.q;
   var L=poly2(o.a,o.b,o.c),Rr=poly2(o.d,o.e,o.f),rel2=pick(['<=','>=']),
-      P=poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q),Pa=function(w){return '(x '+(w<0?'+':'−')+' '+Math.abs(w)+')'};
+      P=poly2(o.A,-o.A*(o.p+o.q),o.A*o.p*o.q),Pa=par;
   var an2=analyse([{a:1,b:-o.p,p:1},{a:1,b:-o.q,p:1}],o.A,rel2);
   var fac=(o.A>1?o.A:'')+Pa(o.p)+Pa(o.q);
   var xa=Math.min(o.p,o.q)-2,xb=Math.max(o.p,o.q)+2,fn=function(x){return o.A*(x-o.p)*(x-o.q)},ymin=-o.A*Math.pow((o.q-o.p)/2,2)-1,ymax=Math.min(o.A*Math.pow(Math.max(Math.abs(xa-o.p),Math.abs(xb-o.q)),2)*1.0,16);
   return [
    {eq:L+' = '+Rr,vis:'',txt:'<b>Forme compliquée</b> : des x² et des x des deux côtés. Le réflexe : <b>tout ranger</b>.'},
    {eq:P+' = 0',vis:'',txt:'On passe tout du même côté (comme pour la balance) et on regroupe les termes semblables. S’il y a des parenthèses, on <b>distribue d’abord</b>.'},
-   {eq:fac+' = 0',vis:'',txt:'On <b>factorise</b> (ici, on cherche deux nombres de somme '+N(o.p+o.q)+' et de produit '+N(o.p*o.q)+' avec '+N(-o.p)+' et '+N(-o.q)+'). Un produit est nul si l’un des facteurs est nul.'},
+   {eq:fac+' = 0',vis:'',txt:'On <b>factorise</b>'+(o.A>1?' : on met d’abord '+o.A+' en évidence, puis':' :')+' on cherche les deux racines, de somme '+N(o.p+o.q)+' et de produit '+N(o.p*o.q)+'. Ce sont '+N(o.p)+' et '+N(o.q)+' (on peut aussi les trouver avec Δ). Un produit est nul si l’un des facteurs est nul.'},
    {eq:'x = '+N(o.p)+' ou x = '+N(o.q),vis:fnGraph(fn,xa,xb,ymin,Math.max(ymax,4),[],[],[o.p,o.q]),txt:'<b>Équation</b> : deux solutions. La courbe du trinôme coupe l’axe des x en ces deux points.'},
    {eq:P+' '+RS(rel2)+' 0',vis:fnGraph(fn,xa,xb,ymin,Math.max(ymax,4),[],an2.parts,[o.p,o.q]),txt:'<b>Inéquation</b> : même trinôme, mais on cherche où la courbe est '+(rel2==='<='?'<b>sous</b> l’axe':'<b>au-dessus</b> de l’axe')+' (zone verte sur l’axe).'},
-   {eq:setHtml(an2.parts),vis:tableHtml(an2,3,true,'Signe')+nline(an2,an2.parts),txt:'Le même résultat avec un <b>tableau de signes</b>. Les racines sont '+(rel2==='<='||rel2==='>='?'<b>incluses</b> (≤, ≥).':'exclues.')}
+   {eq:setHtml(an2.parts),vis:tableHtml(an2,3,true,'Signe')+nline(an2,an2.parts),txt:'Le même résultat avec un <b>tableau de signes</b> de la forme factorisée. Les racines sont '+(rel2==='<='||rel2==='>='?'<b>incluses</b> (≤, ≥).':'exclues.')}
   ];
 }
 
