@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,top=1.9cm,bottom=1.8cm,left=2.3cm,right=2.3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{longtable,array,booktabs}
+\usepackage{fancyhdr}
+\newcommand{\barre}[1]{\leavevmode\setbox0\hbox{#1}\rlap{\rule[0.55ex]{\wd0}{0.5pt}}\box0}
+\definecolor{bleu}{HTML}{1F4E79}
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small 5\textsuperscript{e} Mathématiques --- Trigonométrie}
+\rhead{\small Partie 2 : formules et équations}
+\cfoot{\small\thepage}
+\rfoot{\footnotesize Aide de l'IA (AIA)}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}
+% ---- lignes du tableau ----
+\newcommand{\case}{$\square$}
+\newcommand{\sect}[1]{\midrule\multicolumn{2}{@{}l}{\rule{0pt}{4ex}\textbf{\large\color{bleu}#1}}\\[0.6ex]\midrule}
+\newcommand{\ligne}[1]{#1 & \case\\}                         % savoir-faire simple
+\newcommand{\groupe}[1]{\rule{0pt}{3.6ex}\textbf{#1} & \\} % titre d'un groupe
+\newcommand{\sous}[1]{\hangindent=2.1em\hangafter=1\hspace{1.2em}$\circ$ #1 & \case\\}  % ligne d'un groupe
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{bleu} Tableau des savoir-faire}\\[1mm]
+Trigonométrie $\bullet$ Partie 2 : formules et équations trigonométriques
+\end{center}
+\vspace{-2mm}
+\renewcommand{\arraystretch}{1.04}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{12.6cm}>{\centering\arraybackslash}p{2.9cm}@{}}
+\toprule
+ & \textbf{Éval. (x ou v)}\\
+\endhead
+\bottomrule
+\endlastfoot
+
+\sect{À revoir avant de commencer}
+\ligne{Les valeurs particulières de $\sin$, $\cos$ et $\tan$}
+\ligne{Les angles associés}
+\ligne{La formule fondamentale : $\sin^2a+\cos^2a=1$}
+
+\sect{1. Connaître et démontrer les formules}
+\ligne{Connaître les formules d'addition : $\sin(a\pm b)$, $\cos(a\pm b)$, $\tan(a\pm b)$}
+\ligne{Connaître les formules de duplication : $\sin(2a)$, $\cos(2a)$, $\tan(2a)$}
+\ligne{Connaître les formules de Carnot : $\cos(2a)=1-2\sin^2a=2\cos^2a-1$}
+\barre{Connaître les formules de Simpson}\quad\textit{(elles sont données)} & \\
+\groupe{Démontrer une formule}
+\sous{démontrer la formule de $\sin(a+b)$}
+\sous{en déduire les autres formules d'addition ($\sin$, $\cos$ et $\tan$ de $a\pm b$)}
+\sous{démontrer les formules de duplication (avec les formules d'addition)}
+\sous{démontrer les formules de Carnot (avec $\cos(2a)$ et la formule fondamentale)}
+\sous{démontrer les formules de Simpson (avec les formules d'addition)}
+
+\sect{2. Utiliser les formules}
+\groupe{Calculer une valeur exacte, sans calculatrice}
+\sous{d'une somme ou d'une différence d'angles remarquables (ex. : $\cos 75^\circ$, $\sin\frac{\pi}{12}$)}
+\sous{de $\sin(a+b)$, $\cos(a-b)$, $\tan(a+b)$, \dots{} à partir de nombres trigonométriques de $a$ et de $b$}
+\sous{de $\sin(2a)$, $\cos(2a)$, $\tan(2a)$ à partir d'un nombre trigonométrique de $a$ et de son quadrant}
+\groupe{Transformer une expression}
+\sous{écrire $\cos a$ à partir de $\sin a$ (ou l'inverse) avec la formule fondamentale}
+\sous{développer ou regrouper avec les formules d'addition}
+\sous{avec les formules de duplication}
+\sous{avec les formules de Carnot (remplacer $\sin^2a$ ou $\cos^2a$)}
+\sous{transformer une somme en produit (Simpson)}
+\sous{transformer un produit en somme (Simpson)}
+\groupe{Raisonner avec les formules}
+\sous{dire si une égalité est vraie ou fausse, et justifier (ex. : $\sin(2a)=2\sin a$)}
+\sous{vérifier une identité trigonométrique}
+
+\pagebreak
+\sect{3. Résoudre une équation trigonométrique}
+\groupe{Résoudre une équation élémentaire}
+\sous{$\sin x = c$}
+\sous{$\cos x = c$}
+\sous{$\tan x = c$ (avec sa condition d'existence)}
+\sous{reconnaître une équation sans solution (ex. : $\cos x = 2$)}
+\groupe{Écrire les solutions}
+\sous{donner toutes les solutions (avec $+\,2k\pi$ ou $+\,k\pi$, $k\in\mathbb{Z}$)}
+\sous{donner les solutions qui se trouvent dans un intervalle donné}
+\sous{représenter les solutions sur le cercle trigonométrique}
+\groupe{Résoudre une équation qui se ramène à une équation élémentaire}
+\sous{l'inconnue est dans une expression : $\sin(ax+b)=c$, $\cos(ax+b)=c$, \dots}
+\sous{égalité de la même famille : $\sin A=\sin B$, $\cos A=\cos B$, $\tan A=\tan B$}
+\sous{égalité de familles différentes : $\sin A=\cos B$ (angles associés)}
+\groupe{Résoudre une équation en choisissant la méthode}
+\sous{par mise en évidence ou factorisation (produit nul)}
+\sous{en se ramenant à une équation du 2\textsuperscript{e} degré (poser $y=\sin x$ ou $y=\cos x$)}
+\sous{en utilisant d'abord une formule (duplication, Carnot, Simpson)}
+\sous{équation linéaire $a\sin x+b\cos x=c$}
+\sous{équation homogène en $\sin x$ et $\cos x$}
+
+\sect{4. Résoudre une inéquation trigonométrique}
+\ligne{Résoudre une inéquation élémentaire ($\sin x \geq c$, $\cos x < c$, \dots) à l'aide du cercle trigonométrique}
+\end{longtable}
+\end{document}

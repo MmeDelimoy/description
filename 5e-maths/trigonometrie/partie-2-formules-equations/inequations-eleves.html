@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Les inéquations trigonométriques</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;margin:4px 0 10px}
+.top a{color:var(--navy);text-decoration:none;font-weight:600}
+h1{font-size:25px;line-height:1.2;margin:6px 0 4px;color:var(--navy)}
+h2{font-size:20px;margin:0 0 8px;color:var(--navy)}
+.lead{color:#4a5a6c;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.goal{border-left:6px solid var(--teal);background:#EAF6F4}
+.warn{border-left:6px solid var(--coral);background:#FDF0EC}
+.key{border-left:6px solid var(--sun);background:#FFF8DC}
+.badge{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 2px;font-size:.92em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;min-height:46px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.coral{background:var(--coral)}
+.btn[disabled]{opacity:.35}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.eqline{font-size:26px;text-align:center;margin:8px 0;min-height:44px;color:var(--ink)}
+.stepbox{min-height:72px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.chip{animation:pop .45s ease both;transform-box:fill-box;transform-origin:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--navy)}
+.stw{overflow-x:auto}
+table.st{border-collapse:collapse;margin:8px auto;font-size:17px}
+table.st th.lab{text-align:left;padding:6px 6px;font-size:15px;font-weight:700;white-space:nowrap;border-right:2px solid var(--ink)}
+table.st td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line);min-width:30px}
+table.st tr:first-child td,table.st tr:first-child th{border-bottom:2px solid var(--ink)}
+table.st td.pt{border-left:1.5px solid #8895a5;border-right:1.5px solid #8895a5;font-weight:700;min-width:34px}
+table.st td.pt.forb{border-left:3px double var(--ink);border-right:3px double var(--ink);color:var(--coral)}
+table.st .sp{color:var(--teal);font-weight:700;font-size:20px}
+table.st .sn{color:var(--coral);font-weight:700;font-size:20px}
+table.st td.on{background:#CFEFEA}
+table.st tr.res th{color:var(--navy)}
+.inf{display:block;font-size:14px}.inf.l{text-align:left}.inf.r{text-align:right}
+svg.nl{width:100%;max-width:420px;display:block;margin:6px auto}
+svg.gr,svg.bal{width:100%;max-width:420px;display:block;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;font-size:15px;color:#4a5a6c;margin-bottom:6px}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.bar>div{height:100%;background:var(--teal);width:0;transition:width .4s}
+.qtext{font-size:19px;margin:6px 0 12px}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:18px;min-height:50px;color:var(--ink)}
+.ch.good{border-color:var(--teal);background:#E3F5F1}
+.ch.bad{border-color:var(--coral);background:#FDECE7}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;background:#F0F4F9}
+.fb.ok{background:#E3F5F1}.fb.ko{background:#FDECE7}
+.big{font-size:42px;text-align:center}
+.cards{display:grid;gap:12px}
+.item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.item .n{flex:none;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:20px}
+.item.done .n{background:var(--teal)}
+.item b{display:block;color:var(--navy);font-size:18px}
+.item small{color:#4a5a6c;display:block}
+.tag{display:inline-block;background:#EEF3F9;border-radius:8px;padding:1px 8px;font-size:13px;margin:4px 6px 0 0;color:#3b4b5d}
+ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
+.def{font-size:18px}
+.foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
+@media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+@media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
+
+.ou{color:#6b7b8c;font-size:.9em}
+.f{font-size:18px;margin:8px 0;line-height:2}
+.f b{color:var(--navy)}
+.steps{padding-left:22px}.steps li{margin:8px 0}
+table.sg{border-collapse:collapse;margin:8px auto}table.sg td,table.sg th{border:1px solid var(--line);padding:5px 9px;text-align:center}
+.ex{border-left:6px solid var(--blue);background:#EEF4FF}
+</style></head><body><div class="wrap">
+<div class="top"><a href="./">← Trigonométrie, partie 2</a><span>Bloc 7 / 7</span></div>
+<h1>Les inéquations trigonométriques</h1>
+<div class="card goal"><span class="badge">Objectif</span><div>Résoudre une inéquation élémentaire (sin x ≥ c, cos x &lt; c…) dans un intervalle, <b>à l’aide du cercle</b>.</div></div>
+<div class="card"><span class="badge">Comprendre</span><h2>Un arc de cercle</h2><p>Clique sur « Suivant ». Le bouton « Un autre exemple » change d’inéquation.</p><div id="ineq"></div></div>
+<div class="card key"><span class="badge">Méthode</span>
+<ol class="steps"><li>Tracer la droite : <b>horizontale</b> pour un sinus (hauteur), <b>verticale</b> pour un cosinus (abscisse).</li><li>Résoudre l’<b>équation</b> : ses solutions sont les bornes.</li><li>Choisir le <b>bon arc</b> : au-dessus ou en dessous pour un sinus, à droite ou à gauche pour un cosinus.</li><li>Écrire l’intervalle <b>dans le sens positif</b>, avec des crochets fermés si l’inégalité est large (≤, ≥), ouverts sinon.</li></ol></div>
+<div class="card warn"><b>Attention à l’intervalle demandé.</b> Dans [0 ; 2π], un arc qui passe par 0 s’écrit en <b>deux morceaux</b>. Dans [−π ; π], c’est un arc qui passe par π qui se coupe en deux.<br>Et toujours : sin x ≤ 1 est vrai pour tous les réels, sin x &gt; 1 n’est jamais vrai.</div>
+<div class="card" id="testcard"><span class="badge">Teste-toi</span>
+<h2>Quiz : 10 questions</h2>
+<p>Chaque faute ajoute <b>3 questions</b> pour consolider. À la fin, tu sais si tu maîtrises ce bloc.</p>
+<div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
+<div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
+<div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
+<script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
+var M='−', EPS=1e-9;
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[R(0,a.length-1)]}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a}
+function F(n,d){d=(d===undefined)?1:d;if(d<0){n=-n;d=-d}var g=gcd(n,d)||1;return{n:n/g,d:d/g}}
+function fv(f){return f.n/f.d}
+function feq(a,b){return a.n===b.n&&a.d===b.d}
+function fcmp(a,b){return a.n*b.d-b.n*a.d}
+function N(n){return n<0?M+(-n):''+n}
+function frs(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'}
+function FR(n,d){var f=F(n,d);if(f.d===1)return N(f.n);return (f.n<0?M:'')+frs(Math.abs(f.n),f.d)}
+function fh(f){return FR(f.n,f.d)}
+function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
+function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
+function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
+function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
+var LT='&lt;',GT='&gt;';
+/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
+function ng(n){return n<0?'('+N(n)+')':N(n)}
+function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
+function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
+function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
+function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
+/* éléments de réponse */
+function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
+function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
+function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
+function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
+function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
+/* analyse du signe d'un produit/quotient de facteurs du 1er degré
+   factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
+function mids(roots){var k=roots.length,m=[];for(var i=0;i<=k;i++){m.push(k===0?0:(i===0?fv(roots[0])-1:(i===k?fv(roots[k-1])+1:(fv(roots[i-1])+fv(roots[i]))/2)))}return m}
+function analyse(factors,K,rel){
+  var roots=[];factors.forEach(function(f){var r=F(-f.b,f.a);if(!roots.some(function(q){return feq(q,r)}))roots.push(r)});
+  roots.sort(fcmp);var k=roots.length,mi=mids(roots),iv=[],pt=[];
+  mi.forEach(function(m){var s=K>0?1:-1;factors.forEach(function(f){s*=(f.a*m+f.b)>0?1:-1});iv.push(s)});
+  roots.forEach(function(r){var zd=false;factors.forEach(function(f){if(f.p<0&&feq(F(-f.b,f.a),r))zd=true});pt.push(zd?'forb':'zero')});
+  var eq=(rel==='>='||rel==='<='),want=(rel==='>'||rel==='>=')?1:-1,els=[];
+  for(var i=0;i<=k;i++){els.push({t:'iv',inS:iv[i]===want,i:i});if(i<k)els.push({t:'pt',inS:pt[i]==='zero'&&eq,i:i})}
+  var parts=[],cur=null;
+  els.forEach(function(e,idx){if(e.inS){if(!cur)cur={start:idx};cur.end=idx}else if(cur){parts.push(cur);cur=null}});
+  if(cur)parts.push(cur);
+  parts=parts.map(function(c){var s=els[c.start],e=els[c.end],p={};
+    if(s.t==='iv'){p.lo=s.i===0?null:roots[s.i-1];p.loI=false}else{p.lo=roots[s.i];p.loI=true}
+    if(e.t==='iv'){p.hi=e.i===k?null:roots[e.i];p.hiI=false}else{p.hi=roots[e.i];p.hiI=true}
+    return p});
+  return {roots:roots,iv:iv,pt:pt,parts:parts,factors:factors,K:K,rel:rel,mids:mi};
+}
+function sg(s){return s>0?'+':s<0?M:'0'}
+function tableHtml(an,show,hl,resLab){
+  var k=an.roots.length,rows=[];
+  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
+  an.factors.forEach(function(f){var r=F(-f.b,f.a);
+    rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
+  rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
+  var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
+  for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
+  h+='</tr>';
+  var nr=rows.length-1;
+  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
+    h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
+    for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
+      if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
+    h+='</tr>'});
+  return h+'</table></div>';
+}
+function nline(an,parts){
+  var k=an.roots.length,W=320,H=74,x0=26,x1=W-26;
+  function X(i){return x0+(i+1)*(x1-x0)/(k+1)}
+  function idx(r){for(var i=0;i<k;i++)if(feq(an.roots[i],r))return i;return 0}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="nl" role="img" aria-label="droite réelle">';
+  s+='<line x1="8" y1="34" x2="'+(W-8)+'" y2="34" stroke="#5b6b7b" stroke-width="2"/>';
+  s+='<text x="8" y="16" font-size="11" fill="#5b6b7b">'+M+'∞</text><text x="'+(W-8)+'" y="16" font-size="11" fill="#5b6b7b" text-anchor="end">+∞</text>';
+  parts.forEach(function(p){var a=p.lo==null?8:X(idx(p.lo)),b=p.hi==null?W-8:X(idx(p.hi));s+='<line x1="'+a+'" y1="34" x2="'+b+'" y2="34" stroke="#2A9D8F" stroke-width="8" opacity=".85"/>'});
+  an.roots.forEach(function(r,i){var on=inParts(parts,fv(r));s+='<circle cx="'+X(i)+'" cy="34" r="6" fill="'+(on?'#1F4E79':'#fff')+'" stroke="#1F4E79" stroke-width="2"/><text x="'+X(i)+'" y="62" font-size="12" text-anchor="middle" fill="#1F2A44">'+ftxt(r)+'</text>'});
+  return s+'</svg>';
+}
+/* ===== fabrique de questions ===== */
+function mk(o){
+  var seen={};seen[o.ok.h]=1;var ws=[];
+  o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
+  function cp(w,ok){return {h:w.h,f:w.f,g:w.g,v:w.v,id:w.id,ok:ok}}
+  var all=shuffle([cp(o.ok,true)].concat(ws.map(function(w){return cp(w,false)})));
+  return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q,G:o.G,num:o.num,dom:o.dom};
+}
+/* QCM texte simple : bonne réponse + mauvaises */
+function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
+/* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
+function distract(an,extra){
+  var v=[];(extra||[]).forEach(function(p){v.push(p)});
+  var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
+  var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
+  v.push(flipBr(an.parts));                                                           // crochets inversés
+  var asProd=analyse(an.factors.map(function(f){return {a:f.a,b:f.b,p:1}}),an.K,an.rel);v.push(asProd.parts);   // dénominateurs traités comme des facteurs
+  var noDen=an.factors.filter(function(f){return f.p>0});if(noDen.length&&noDen.length<an.factors.length)v.push(analyse(noDen,an.K,an.rel).parts);
+  v.push(analyse(an.factors,-an.K,compRel(an.rel)).parts);
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
+  [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
+  var seen={},out=[];seen[setHtml(an.parts)]=1;
+  v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
+  return out;
+}
+/* choix numériques : x entier exact + valeurs fausses plausibles */
+function numOpts(x,cands,pre){
+  pre=pre||'x = ';var seen={},wr=[];seen[x]=1;
+  cands.concat([x+1,x-1,x+2,x-2,-x,x+3]).forEach(function(v){if(Math.round(v)===v&&!seen[v]){seen[v]=1;wr.push(v)}});
+  function mkc(v){return {h:pre+N(v),f:function(t){return Math.abs(t-v)<EPS}}}
+  return {ok:mkc(x),wr:wr.slice(0,6).map(mkc)};
+}
+
+/* ===== interface : maîtrise, stepper, quiz ===== */
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function $(id){return document.getElementById(id)}
+function stepper(root,getSteps,opts){
+  opts=opts||{};var i=0,steps=getSteps();
+  root.innerHTML='<div class="eqline" id="'+root.id+'_eq"></div><div id="'+root.id+'_vis"></div><div class="dots" id="'+root.id+'_dots"></div><div class="stepbox card key" id="'+root.id+'_txt"></div><div class="row"><button class="btn alt" id="'+root.id+'_p">◀ Précédent</button><button class="btn" id="'+root.id+'_n">Suivant ▶</button>'+(opts.again?'<button class="btn alt" id="'+root.id+'_a">↻ Un autre exemple</button>':'')+'</div>';
+  function draw(){var s=steps[i];
+    $(root.id+'_eq').innerHTML=s.eq||'';$(root.id+'_vis').innerHTML=s.vis||'';
+    var t=$(root.id+'_txt');t.style.animation='none';void t.offsetWidth;t.style.animation='';t.innerHTML=s.txt;
+    $(root.id+'_dots').innerHTML=steps.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>'}).join('');
+    $(root.id+'_p').disabled=(i===0);$(root.id+'_n').disabled=(i===steps.length-1);
+    if(s.after)s.after(root);}
+  $(root.id+'_p').onclick=function(){if(i>0){i--;draw()}};
+  $(root.id+'_n').onclick=function(){if(i<steps.length-1){i++;draw()}};
+  if(opts.again)$(root.id+'_a').onclick=function(){steps=getSteps(true);i=0;draw()};
+  root._redraw=draw;draw();
+}
+function setMastered(id,on){store('trigo2_'+id,on?'1':'0')}
+function isMastered(id){return store('trigo2_'+id)==='1'}
+function runQuiz(root,gens,itemId,itemLabel,hubUrl){
+  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur;
+  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[]}
+  function nextQ(){
+    for(var t=0;t<60;t++){
+      if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
+    }
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
+  }
+  function show(){
+    if(done>=planned)return end();
+    cur=nextQ();
+    var extra=planned>FIRST?' <b style="color:var(--coral)">(+'+(planned-FIRST)+' de consolidation)</b>':'';
+    var h='<div class="qhead"><span>Question '+(done+1)+' sur '+planned+extra+'</span><span>Erreurs : '+wrong+'</span></div><div class="bar"><div style="width:'+(100*done/planned)+'%"></div></div><div class="qtext">'+cur.q+'</div>';
+    cur.ch.forEach(function(c,i){h+='<button class="ch" data-i="'+i+'">'+c.h+'</button>'});
+    h+='<div id="fb"></div><div class="row" id="nx"></div>';
+    root.innerHTML=h;
+    var bs=root.querySelectorAll('.ch');
+    Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
+  }
+  function answer(i,bs){
+    var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
+    done++;
+    if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
+    else{wrong++;planned+=PEN;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
+    $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
+    $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
+  }
+  function end(){
+    setMastered(itemId,true);
+    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div><div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
+    $('again').onclick=function(){reset();show()};
+  }
+  root._peek=function(){return cur};
+  reset();show();
+}
+
+/* ===== outils de trigonométrie ===== */
+var PIv=Math.PI,R2=Math.SQRT2,R3=Math.sqrt(3),R6=Math.sqrt(6);
+function PI(n,d){var f=F(n,d===undefined?1:d);if(f.n===0)return '0';var a=Math.abs(f.n),s=f.n<0?M:'';if(f.d===1)return s+(a===1?'':a)+'π';return s+frs((a===1?'':a)+'π',f.d)}
+function PIt(n,d){var f=F(n,d===undefined?1:d);if(f.n===0)return '0';var a=Math.abs(f.n),s=f.n<0?M:'';return s+(a===1?'':a)+'π'+(f.d===1?'':'/'+f.d)}
+function kper(n,d){var f=F(n,d===undefined?1:d),t=(f.n===1?'':f.n)+'kπ';return f.d===1?t:frs(t,f.d)}
+/* famille de solutions : x = b·π + k·p·π */
+function fam(bn,bd,pn,pd){return {b:F(bn,bd),p:F(pn,pd===undefined?1:pd)}}
+function famH(fm){return 'x = '+(fm.b.n===0?'':PI(fm.b.n,fm.b.d)+' + ')+kper(fm.p.n,fm.p.d)}
+var OU=' <span class="ou">ou</span> ';
+function famsH(l){return l.map(famH).join(OU)}
+function famsF(l){return function(x){return l.some(function(fm){var t=(x/PIv-fv(fm.b))/fv(fm.p);return Math.abs(t-Math.round(t))<1e-7})}}
+function famC(l){return {h:famsH(l),f:famsF(l)}}
+/* liste de valeurs (multiples de π/12) */
+function valsH(ns){return ns.length?ns.map(function(n){return 'x = '+PI(n,12)}).join(OU):'aucune solution'}
+function valsF(ns){return function(x){return ns.some(function(n){return Math.abs(x-n*PIv/12)<1e-7})}}
+function valsC(ns){ns=ns.slice().sort(function(a,b){return a-b});return {h:valsH(ns),f:valsF(ns)}}
+/* valeurs exactes */
+var EX=[[0,'0'],[.5,frs(1,2)],[R2/2,frs('√2',2)],[R3/2,frs('√3',2)],[1,'1'],[R3/3,frs('√3',3)],[R3,'√3'],[2,'2'],[1.5,frs(3,2)]];
+function exH(v){for(var i=0;i<EX.length;i++)if(Math.abs(Math.abs(v)-EX[i][0])<1e-9)return (v<-1e-9?M:'')+EX[i][1];return null}
+var EXT=['0','1/2','√2/2','√3/2','1','√3/3','√3','2','3/2'];
+function exT(v){for(var i=0;i<EX.length;i++)if(Math.abs(Math.abs(v)-EX[i][0])<1e-9)return (v<-1e-9?M:'')+EXT[i];return ''}
+var FN={sin:Math.sin,cos:Math.cos,tan:Math.tan};
+function defd(fn,x){return fn!=='tan'||Math.abs(Math.cos(x))>1e-9}
+/* solutions de fn(x)=c parmi les multiples de π/12, de lo à hi (en douzièmes de π) */
+function solsIn(fn,c,lo,hi){var r=[];for(var n=lo;n<=hi;n++){var x=n*PIv/12;if(defd(fn,x)&&Math.abs(FN[fn](x)-c)<1e-9)r.push(n)}return r}
+function princ(fn,c){var r=fn==='cos'?solsIn(fn,c,0,12):solsIn(fn,c,-6,6);return r[0]}
+/* solution générale de l'équation élémentaire fn(x)=c */
+function genSol(fn,c){var a=princ(fn,c);
+  if(fn==='tan')return [fam(a,12,1)];
+  if(fn==='sin'){if(Math.abs(c)===1)return [fam(a,12,2)];if(c===0)return [fam(0,1,1)];return [fam(a,12,2),fam(12-a,12,2)]}
+  if(Math.abs(c)===1)return [fam(a,12,2)];if(c===0)return [fam(1,2,1)];return [fam(a,12,2),fam(-a,12,2)]}
+var CS=[.5,R2/2,R3/2,-.5,-R2/2,-R3/2],CT=[R3/3,1,R3,-R3/3,-1,-R3];
+function eqH(fn,c,arg){return fn+' '+(arg||'x')+' = '+exH(c)}
+/* cercle trigonométrique : o = {line:['h'|'v'|'t',c], pts:[douzièmes], arcs:[[n1,n2]], lab:true} */
+function circ(o){
+  var cx=120,cy=112,r=78,s='<svg class="gr" viewBox="0 0 240 224" style="max-width:300px" role="img" aria-label="cercle trigonométrique">';
+  function X(a){return cx+r*Math.cos(a)}function Y(a){return cy-r*Math.sin(a)}
+  s+='<line x1="14" y1="'+cy+'" x2="226" y2="'+cy+'" stroke="#8895a5"/><line x1="'+cx+'" y1="8" x2="'+cx+'" y2="216" stroke="#8895a5"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#1F2A44" stroke-width="1.6"/>';
+  (o.arcs||[]).forEach(function(a){var a1=a[0]*PIv/12,a2=a[1]*PIv/12,big=(a2-a1)>PIv?1:0;
+    s+='<path d="M '+X(a1).toFixed(1)+' '+Y(a1).toFixed(1)+' A '+r+' '+r+' 0 '+big+' 0 '+X(a2).toFixed(1)+' '+Y(a2).toFixed(1)+'" fill="none" stroke="#2A9D8F" stroke-width="7" opacity=".85" stroke-linecap="round"/>'});
+  if(o.line){var c=o.line[1];
+    if(o.line[0]==='h')s+='<line x1="20" y1="'+(cy-r*c)+'" x2="220" y2="'+(cy-r*c)+'" stroke="#E76F51" stroke-width="2" stroke-dasharray="5 4"/><text x="'+cx+'" y="'+(cy-r*c+(c>=0?15:-7))+'" font-size="10" text-anchor="middle" fill="#E76F51" stroke="#fff" stroke-width="3" paint-order="stroke">hauteur '+o.line[2]+'</text>';
+    if(o.line[0]==='v')s+='<line x1="'+(cx+r*c)+'" y1="12" x2="'+(cx+r*c)+'" y2="212" stroke="#E76F51" stroke-width="2" stroke-dasharray="5 4"/><text x="'+(cx+r*c+(c>0?4:-4))+'" y="20" font-size="10" text-anchor="'+(c>0?'start':'end')+'" fill="#E76F51">abscisse '+o.line[2]+'</text>';
+    if(o.line[0]==='t'){var a=Math.atan(c);s+='<line x1="'+(cx-100*Math.cos(a))+'" y1="'+(cy+100*Math.sin(a))+'" x2="'+(cx+100*Math.cos(a))+'" y2="'+(cy-100*Math.sin(a))+'" stroke="#E76F51" stroke-width="2" stroke-dasharray="5 4"/>'}}
+  (o.pts||[]).forEach(function(n){var a=n*PIv/12,ca=Math.cos(a),sa=Math.sin(a);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+X(a)+'" y2="'+Y(a)+'" stroke="#1F4E79" stroke-width="1.5"/><circle cx="'+X(a)+'" cy="'+Y(a)+'" r="5" fill="'+(o.open?'#fff':'#1F4E79')+'" stroke="#1F4E79" stroke-width="2"/>';
+    if(o.lab!==false)s+='<text x="'+(cx+(r+17)*ca)+'" y="'+(cy-(r+15)*sa+4)+'" font-size="12" font-weight="700" text-anchor="middle" fill="#1F4E79">'+PIt(n,12)+'</text>'});
+  return s+'</svg>';
+}
+var GENS=[];
+function uni(a,b){var r=a.slice();b.forEach(function(v){if(r.indexOf(v)<0)r.push(v)});return r.sort(function(x,y){return x-y})}
+/* résout fn(x) rel c sur l'intervalle [lo ; hi] (douzièmes de π) */
+function ineq(fn,c,rel,lo,hi,loIn,hiIn){
+  var pts=uni([lo,hi],solsIn(fn,c,lo,hi)),els=[];
+  pts.forEach(function(p,i){els.push({t:'p',n:p,inS:relOK(rel,FN[fn](p*PIv/12)-c)&&(p!==lo||loIn)&&(p!==hi||hiIn)});
+    if(i<pts.length-1)els.push({t:'i',a:p,b:pts[i+1],inS:relOK(rel,FN[fn]((p+pts[i+1])/2*PIv/12)-c)})});
+  var parts=[],cur=null;
+  els.forEach(function(e){if(e.inS){if(!cur){cur=e.t==='p'?{lo:e.n,loI:true}:{lo:e.a,loI:false}}if(e.t==='p'){cur.hi=e.n;cur.hiI=true}else{cur.hi=e.b;cur.hiI=false}}else if(cur){parts.push(cur);cur=null}});
+  if(cur)parts.push(cur);return parts}
+function partsH(ps){if(!ps.length)return 'S = ∅';return 'S = '+ps.map(function(p){return p.lo===p.hi?'{'+PI(p.lo,12)+'}':(p.loI?'[':']')+PI(p.lo,12)+' ; '+PI(p.hi,12)+(p.hiI?']':'[')}).join(' ∪ ')}
+function partsF(ps){return function(x){var t=x*12/PIv;return ps.some(function(p){return (p.loI?t>=p.lo-1e-7:t>p.lo+1e-7)&&(p.hiI?t<=p.hi+1e-7:t<p.hi-1e-7)})}}
+function pc(ps){return {h:partsH(ps),f:partsF(ps)}}
+function swapRel(rel){return {'>':'>=','>=':'>','<':'<=','<=':'<'}[rel]}
+function domH(d){return (d[2]?'[':']')+PI(d[0],12)+' ; '+PI(d[1],12)+(d[3]?']':'[')}
+function ineqQ(fn,d){return function(){var c=pick(CS),rel=pick(['>','>=','<','<=']),I=function(f,cc,r){return ineq(f,cc,r,d[0],d[1],d[2],d[3])},ok=I(fn,c,rel),o=fn==='sin'?'cos':'sin';
+  var big=(rel==='>'||rel==='>=');
+  return mk({q:'Résous dans <b>'+domH(d)+'</b> : <b>'+fn+' x '+RS(rel)+' '+exH(c)+'</b>',ok:pc(ok),wr:[pc(I(fn,c,compRel(rel))),pc(I(fn,c,swapRel(rel))),pc(I(o,c,rel)),pc(I(fn,-c,rel)),pc(I(fn,c,flipRel(rel)))],
+   truth:function(x){return relOK(rel,FN[fn](x)-c)},dom:[d[0]*PIv/12+(d[2]?0:1e-6),d[1]*PIv/12-(d[3]?0:1e-6)],
+   why:'On résout d’abord l’égalité : '+fn+' x = '+exH(c)+' pour '+valsH(solsIn(fn,c,d[0],d[1]))+'. '+(fn==='sin'?'Le sinus est la hauteur : on garde l’arc situé <b>'+(big?'au-dessus':'en dessous')+'</b> de la droite horizontale.':'Le cosinus est l’abscisse : on garde l’arc situé <b>à '+(big?'droite':'gauche')+'</b> de la droite verticale.')+' Bornes '+((rel==='>='||rel==='<=')?'incluses (inégalité large)':'exclues (inégalité stricte)')+'.'})}}
+var D1=[0,24,true,true],D2=[-12,12,true,true],D3=[-12,12,false,true];
+GENS.push(ineqQ('sin',D1));GENS.push(ineqQ('cos',D2));GENS.push(ineqQ('cos',D1));GENS.push(ineqQ('sin',D3));
+/* 5. lire le cercle */
+GENS.push(function(){var fn=pick(['sin','cos']),c=pick(CS),rel=pick(['>=','<=']),ps=ineq(fn,c,rel,0,24,true,true),o=fn==='sin'?'cos':'sin',b=solsIn(fn,c,0,23);
+  var H=function(f,r,v){return f+' x '+RS(r)+' '+exH(v)};
+  return qcm('L’arc vert (bornes comprises) représente les solutions de quelle inéquation ?'+circ({arcs:ps.map(function(p){return [p.lo,p.hi]}),pts:b}),H(fn,rel,c),[H(fn,compRel(rel)==='<'?'<=':'>=',c),H(o,rel,FN[o](b[0]*PIv/12)),H(fn,rel,-c),H(o,compRel(rel)==='<'?'<=':'>=',FN[o](b[0]*PIv/12))],
+   (fn==='sin'?'Les deux bornes sont à la <b>même hauteur</b> ('+exH(c)+') : c’est une inéquation en sinus. L’arc est '+(rel==='>='?'au-dessus':'en dessous')+' de cette hauteur.':'Les deux bornes ont la <b>même abscisse</b> ('+exH(c)+') : c’est une inéquation en cosinus. L’arc est à '+(rel==='>='?'droite':'gauche')+' de cette abscisse.'))});
+/* 6. tester une valeur */
+GENS.push(function(){var fn=pick(['sin','cos']),c=pick(CS),rel=pick(['>','>=','<','<=']),n=pick([0,2,4,6,8,10,12,14,16,18,20,22]),x=n*PIv/12,v=FN[fn](x),yes=relOK(rel,v-c),o=fn==='sin'?'cos':'sin',vo=FN[o](x);
+  var J=function(y,val){return (y?'Oui':'Non')+', car '+fn+' '+PI(n,12)+' = '+exH(val)};
+  return qcm('x = '+PI(n,12)+' est-il solution de <b>'+fn+' x '+RS(rel)+' '+exH(c)+'</b> ?',J(yes,v),[J(!yes,v),J(yes,vo),J(!yes,vo),'On ne peut pas le savoir sans calculatrice'],
+   fn+' '+PI(n,12)+' = '+exH(v)+'. '+(Math.abs(v-c)<1e-9?'C’est exactement la valeur limite : elle convient seulement si l’inégalité est <b>large</b> (≤ ou ≥).':'On compare : '+exH(v)+' '+(v>c?GT:LT)+' '+exH(c)+'.')+' Tester une valeur est un bon moyen de contrôler sa réponse.')});
+/* 7. cas extrêmes */
+GENS.push(function(){var fn=pick(['sin','cos']),t=pick([['<=',1,'all'],['>=',-1,'all'],['>',1,'none'],['<',-1,'none'],['<',2,'all'],['>',-2,'all'],['>=',2,'none'],['>=',1,'one'],['<=',-1,'onem']]);
+  var one=fn==='sin'?famH(fam(1,2,2)):famH(fam(0,1,2)),onem=fn==='sin'?famH(fam(-1,2,2)):famH(fam(1,1,2));
+  var A={all:'Tous les réels',none:'Aucun réel',one:'Seulement '+one,onem:'Seulement '+onem},keys=['all','none',t[2]==='onem'?'onem':'one'];
+  return qcm('Quelles sont les solutions de <b>'+fn+' x '+RS(t[0])+' '+N(t[1])+'</b> dans ℝ ?',A[t[2]],keys.filter(function(k){return k!==t[2]}).map(function(k){return A[k]}).concat(['Tous les x de [0 ; π]']),
+   'Un '+(fn==='sin'?'sinus':'cosinus')+' est toujours compris entre '+M+'1 et 1. '+({all:'L’inégalité est donc toujours vraie.',none:'L’inégalité n’est donc jamais vraie.',one:'Il ne peut pas dépasser 1 : il reste seulement le cas d’égalité, '+fn+' x = 1.',onem:'Il ne peut pas descendre sous '+M+'1 : il reste seulement le cas d’égalité, '+fn+' x = '+M+'1.'}[t[2]]))});
+/* ----- animation ----- */
+var exI=-1;
+function inSteps(again){if(again||exI<0)exI++;
+  var E=[['sin',.5,'>='],['cos',.5,'<'],['sin',-R2/2,'<'],['cos',-R3/2,'>=']][exI%4],fn=E[0],c=E[1],rel=E[2],b=solsIn(fn,c,0,23),ps=ineq(fn,c,rel,0,24,true,true),ln=[fn==='sin'?'h':'v',c,exT(c)],big=(rel==='>'||rel==='>='),lg=(rel==='>='||rel==='<=');
+  var arcs=ps.map(function(p){return [p.lo,p.hi]}),st=fn+' x '+RS(rel)+' '+exH(c);
+  return [
+   {eq:st,vis:circ({line:ln}),txt:'<b>1. La frontière.</b> '+(fn==='sin'?'Le sinus est la hauteur du point : on trace la droite horizontale de hauteur '+exH(c)+'.':'Le cosinus est l’abscisse du point : on trace la droite verticale d’abscisse '+exH(c)+'.')},
+   {eq:st,vis:circ({line:ln,pts:b,open:!lg}),txt:'<b>2. L’équation.</b> On résout d’abord '+fn+' x = '+exH(c)+' : '+valsH(b)+' (dans [0 ; 2π]). Ces deux points sont les bornes.'},
+   {eq:st,vis:circ({line:ln,pts:b,arcs:arcs,open:!lg}),txt:'<b>3. Le bon arc.</b> On veut '+fn+' x '+RS(rel)+' '+exH(c)+' : on garde les points situés <b>'+(fn==='sin'?(big?'au-dessus':'en dessous'):(big?'à droite':'à gauche'))+'</b> de la droite (arc vert).'},
+   {eq:partsH(ps),vis:circ({line:ln,pts:b,arcs:arcs,open:!lg}),txt:'<b>4. L’écriture.</b> On lit l’arc dans le sens positif, de 0 à 2π. Bornes '+(lg?'<b>incluses</b> (inégalité large) : crochets fermés.':'<b>exclues</b> (inégalité stricte) : crochets ouverts.')+(ps.length>1?' L’arc passe par 0 : dans [0 ; 2π], il s’écrit en deux morceaux.':'')}];
+}
+stepper($('ineq'),inSteps,{again:true});
+
+document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p7',"Les inéquations trigonométriques",'./')};
+</script></body></html>
