@@ -85,7 +85,7 @@ table.sg{border-collapse:collapse;margin:8px auto}table.sg td,table.sg th{border
 <div class="card"><span class="badge">Comprendre</span><h2>D’où vient sin(a + b) ?</h2><p>Une démonstration en images. Clique sur « Suivant ».</p><div id="proof"></div></div>
 <div class="card"><h2>Les autres formules s’en déduisent</h2>
 <ul class="pts"><li><b>sin(a − b)</b> : on remplace b par −b, avec cos(−b) = cos b et sin(−b) = −sin b.</li>
-<li><b>cos(a + b)</b> : on le lit sur le rectangle, ou on écrit cos x = sin(<span class="fr"><span>π</span><span>2</span></span> − x) (angles complémentaires).</li>
+<li><b>cos(a + b)</b> : on le lit sur la même figure (dernière étape), ou on écrit cos x = sin(<span class="fr"><span>π</span><span>2</span></span> − x) (angles complémentaires).</li>
 <li><b>tan(a + b)</b> : on divise sin(a + b) par cos(a + b), puis on divise le haut et le bas par cos a cos b.</li></ul></div>
 <div class="card warn"><b>Piège.</b> sin(a + b) n’est <b>pas</b> sin a + sin b. Contre-exemple : a = b = <span class="fr"><span>π</span><span>2</span></span> donne sin π = 0 à gauche, et 1 + 1 = 2 à droite. Les fonctions sin, cos et tan ne se distribuent pas.</div>
 <div class="card ex"><span class="badge">Exemple</span><p>Valeur exacte de <b>cos 75°</b>. On écrit 75° = 45° + 30° (deux angles remarquables).</p>
@@ -407,34 +407,44 @@ GENS.push(function(){var t=pick([
    ['tan(a + b)','Diviser sin(a + b) par cos(a + b), puis diviser le haut et le bas par cos a cos b',['Additionner tan a et tan b','Diviser sin(a + b) par cos(a + b), puis simplifier les a et les b','Remplacer b par a dans sin(a + b)']],
    ['cos(a + b)','Écrire cos(a + b) = sin('+frs('π',2)+' '+M+' (a + b)) et utiliser une formule de sinus (angles complémentaires)',['Écrire cos(a + b) = 1 '+M+' sin(a + b)','Écrire cos(a + b) = cos a + cos b','Diviser sin(a + b) par tan(a + b) sans rien développer']]]);
   return qcm('On a démontré la formule de sin(a + b). Comment en <b>déduire</b> celle de <b>'+t[0]+'</b> ?',t[1],t[2],'Toutes les formules d’addition se déduisent de sin(a + b) : par un changement de signe (b devient '+M+'b), par les angles complémentaires, ou en divisant sin par cos.')});
-/* ----- animation : démonstration par le rectangle ----- */
+/* ----- animation : démonstration avec le triangle OAB rectangle en A, OB = 1 ----- */
 function proofSvg(st){
-  var a=35*PIv/180,b=25*PIv/180,u=185,ox=64,oy=226;
-  function X(x){return ox+u*x}function Y(y){return oy-u*y}
-  var Px=cos(b)*cos(a),Py=cos(b)*sin(a),Qx=cos(a+b),Qy=sin(a+b);
-  function seg(x1,y1,x2,y2,c,w){return '<line x1="'+X(x1)+'" y1="'+Y(y1)+'" x2="'+X(x2)+'" y2="'+Y(y2)+'" stroke="'+c+'" stroke-width="'+(w||2)+'"/>'}
-  function tx(x,y,t,c,an,dx,dy){return '<text x="'+(X(x)+(dx||0))+'" y="'+(Y(y)+(dy||0))+'" font-size="11" font-weight="700" fill="'+c+'" text-anchor="'+(an||'middle')+'">'+t+'</text>'}
-  var s='<svg class="gr" viewBox="0 0 330 250" style="max-width:440px" role="img" aria-label="démonstration de la formule d’addition">';
-  if(st>=2)s+='<rect x="'+X(0)+'" y="'+Y(Qy)+'" width="'+(u*Px)+'" height="'+(u*Qy)+'" fill="#F5F8FC" stroke="#8895a5" stroke-dasharray="4 3"/>';
-  if(st>=1)s+='<polygon points="'+X(0)+','+Y(0)+' '+X(Px)+','+Y(0)+' '+X(Px)+','+Y(Py)+'" fill="#DCEBFA" stroke="#2563EB" stroke-width="1.5"/>';
-  if(st>=2)s+='<polygon points="'+X(Px)+','+Y(Py)+' '+X(Px)+','+Y(Qy)+' '+X(Qx)+','+Y(Qy)+'" fill="#FDECE7" stroke="#E76F51" stroke-width="1.5"/>';
-  s+='<polygon points="'+X(0)+','+Y(0)+' '+X(Px)+','+Y(Py)+' '+X(Qx)+','+Y(Qy)+'" fill="#FFF3C4" stroke="#1F2A44" stroke-width="2"/>';
-  if(st>=3)s+=seg(0,0,0,Qy,'#2A9D8F',4)+seg(0,Qy,Qx,Qy,'#2A9D8F',4);
-  /* étiquettes */
-  s+=tx(Qx/2,Qy/2,'1','#1F2A44','end',-6,0)+tx((Px+Qx)/2,(Py+Qy)/2,'sin b','#1F2A44','start',5,-3)+tx(Px/2,Py/2,'cos b','#1F2A44','middle',6,14);
-  s+='<text x="'+(X(0)+30)+'" y="'+(Y(0)-18)+'" font-size="11" fill="#1F2A44">b</text>';
-  if(st>=1){s+='<text x="'+(X(0)+38)+'" y="'+(Y(0)-4)+'" font-size="11" fill="#2563EB">a</text>'+tx(Px/2,0,'cos a · cos b','#2563EB','middle',0,15)+tx(Px,Py/2,'sin a · cos b','#2563EB','start',6,4)}
-  if(st>=2){s+=tx(Px,(Py+Qy)/2,'cos a · sin b','#E76F51','start',6,4)+tx((Px+Qx)/2,Qy,'sin a · sin b','#E76F51','middle',8,-7)+'<text x="'+(X(Px)-12)+'" y="'+(Y(Py)-22)+'" font-size="11" fill="#E76F51">a</text>'}
-  if(st>=3){s+=tx(0,Qy/2,'sin(a + b)','#2A9D8F','end',-5,4)+tx(Qx/2,Qy,'cos(a + b)','#2A9D8F','middle',-6,-7)}
+  var O=[40,235],A=[146,235],B=[146,65.4],H=[192.9,146.7],Hp=[192.9,235],K=[146,146.7],D=[261,107.4];
+  function P(p){return p[0]+','+p[1]}
+  function poly(pts,f,c){return '<polygon points="'+pts.map(P).join(' ')+'" fill="'+f+'" stroke="'+c+'" stroke-width="1.5"/>'}
+  function ln(p,q,c,w,d){return '<line x1="'+p[0]+'" y1="'+p[1]+'" x2="'+q[0]+'" y2="'+q[1]+'" stroke="'+c+'" stroke-width="'+(w||1.5)+'"'+(d?' stroke-dasharray="4 3"':'')+'/>'}
+  function tx(x,y,t,c,an,b){return '<text x="'+x+'" y="'+y+'" font-size="11"'+(b?' font-weight="700"':'')+' fill="'+(c||'#1F2A44')+'" text-anchor="'+(an||'start')+'">'+t+'</text>'}
+  function sq(x,y,dx,dy){return '<path d="M '+(x+dx)+' '+y+' L '+(x+dx)+' '+(y+dy)+' L '+x+' '+(y+dy)+'" fill="none" stroke="#1F2A44" stroke-width="1"/>'}
+  function lead(x1,y1,x2,y2,t,c){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#8895a5" stroke-width=".8" stroke-dasharray="3 2"/>'+tx(x2+4,y2+4,t,c)}
+  var s='<svg class="gr" viewBox="0 0 370 260" style="max-width:470px" role="img" aria-label="démonstration de la formule de sin(a + b)">';
+  s+=ln([20,235],[300,235],'#8895a5',1);
+  if(st>=1)s+=poly([O,A,B],'#FFF3C4','#1F2A44')+sq(146,235,-9,-9);
+  if(st>=2)s+=poly([O,H,B],'#FDECE7','#E76F51');
+  if(st>=3)s+=poly([O,Hp,H],'#DFF3EE','#2A9D8F')+sq(192.9,235,-9,-9);
+  if(st>=4)s+=poly([K,H,B],'#DCEBFA','#2563EB')+sq(146,146.7,9,-9);
+  if(st>=2)s+='<path d="M 185.1 151.2 L 180.6 143.4 L 188.4 138.9" fill="none" stroke="#1F2A44" stroke-width="1"/>';
+  /* les deux angles collés en O */
+  s+=ln(O,D,'#2A9D8F',2)+ln(O,B,'#E76F51',2);
+  s+='<path d="M 90 235 A 50 50 0 0 0 83.3 210" fill="none" stroke="#2A9D8F" stroke-width="1.6"/>'+tx(95,226,'a','#2A9D8F','start',1);
+  s+='<path d="M 79 212.5 A 45 45 0 0 0 63.8 196.8" fill="none" stroke="#E76F51" stroke-width="1.6"/>'+tx(80,203,'b','#E76F51','start',1);
+  s+=tx(30,250,'O','#1F2A44','middle',1);
+  if(st>=1){s+=ln(B,A,'#1F2A44',2.5)+tx(146,252,'A','#1F2A44','middle',1)+tx(140,60,'B','#1F2A44','end',1)+tx(86,140,'1','#1F2A44','end',1);
+    s+=lead(146,78,232,28,'BA = sin(a + b)','#7A5C00')}
+  if(st>=2){s+=tx(201,145,'H','#1F2A44','start',1)+tx(176,104,'sin b','#E76F51')+tx(100,184,'cos b','#E76F51')}
+  if(st>=3){s+=ln(H,Hp,'#2A9D8F',2,1)+tx(196,252,'H′','#1F2A44','middle',1)+lead(193,195,232,195,'HH′ = sin a · cos b','#1E7F72')}
+  if(st>=4){s+=ln(H,K,'#2563EB',1.5,1)+tx(140,150,'K','#1F2A44','end',1)+'<path d="M 146 83.4 A 18 18 0 0 0 155 81" fill="none" stroke="#2563EB" stroke-width="1.6"/>'+tx(150,98,'a','#2563EB','start',1)+lead(146,100,232,58,'BK = cos a · sin b','#2563EB')}
+  if(st>=5)s+=lead(146,190,232,128,'KA = HH′','#1F2A44');
+  if(st>=6)s+=lead(110,235,232,226,'OA = cos(a + b)','#7A5C00');
   return s+'</svg>';
 }
 function proofSteps(){return [
- {eq:'sin(a + b) = ?',vis:proofSvg(0),txt:'On part d’un triangle rectangle dont l’hypoténuse vaut <b>1</b> et dont un angle vaut <b>b</b>. Ses deux autres côtés valent donc <b>cos b</b> et <b>sin b</b>.'},
- {eq:'sin(a + b) = ?',vis:proofSvg(1),txt:'On pose ce triangle sur un triangle rectangle d’angle <b>a</b> (en bleu), dont l’hypoténuse est le côté cos b. Ses côtés valent <b>cos a · cos b</b> (en bas) et <b>sin a · cos b</b> (à droite).'},
- {eq:'sin(a + b) = ?',vis:proofSvg(2),txt:'On enferme le tout dans un <b>rectangle</b>. Le petit triangle rouge a aussi un angle a, et son hypoténuse vaut sin b : ses côtés valent <b>cos a · sin b</b> et <b>sin a · sin b</b>.'},
- {eq:'sin(a + b) = ?',vis:proofSvg(3),txt:'Le côté de longueur 1 fait un angle <b>a + b</b> avec l’horizontale. Donc la hauteur du rectangle vaut <b>sin(a + b)</b> et le morceau du haut vaut <b>cos(a + b)</b> (en vert).'},
- {eq:'sin(a + b) = sin a cos b + cos a sin b',vis:proofSvg(3),txt:'Les deux côtés verticaux d’un rectangle sont <b>égaux</b> : la hauteur de gauche, sin(a + b), vaut la somme des deux morceaux de droite.'},
- {eq:'cos(a + b) = cos a cos b '+M+' sin a sin b',vis:proofSvg(3),txt:'Les deux côtés horizontaux sont <b>égaux</b> aussi : cos(a + b) + sin a · sin b = cos a · cos b. On isole cos(a + b).'}]}
+ {eq:'sin(a + b) = ?',vis:proofSvg(0),txt:'On colle deux angles <b>a</b> et <b>b</b> en O. Leur côté commun est la demi-droite du milieu (en vert).'},
+ {eq:'sin(a + b) = ?',vis:proofSvg(1),txt:'On construit le grand triangle <b>OAB rectangle en A</b>, avec <b>OB = 1</b>. Son angle en O vaut a + b, donc <b>BA = sin(a + b)</b>. C’est cette longueur qu’on cherche.'},
+ {eq:'OH = cos b &nbsp; HB = sin b',vis:proofSvg(2),txt:'De B, on trace la perpendiculaire au côté commun : elle le coupe en <b>H</b>. Le triangle OHB est rectangle en H, son angle en O vaut b et son hypoténuse vaut 1 : <b>OH = cos b</b> et <b>HB = sin b</b>.'},
+ {eq:'HH′ = sin a · cos b',vis:proofSvg(3),txt:'De H, on trace la perpendiculaire HH′ à OA. Le triangle OH′H a un angle <b>a</b> en O et une hypoténuse OH = cos b : <b>HH′ = sin a · cos b</b>.'},
+ {eq:'BK = cos a · sin b',vis:proofSvg(4),txt:'De H, on trace la parallèle à OA : elle coupe BA en <b>K</b>. Dans le petit triangle BKH, l’angle en B vaut aussi <b>a</b> (ses côtés sont perpendiculaires à ceux de l’angle a). Son hypoténuse est HB = sin b : <b>BK = cos a · sin b</b>.'},
+ {eq:'sin(a + b) = sin a cos b + cos a sin b',vis:proofSvg(5),txt:'KA = HH′ (côtés opposés d’un rectangle). Donc <b>BA = BK + KA</b>, c’est-à-dire sin(a + b) = cos a · sin b + sin a · cos b.'},
+ {eq:'cos(a + b) = cos a cos b − sin a sin b',vis:proofSvg(6),txt:'Avec la même figure : OA = cos(a + b) et OA = OH′ − KH. Or OH′ = cos a · cos b (triangle OH′H) et KH = sin a · sin b (triangle BKH). On obtient la formule de cos(a + b).'}]}
 stepper($('proof'),proofSteps,{});
 
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p1',"Les formules d’addition",'./')};
