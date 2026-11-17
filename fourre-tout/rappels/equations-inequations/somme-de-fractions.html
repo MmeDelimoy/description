@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Inéquation avec une somme de fractions</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;margin:4px 0 10px}
+.top a{color:var(--navy);text-decoration:none;font-weight:600}
+h1{font-size:25px;line-height:1.2;margin:6px 0 4px;color:var(--navy)}
+h2{font-size:20px;margin:0 0 8px;color:var(--navy)}
+.lead{color:#4a5a6c;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.goal{border-left:6px solid var(--teal);background:#EAF6F4}
+.warn{border-left:6px solid var(--coral);background:#FDF0EC}
+.key{border-left:6px solid var(--sun);background:#FFF8DC}
+.badge{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 2px;font-size:.92em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;min-height:46px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.coral{background:var(--coral)}
+.btn[disabled]{opacity:.35}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.eqline{font-size:26px;text-align:center;margin:8px 0;min-height:44px;color:var(--ink)}
+.stepbox{min-height:72px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.chip{animation:pop .45s ease both;transform-box:fill-box;transform-origin:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--navy)}
+.stw{overflow-x:auto}
+table.st{border-collapse:collapse;margin:8px auto;font-size:17px}
+table.st th.lab{text-align:left;padding:6px 6px;font-size:15px;font-weight:700;white-space:nowrap;border-right:2px solid var(--ink)}
+table.st td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line);min-width:30px}
+table.st tr:first-child td,table.st tr:first-child th{border-bottom:2px solid var(--ink)}
+table.st td.pt{border-left:1.5px solid #8895a5;border-right:1.5px solid #8895a5;font-weight:700;min-width:34px}
+table.st td.pt.forb{border-left:3px double var(--ink);border-right:3px double var(--ink);color:var(--coral)}
+table.st .sp{color:var(--teal);font-weight:700;font-size:20px}
+table.st .sn{color:var(--coral);font-weight:700;font-size:20px}
+table.st td.on{background:#CFEFEA}
+table.st tr.res th{color:var(--navy)}
+.inf{display:block;font-size:14px}.inf.l{text-align:left}.inf.r{text-align:right}
+svg.nl{width:100%;max-width:420px;display:block;margin:6px auto}
+svg.gr,svg.bal{width:100%;max-width:420px;display:block;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;font-size:15px;color:#4a5a6c;margin-bottom:6px}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.bar>div{height:100%;background:var(--teal);width:0;transition:width .4s}
+.qtext{font-size:19px;margin:6px 0 12px}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:18px;min-height:50px;color:var(--ink)}
+.ch.good{border-color:var(--teal);background:#E3F5F1}
+.ch.bad{border-color:var(--coral);background:#FDECE7}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;background:#F0F4F9}
+.fb.ok{background:#E3F5F1}.fb.ko{background:#FDECE7}
+.big{font-size:42px;text-align:center}
+.cards{display:grid;gap:12px}
+.item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.item .n{flex:none;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:20px}
+.item.done .n{background:var(--teal)}
+.item b{display:block;color:var(--navy);font-size:18px}
+.item small{color:#4a5a6c;display:block}
+.tag{display:inline-block;background:#EEF3F9;border-radius:8px;padding:1px 8px;font-size:13px;margin:4px 6px 0 0;color:#3b4b5d}
+ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
+.def{font-size:18px}
+.foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
+@media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+@media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
+</style></head><body><div class="wrap">
+<div class="top"><a href="index.html">← Liste des savoir-faire</a><span>Savoir-faire 5 / 5</span></div>
+<h1>Inéquation avec une somme de fractions</h1>
+<div class="card goal"><span class="badge">Objectif</span><div>Résoudre une inéquation où il y a <b>des fractions</b> à additionner ou à comparer, avec les conditions d’existence.</div></div>
+<div class="card"><span class="badge">Comprendre</span><h2>Un exercice résolu, pas à pas</h2>
+<div id="sum"></div></div>
+<div class="card key"><b>Les 4 réflexes</b>
+<ul class="pts"><li><b>Conditions d’existence</b> : repérer ce qui annule un dénominateur.</li>
+<li><b>Tout du même côté</b>, 0 à droite. Jamais de multiplication par un dénominateur.</li>
+<li><b>Même dénominateur</b>, puis simplifier le numérateur.</li>
+<li><b>Tableau de signes</b>, lecture de la solution, contrôle avec une valeur.</li></ul></div>
+<div class="card" id="testcard"><span class="badge">Teste-toi</span>
+<h2>Quiz : 10 questions</h2>
+<p>Chaque faute ajoute <b>3 questions</b> pour consolider. À la fin, tu sais si tu maîtrises ce savoir-faire.</p>
+<div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
+<div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
+<div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
+<script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
+var M='−', EPS=1e-9;
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[R(0,a.length-1)]}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a}
+function F(n,d){d=(d===undefined)?1:d;if(d<0){n=-n;d=-d}var g=gcd(n,d)||1;return{n:n/g,d:d/g}}
+function fv(f){return f.n/f.d}
+function feq(a,b){return a.n===b.n&&a.d===b.d}
+function fcmp(a,b){return a.n*b.d-b.n*a.d}
+function N(n){return n<0?M+(-n):''+n}
+function frs(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'}
+function FR(n,d){var f=F(n,d);if(f.d===1)return N(f.n);return (f.n<0?M:'')+frs(Math.abs(f.n),f.d)}
+function fh(f){return FR(f.n,f.d)}
+function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
+function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
+function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
+function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
+var LT='&lt;',GT='&gt;';
+/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
+function ng(n){return n<0?'('+N(n)+')':N(n)}
+function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
+function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
+function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
+function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
+/* éléments de réponse */
+function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
+function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
+function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
+function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
+function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
+/* analyse du signe d'un produit/quotient de facteurs du 1er degré
+   factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
+function mids(roots){var k=roots.length,m=[];for(var i=0;i<=k;i++){m.push(k===0?0:(i===0?fv(roots[0])-1:(i===k?fv(roots[k-1])+1:(fv(roots[i-1])+fv(roots[i]))/2)))}return m}
+function analyse(factors,K,rel){
+  var roots=[];factors.forEach(function(f){var r=F(-f.b,f.a);if(!roots.some(function(q){return feq(q,r)}))roots.push(r)});
+  roots.sort(fcmp);var k=roots.length,mi=mids(roots),iv=[],pt=[];
+  mi.forEach(function(m){var s=K>0?1:-1;factors.forEach(function(f){s*=(f.a*m+f.b)>0?1:-1});iv.push(s)});
+  roots.forEach(function(r){var zd=false;factors.forEach(function(f){if(f.p<0&&feq(F(-f.b,f.a),r))zd=true});pt.push(zd?'forb':'zero')});
+  var eq=(rel==='>='||rel==='<='),want=(rel==='>'||rel==='>=')?1:-1,els=[];
+  for(var i=0;i<=k;i++){els.push({t:'iv',inS:iv[i]===want,i:i});if(i<k)els.push({t:'pt',inS:pt[i]==='zero'&&eq,i:i})}
+  var parts=[],cur=null;
+  els.forEach(function(e,idx){if(e.inS){if(!cur)cur={start:idx};cur.end=idx}else if(cur){parts.push(cur);cur=null}});
+  if(cur)parts.push(cur);
+  parts=parts.map(function(c){var s=els[c.start],e=els[c.end],p={};
+    if(s.t==='iv'){p.lo=s.i===0?null:roots[s.i-1];p.loI=false}else{p.lo=roots[s.i];p.loI=true}
+    if(e.t==='iv'){p.hi=e.i===k?null:roots[e.i];p.hiI=false}else{p.hi=roots[e.i];p.hiI=true}
+    return p});
+  return {roots:roots,iv:iv,pt:pt,parts:parts,factors:factors,K:K,rel:rel,mids:mi};
+}
+function sg(s){return s>0?'+':s<0?M:'0'}
+function tableHtml(an,show,hl,resLab){
+  var k=an.roots.length,rows=[];
+  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
+  an.factors.forEach(function(f){var r=F(-f.b,f.a);
+    rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
+  rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
+  var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
+  for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
+  h+='</tr>';
+  var nr=rows.length-1;
+  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
+    h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
+    for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
+      if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
+    h+='</tr>'});
+  return h+'</table></div>';
+}
+function nline(an,parts){
+  var k=an.roots.length,W=320,H=74,x0=26,x1=W-26;
+  function X(i){return x0+(i+1)*(x1-x0)/(k+1)}
+  function idx(r){for(var i=0;i<k;i++)if(feq(an.roots[i],r))return i;return 0}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="nl" role="img" aria-label="droite réelle">';
+  s+='<line x1="8" y1="34" x2="'+(W-8)+'" y2="34" stroke="#5b6b7b" stroke-width="2"/>';
+  s+='<text x="8" y="16" font-size="11" fill="#5b6b7b">'+M+'∞</text><text x="'+(W-8)+'" y="16" font-size="11" fill="#5b6b7b" text-anchor="end">+∞</text>';
+  parts.forEach(function(p){var a=p.lo==null?8:X(idx(p.lo)),b=p.hi==null?W-8:X(idx(p.hi));s+='<line x1="'+a+'" y1="34" x2="'+b+'" y2="34" stroke="#2A9D8F" stroke-width="8" opacity=".85"/>'});
+  an.roots.forEach(function(r,i){var on=inParts(parts,fv(r));s+='<circle cx="'+X(i)+'" cy="34" r="6" fill="'+(on?'#1F4E79':'#fff')+'" stroke="#1F4E79" stroke-width="2"/><text x="'+X(i)+'" y="62" font-size="12" text-anchor="middle" fill="#1F2A44">'+ftxt(r)+'</text>'});
+  return s+'</svg>';
+}
+/* ===== fabrique de questions ===== */
+function mk(o){
+  var seen={};seen[o.ok.h]=1;var ws=[];
+  o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
+  var all=shuffle([{h:o.ok.h,f:o.ok.f,ok:true}].concat(ws.map(function(w){return{h:w.h,f:w.f,ok:false}})));
+  return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q};
+}
+/* QCM texte simple : bonne réponse + mauvaises */
+function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
+/* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
+function distract(an,extra){
+  var v=[];(extra||[]).forEach(function(p){v.push(p)});
+  var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
+  var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
+  v.push(flipBr(an.parts));                                                           // crochets inversés
+  var asProd=analyse(an.factors.map(function(f){return {a:f.a,b:f.b,p:1}}),an.K,an.rel);v.push(asProd.parts);   // dénominateurs traités comme des facteurs
+  var noDen=an.factors.filter(function(f){return f.p>0});if(noDen.length&&noDen.length<an.factors.length)v.push(analyse(noDen,an.K,an.rel).parts);
+  v.push(analyse(an.factors,-an.K,compRel(an.rel)).parts);
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
+  [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
+  var seen={},out=[];seen[setHtml(an.parts)]=1;
+  v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
+  return out;
+}
+/* choix numériques : x entier exact + valeurs fausses plausibles */
+function numOpts(x,cands,pre){
+  pre=pre||'x = ';var seen={},wr=[];seen[x]=1;
+  cands.concat([x+1,x-1,x+2,x-2,-x,x+3]).forEach(function(v){if(Math.round(v)===v&&!seen[v]){seen[v]=1;wr.push(v)}});
+  function mkc(v){return {h:pre+N(v),f:function(t){return Math.abs(t-v)<EPS}}}
+  return {ok:mkc(x),wr:wr.slice(0,6).map(mkc)};
+}
+
+/* ===== interface : maîtrise, stepper, quiz ===== */
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function $(id){return document.getElementById(id)}
+function stepper(root,getSteps,opts){
+  opts=opts||{};var i=0,steps=getSteps();
+  root.innerHTML='<div class="eqline" id="'+root.id+'_eq"></div><div id="'+root.id+'_vis"></div><div class="dots" id="'+root.id+'_dots"></div><div class="stepbox card key" id="'+root.id+'_txt"></div><div class="row"><button class="btn alt" id="'+root.id+'_p">◀ Précédent</button><button class="btn" id="'+root.id+'_n">Suivant ▶</button>'+(opts.again?'<button class="btn alt" id="'+root.id+'_a">↻ Un autre exemple</button>':'')+'</div>';
+  function draw(){var s=steps[i];
+    $(root.id+'_eq').innerHTML=s.eq||'';$(root.id+'_vis').innerHTML=s.vis||'';
+    var t=$(root.id+'_txt');t.style.animation='none';void t.offsetWidth;t.style.animation='';t.innerHTML=s.txt;
+    $(root.id+'_dots').innerHTML=steps.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>'}).join('');
+    $(root.id+'_p').disabled=(i===0);$(root.id+'_n').disabled=(i===steps.length-1);
+    if(s.after)s.after(root);}
+  $(root.id+'_p').onclick=function(){if(i>0){i--;draw()}};
+  $(root.id+'_n').onclick=function(){if(i<steps.length-1){i++;draw()}};
+  if(opts.again)$(root.id+'_a').onclick=function(){steps=getSteps(true);i=0;draw()};
+  root._redraw=draw;draw();
+}
+function setMastered(id,on){store('eqineq_'+id,on?'1':'0')}
+function isMastered(id){return store('eqineq_'+id)==='1'}
+function runQuiz(root,gens,itemId,itemLabel,hubUrl){
+  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur;
+  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[]}
+  function nextQ(){
+    for(var t=0;t<60;t++){
+      if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
+    }
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
+  }
+  function show(){
+    if(done>=planned)return end();
+    cur=nextQ();
+    var extra=planned>FIRST?' <b style="color:var(--coral)">(+'+(planned-FIRST)+' de consolidation)</b>':'';
+    var h='<div class="qhead"><span>Question '+(done+1)+' sur '+planned+extra+'</span><span>Erreurs : '+wrong+'</span></div><div class="bar"><div style="width:'+(100*done/planned)+'%"></div></div><div class="qtext">'+cur.q+'</div>';
+    cur.ch.forEach(function(c,i){h+='<button class="ch" data-i="'+i+'">'+c.h+'</button>'});
+    h+='<div id="fb"></div><div class="row" id="nx"></div>';
+    root.innerHTML=h;
+    var bs=root.querySelectorAll('.ch');
+    Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
+  }
+  function answer(i,bs){
+    var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
+    done++;
+    if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
+    else{wrong++;planned+=PEN;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
+    $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
+    $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
+  }
+  function end(){
+    setMastered(itemId,true);
+    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div><div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
+    $('again').onclick=function(){reset();show()};
+  }
+  root._peek=function(){return cur};
+  reset();show();
+}
+
+var GENS=[];
+function nfac(n,w){var k=Math.abs(n)===1?'':Math.abs(n);return k+(w===0?'x':'(x '+(w<0?'+':'−')+' '+Math.abs(w)+')')}
+function term(n,p,first){var sgn=n<0?(first?M:' '+M+' '):(first?'':' + ');return sgn+frs(Math.abs(n),lin(1,-p))}
+function sumH(n1,p,n2,q){return term(n1,p,true)+term(n2,q,false)}
+function denH(p,q){return q===0?par(q)+par(p):par(p)+par(q)}
+function sumInfo(n1,p,n2,q,rel){
+  var A1=n1+n2,B1=-(n1*q+n2*p),fac=[];
+  if(A1!==0)fac.push({a:A1,b:B1,p:1});
+  fac.push({a:1,b:-p,p:-1});fac.push({a:1,b:-q,p:-1});
+  var K=A1!==0?1:(B1>0?1:-1),an=analyse(fac,K,rel);
+  if(A1===0)an.cst=B1;                     /* numérateur constant : il a sa propre ligne dans le tableau */
+  return {A1:A1,B1:B1,an:an,nr:fac.length+(A1===0?1:0)};
+}
+/* mode : 0 = quelconque, 1 = numérateur du 1er degré, 2 = numérateur constant */
+function rndSum(mode){var n1,n2,p,q,A,B,bad;do{n1=pick([-3,-2,-1,1,2,3]);n2=pick([-3,-2,-1,1,2,3]);p=R(-4,4);q=R(-4,4);A=n1+n2;B=n1*q+n2*p;
+    bad=p===q||(A===0&&(mode===1||(!mode&&Math.random()<.7)))||(A!==0&&(mode===2||Math.abs(B/A)>9));}while(bad);return {n1:n1,p:p,n2:n2,q:q}}
+function truthSum(o,rel){return function(x){if(Math.abs(x-o.p)<EPS||Math.abs(x-o.q)<EPS)return false;return relOK(rel,o.n1/(x-o.p)+o.n2/(x-o.q))}}
+function tableFb(an,lab){return '<br>'+tableHtml(an,99,true,lab)}
+function numTxt(si){return si.A1!==0?'de numérateur '+lin(si.A1,si.B1):'de numérateur constant '+N(si.B1)}
+/* résoudre : somme rel 0 */
+GENS.push(function(){var o=rndSum(),rel=pick(['>','>=','<','<=']),si=sumInfo(o.n1,o.p,o.n2,o.q,rel),an=si.an;
+  var trap=si.A1!==0?analyse([{a:si.A1,b:si.B1,p:1}],1,rel).parts:analyse([{a:1,b:-o.p,p:1}],1,rel).parts;
+  return mk({q:'Résous : <b>'+sumH(o.n1,o.p,o.n2,o.q)+' '+RS(rel)+' 0</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[trap]),truth:truthSum(o,rel),
+   why:'Conditions d’existence : x ≠ '+N(Math.min(o.p,o.q))+' et x ≠ '+N(Math.max(o.p,o.q))+'. Même dénominateur '+denH(o.p,o.q)+' → une seule fraction '+numTxt(si)+' → tableau de signes :'+tableFb(an,'Quotient')})});
+/* résoudre : fraction rel fraction */
+GENS.push(function(){var o=rndSum(),rel=pick(['>','>=','<','<=']),n2b=-o.n2,si=sumInfo(o.n1,o.p,o.n2,o.q,rel),an=si.an;
+  var q1=frs(Math.abs(o.n1),lin(1,-o.p)),sn1=(o.n1<0?M:''),q2=frs(Math.abs(n2b),lin(1,-o.q)),sn2=(n2b<0?M:'');
+  return mk({q:'Résous : <b>'+sn1+q1+' '+RS(rel)+' '+sn2+q2+'</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[]),
+   truth:function(x){if(Math.abs(x-o.p)<EPS||Math.abs(x-o.q)<EPS)return false;return relOK(rel,o.n1/(x-o.p)-n2b/(x-o.q))},
+   why:'On <b>ne multiplie pas</b> par les dénominateurs (leur signe est inconnu). On met tout du même côté : '+sumH(o.n1,o.p,o.n2,o.q)+' '+RS(rel)+' 0. Même dénominateur → une seule fraction '+numTxt(si)+' → tableau de signes :'+tableFb(an,'Quotient')})});
+/* conditions d'existence */
+GENS.push(function(){var o=rndSum(),A=o.n1+o.n2;
+  var ce=function(u,v){var a=Math.min(u,v),b=Math.max(u,v);return 'x ≠ '+N(a)+' et x ≠ '+N(b)};
+  var wr=[];if(A!==0)wr.push('x ≠ '+fh(F(o.n1*o.q+o.n2*o.p,A))+' (la valeur qui annule le numérateur)');
+  wr.push(ce(-o.p,-o.q));wr.push('aucune : une somme existe toujours');wr.push(ce(o.p,o.q+(o.q+1===o.p?2:1)));wr.push('x ≠ '+N(Math.min(o.p,o.q))+' seulement');
+  return qcm('Quelles valeurs de x faut-il <b>exclure</b> pour <b>'+sumH(o.n1,o.p,o.n2,o.q)+' '+pick(['≥',LT,GT,'≤'])+' 0</b> ?',ce(o.p,o.q),wr,
+   'On exclut les valeurs qui <b>annulent un dénominateur</b> : '+lin(1,-o.p)+' = 0 donne x = '+N(o.p)+' ; '+lin(1,-o.q)+' = 0 donne x = '+N(o.q)+'.')});
+/* numérateur au même dénominateur */
+GENS.push(function(){var o=rndSum(1),A1=o.n1+o.n2,B1=-(o.n1*o.q+o.n2*o.p),
+  okn=lin(A1,B1),wr=[lin(A1,-(o.n1*o.p+o.n2*o.q)),N(A1),lin(A1,-B1),lin(A1,B1+1),lin(A1,B1-1)];
+  return qcm('On met <b>'+sumH(o.n1,o.p,o.n2,o.q)+'</b> au même dénominateur '+denH(o.p,o.q)+'. Le <b>numérateur</b> vaut :',okn,wr,
+   'Chaque numérateur est multiplié par le dénominateur <b>de l’autre</b> fraction : '+(o.n1<0?M:'')+nfac(o.n1,o.q)+(o.n2<0?' '+M+' ':' + ')+nfac(o.n2,o.p)+'. On distribue et on réduit : '+okn+'.')});
+/* inégalité équivalente */
+GENS.push(function(){var o=rndSum(),n2b=Math.abs(o.n2),n1=Math.abs(o.n1),p=o.p,q=o.q,rel=pick(['>=','<=','>','<']);
+  var L=frs(n1,lin(1,-p)),Rr=frs(n2b,lin(1,-q));
+  var ok=L+' '+M+' '+Rr+' '+RS(rel)+' 0';
+  return qcm('Quelle inégalité est <b>équivalente</b> à <b>'+L+' '+RS(rel)+' '+Rr+'</b> ?',ok,
+   [nfac(n1,q)+' '+RS(rel)+' '+nfac(n2b,p)+' (produit en croix)',L+' + '+Rr+' '+RS(rel)+' 0',L+' '+M+' '+Rr+' '+RS(flipRel(rel))+' 0'],
+   'On soustrait le membre de droite des deux côtés : on obtient <b>0 à droite</b> et le sens ne change pas. Le produit en croix est interdit dans une inéquation : le signe des dénominateurs est inconnu.')});
+/* multiplier par un facteur contenant x */
+GENS.push(function(){var p=pick([-5,-4,-3,-2,-1,1,2,3,4,5]);
+  return qcm('Dans une inéquation, peut-on multiplier les deux membres par <b>'+par(p)+'</b> en gardant le même sens ?',
+   'Non : on ne connaît pas son signe, qui dépend de x',['Oui, toujours','Oui, si l’inégalité est large (≤ ou ≥)','Oui, car x est un nombre réel'],
+   par(p)+' est positif si x '+GT+' '+N(p)+' et négatif si x '+LT+' '+N(p)+'. Dans un cas le sens est conservé, dans l’autre il change. Comme on ne sait pas, on <b>met tout du même côté</b> et on utilise un tableau de signes.')});
+/* nombre de valeurs clés */
+GENS.push(function(){var o=rndSum(Math.random()<.5?1:2),A=o.n1+o.n2,B=-(o.n1*o.q+o.n2*o.p),ok=A!==0?'3':'2';
+  return qcm('On veut résoudre <b>'+sumH(o.n1,o.p,o.n2,o.q)+' ≥ 0</b>. Après la mise au même dénominateur, combien de valeurs clés (zéros du numérateur et des dénominateurs) faut-il placer sur la ligne des x du tableau ?',
+   ok,ok==='3'?['2','4','1']:['3','1','0'],
+   (A!==0?'Le numérateur '+lin(A,B)+' s’annule une fois (x = '+fh(F(-B,A))+')':'Le numérateur se réduit à la constante '+N(B)+' : il ne s’annule <b>jamais</b>')+' ; chaque dénominateur donne une valeur interdite : '+N(Math.min(o.p,o.q))+' et '+N(Math.max(o.p,o.q))+'. Soit '+ok+' valeurs, à ranger dans l’ordre croissant.')});
+/* lire un tableau */
+GENS.push(function(){var o=rndSum(),rel=pick(['>','>=','<','<=']),si=sumInfo(o.n1,o.p,o.n2,o.q,rel),an=si.an;
+  return mk({q:'Voici le tableau de signes de <b>'+sumH(o.n1,o.p,o.n2,o.q)+'</b>, écrit sous la forme d’un seul quotient.'+tableHtml(an,99,false,'Quotient')+'Quelle est la solution de <b>'+sumH(o.n1,o.p,o.n2,o.q)+' '+RS(rel)+' 0</b> ?',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[]),truth:truthSum(o,rel),
+   why:'On lit les colonnes où la dernière ligne porte le signe « '+((rel==='>'||rel==='>=')?'+':M)+' ». '+(si.A1!==0?'Le zéro du numérateur est '+((rel==='>='||rel==='<=')?'inclus (inégalité large)':'exclu (inégalité stricte)')+' ; les':'Les')+' valeurs interdites (‖) sont toujours exclues.'})});
+/* ----- animation : exercice résolu ----- */
+function sumSteps(again){
+  var o=again?rndSum():{n1:3,p:1,n2:-2,q:-2},rel=again?pick(['>','>=','<','<=']):'>=';
+  var n2b=-o.n2,si=sumInfo(o.n1,o.p,o.n2,o.q,rel),an=si.an,A1=si.A1,B1=si.B1,nf=si.nr;
+  var left=(o.n1<0?M:'')+frs(Math.abs(o.n1),lin(1,-o.p)),right=(n2b<0?M:'')+frs(Math.abs(n2b),lin(1,-o.q)),stmt=left+' '+RS(rel)+' '+right;
+  var num=(o.n1<0?M:'')+nfac(Math.abs(o.n1),o.q)+(o.n2<0?' − ':' + ')+nfac(Math.abs(o.n2),o.p);
+  var den=denH(o.p,o.q);
+  var numS=A1!==0?lin(A1,B1):N(B1);
+  var tt=0;[0,1,-1,2,-2,3,5].some(function(t){if(t!==o.p&&t!==o.q){tt=t;return true}});
+  var lv=F(o.n1,tt-o.p),rv=F(n2b,tt-o.q),holds=relOK(rel,fv(lv)-fv(rv)),inS=inParts(an.parts,tt);
+  var tab=function(s,hl){return tableHtml(an,s,hl,'Quotient')};
+  return [
+   {eq:stmt,vis:'',txt:'<b>Exercice résolu.</b> On veut les x tels que la fraction de gauche soit '+(rel==='>'?'strictement supérieure':rel==='>='?'supérieure ou égale':rel==='<'?'strictement inférieure':'inférieure ou égale')+' à celle de droite. Six étapes.'},
+   {eq:stmt,vis:'<div class="fb">'+lin(1,-o.p)+' ≠ 0 et '+lin(1,-o.q)+' ≠ 0<br>donc <b>x ≠ '+N(o.p)+'</b> et <b>x ≠ '+N(o.q)+'</b></div>',txt:'<b>1. Conditions d’existence.</b> On repère d’abord les valeurs qui annulent un dénominateur : elles sont interdites <b>quoi qu’il arrive</b> à la fin.'},
+   {eq:left+(o.n2<0?' '+M+' ':' + ')+frs(Math.abs(o.n2),lin(1,-o.q))+' '+RS(rel)+' 0',vis:'',txt:'<b>2. Tout du même côté.</b> On soustrait la fraction de droite des deux côtés'+(n2b<0?' (soustraire une fraction négative, c’est ajouter son opposé)':'')+'. <b>On ne multiplie pas par les dénominateurs</b> : leur signe change avec x, on ne saurait pas s’il faut inverser le sens.'},
+   {eq:frs(num,den)+' '+RS(rel)+' 0',vis:'',txt:'<b>3. Même dénominateur.</b> Chaque numérateur est multiplié par le dénominateur de l’autre fraction. Le dénominateur commun est le produit '+den+'.'},
+   {eq:frs(numS,den)+' '+RS(rel)+' 0',vis:'',txt:'<b>4. Simplifier le numérateur.</b> On développe et on réduit : le numérateur devient '+numS+'. On a maintenant <b>une seule fraction</b> comparée à 0 : c’est le cas du tableau de signes.'},
+   {eq:frs(numS,den)+' '+RS(rel)+' 0',vis:tableHtml(an,0),txt:'<b>5. Tableau de signes.</b> Valeurs clés : '+an.roots.map(function(r){return fh(r)}).join(' ; ')+' (rangées dans l’ordre croissant). Les valeurs interdites '+N(o.p)+' et '+N(o.q)+' auront une double barre.'},
+   {eq:frs(numS,den)+' '+RS(rel)+' 0',vis:tableHtml(an,nf),txt:'<b>5 (suite).</b> Une ligne par facteur : '+(A1!==0?'le numérateur '+numS+' et les deux':'le numérateur constant '+numS+' (toujours '+(B1>0?'positif':'négatif')+') et les deux')+' facteurs du dénominateur.'},
+   {eq:frs(numS,den)+' '+RS(rel)+' 0',vis:tab(nf+1,false),txt:'<b>5 (fin).</b> Dernière ligne : règle des signes pour le quotient. '+(A1!==0?'Le 0 du numérateur reste 0, les':'Les')+' valeurs interdites donnent ‖.'},
+   {eq:setHtml(an.parts),vis:tab(nf+1,true)+nline(an,an.parts),txt:'<b>6. Conclusion.</b> On lit les colonnes du signe voulu et on respecte les crochets : valeurs interdites exclues'+(A1!==0?', zéro du numérateur '+((rel==='>='||rel==='<=')?'inclus':'exclu'):'')+'.<br><b>Contrôle :</b> pour x = '+N(tt)+', '+fh(lv)+' '+RS(rel)+' '+fh(rv)+' est <b>'+(holds?'vrai':'faux')+'</b> et '+N(tt)+' '+(inS?'est':'n’est pas')+' dans S : cohérent ✓'}
+  ];
+}
+
+stepper($('sum'),sumSteps,{again:true});
+document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p5',"Inéquation avec une somme de fractions",'index.html')};
+</script></body></html>
