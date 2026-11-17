@@ -78,20 +78,26 @@ table.sg{border-collapse:collapse;margin:8px auto}table.sg td,table.sg th{border
 </style></head><body><div class="wrap">
 <div class="top"><a href="./">← Trigonométrie, partie 2</a><span>Bloc 3 / 7</span></div>
 <h1>Transformer une expression, vérifier une identité</h1>
-<div class="card goal"><span class="badge">Objectif</span><div><b>Transformer</b> une expression avec les formules (fondamentale, Simpson) et <b>vérifier une identité</b>.</div></div>
+<div class="card goal"><span class="badge">Objectif</span><div>Trouver sin à partir de cos (ou l’inverse), <b>factoriser</b> par mise en évidence, et dire si une <b>égalité</b> est vraie ou fausse.</div></div>
 <div class="card"><span class="badge">Feuille d’explication</span><h2>1. La formule fondamentale</h2>
 <p class="f"><b>sin²a + cos²a = 1</b> &nbsp;donc&nbsp; cos²a = 1 − sin²a &nbsp;et&nbsp; sin²a = 1 − cos²a</p>
 <p>Elle donne cos a à partir de sin a (ou l’inverse), <b>au signe près</b>. C’est le quadrant qui donne le signe.</p>
 <table class="sg"><tr><th>Quadrant</th><th>1er</th><th>2e</th><th>3e</th><th>4e</th></tr><tr><th>sin a</th><td>+</td><td>+</td><td>−</td><td>−</td></tr><tr><th>cos a</th><td>+</td><td>−</td><td>−</td><td>+</td></tr></table></div>
-<div class="card key"><h2>2. Les formules de Simpson</h2><p>Elles sont <b>données</b>. Il faut savoir les utiliser et les démontrer.</p>
+<div class="card"><h2>2. Mettre en évidence</h2>
+<p>On cherche le <b>plus grand facteur commun</b> à tous les termes, puis on divise chaque terme par ce facteur.</p>
+<p class="f"><b>2 sin²x cos x − sin x cos x + sin x</b><br>facteur commun : sin x<br>= sin x (2 sin x cos x − cos x + 1)</p>
+<p><b>Piège :</b> quand un terme est égal au facteur commun, il reste <b>1</b> dans la parenthèse (et pas 0). On vérifie en redéveloppant.</p></div>
+<div class="card key"><h2>3. Les formules de Simpson</h2><p>Elles sont <b>données</b>. Il faut savoir les utiliser et les démontrer.</p>
 <p><b>Somme → produit</b></p>
 <p class="f">sin p + sin q = 2 sin <span class="fr"><span>p + q</span><span>2</span></span> cos <span class="fr"><span>p − q</span><span>2</span></span><br>sin p − sin q = 2 cos <span class="fr"><span>p + q</span><span>2</span></span> sin <span class="fr"><span>p − q</span><span>2</span></span><br>cos p + cos q = 2 cos <span class="fr"><span>p + q</span><span>2</span></span> cos <span class="fr"><span>p − q</span><span>2</span></span><br>cos p − cos q = −2 sin <span class="fr"><span>p + q</span><span>2</span></span> sin <span class="fr"><span>p − q</span><span>2</span></span></p>
 <p><b>Produit → somme</b></p>
 <p class="f">sin a cos b = <span class="fr"><span>1</span><span>2</span></span> [sin(a + b) + sin(a − b)]<br>cos a cos b = <span class="fr"><span>1</span><span>2</span></span> [cos(a + b) + cos(a − b)]<br>sin a sin b = <span class="fr"><span>1</span><span>2</span></span> [cos(a − b) − cos(a + b)]</p>
 <p><b>D’où viennent-elles ?</b> On additionne (ou on soustrait) deux formules d’addition : sin(a + b) + sin(a − b) = 2 sin a cos b. Puis on pose p = a + b et q = a − b.</p></div>
-<div class="card"><h2>3. Vérifier une identité</h2>
+<div class="card"><h2>4. Vérifier une égalité, ou montrer qu’elle est fausse</h2>
 <ol class="steps"><li>On part d’<b>un seul</b> membre, souvent le plus compliqué.</li><li>On le transforme pas à pas avec les formules.</li><li>On s’arrête quand on a obtenu l’autre membre.</li></ol>
 <p>Tester une valeur de x ne prouve rien. Par contre, un seul contre-exemple suffit pour montrer qu’une égalité est <b>fausse</b>.</p></div>
+<div class="card"><p><b>Penser aux formules « à l’envers ».</b> Une expression de la forme sin X cos Y − cos X sin Y est le développement de sin(X − Y), même si X et Y sont eux-mêmes des sommes.</p>
+<p class="f">sin(a + b) cos b − cos(a + b) sin b = sin((a + b) − b) = <b>sin a</b></p></div>
 <div class="card ex"><span class="badge">Exemple</span><p>Vérifier que (sin x + cos x)² = 1 + sin(2x).</p>
 <p class="f">(sin x + cos x)² = sin²x + 2 sin x cos x + cos²x<br>= (sin²x + cos²x) + 2 sin x cos x<br>= 1 + sin(2x)</p></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
@@ -401,6 +407,88 @@ GENS.push(function(){var k=R(0,3);
   var z={h:k<2?'2 sin a':'2 cos a',g:function(a){return 2*(k<2?sin:cos)(a)}};
   return mk({q:'Pour démontrer une formule de Simpson, on développe puis on réduit : <b>'+L+'</b> = ?',ok:o[k],wr:[z].concat(o.filter(function(_,i){return i!==k})),G:o[k].g,
    why:'On écrit les deux formules d’addition l’une sous l’autre : deux termes s’annulent, les deux autres s’additionnent. On obtient '+o[k].h+'. C’est ainsi qu’on démontre les formules de Simpson.'})});
+/* ===== réorganisation : moins de Simpson ===== */
+var OLD=GENS;
+var SIMPSON=[OLD[2],OLD[3],OLD[4],OLD[7]];
+function gSimpson(){return pick(SIMPSON)()}
+/* ---------- mise en évidence (au moins 3 termes) ---------- */
+function pw(f,k){return k===0?'':k===1?f+' x':(f+(k===2?'²':k===3?'³':'⁴')+'x')}
+function mono(c,ps,pc,first){var body=[pw('sin',ps),pw('cos',pc)].filter(function(t){return t}).join(' '),a=Math.abs(c);
+  var co=(body&&a===1)?'':String(a);var t=co+(co&&body?' ':'')+body;return first?(c<0?M:'')+t:(c<0?' '+M+' ':' + ')+t}
+function sumH(ts){return ts.map(function(t,i){return mono(t[0],t[1],t[2],i===0)}).join('')}
+function sumG(ts){return function(x){return ts.reduce(function(s,t){return s+t[0]*Math.pow(Math.sin(x),t[1])*Math.pow(Math.cos(x),t[2])},0)}}
+function facH(F,ts){return mono(F[0],F[1],F[2],true)+' ('+sumH(ts)+')'}
+function facG(F,ts){var g=sumG(ts);return function(x){return F[0]*Math.pow(Math.sin(x),F[1])*Math.pow(Math.cos(x),F[2])*g(x)}}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t}return a}
+var FACT=[[1,1,0],[1,0,1],[1,1,1],[1,2,0],[1,0,2],[2,1,0],[2,0,1],[2,1,1]];
+var MON=[[0,0],[1,0],[0,1],[1,1],[2,0],[0,2]];
+function gFact(){var F,ts,ok;
+  do{F=pick(FACT);var ms=shuffle(MON.slice());if(Math.random()<.65&&ms.slice(0,3).every(function(m){return m[0]+m[1]>0})){ms.splice(ms.indexOf(ms.filter(function(m){return m[0]+m[1]===0})[0]),1);ms.unshift([0,0])}
+    ts=shuffle(ms.slice(0,3)).map(function(m,i){return [(i===0?1:pick([1,-1]))*pick([1,1,2,3]),m[0],m[1]]});
+    ok=!(ts.some(function(t){return t[1]===2&&t[2]===0})&&ts.some(function(t){return t[1]===0&&t[2]===2}))&&!ts.every(function(t){return t[1]>0})&&!ts.every(function(t){return t[2]>0})&&ts.reduce(function(g,t){return gcd(g,t[0])},0)===1;
+  }while(!ok);
+  ts.sort(function(u,v){return (v[1]+v[2])-(u[1]+u[2])||v[1]-u[1]});
+  var ex=ts.map(function(t){return [F[0]*t[0],F[1]+t[1],F[2]+t[2]]}),hasOne=ts.some(function(t){return t[1]+t[2]===0}),isOne=ts.some(function(t){return t[1]+t[2]===0&&Math.abs(t[0])===1});
+  function C(Fx,tx){return {h:facH(Fx,tx),g:facG(Fx,tx)}}
+  var w=[];
+  if(hasOne)w.push(C(F,ts.filter(function(t){return t[1]+t[2]>0})));
+  w.push(C(F,ts.map(function(t,i){return i===1?[-t[0],t[1],t[2]]:t})));
+  if(F[1]+F[2]>1)w.push(C([F[0],F[1]>0?1:0,F[1]>0?0:1],ts));else w.push(C(F,ts.map(function(t,i){return i===2?[t[0],t[1]+(t[2]>0?0:1),t[2]]:t})));
+  w.push(C(F,ts.map(function(t,i){return i===2?[-t[0],t[1],t[2]]:t})));
+  w.push(C(F,ts.map(function(t){return [F[0]*t[0],t[1],t[2]]})));
+  w.push(C(F,ts.map(function(t,i){return i===0?[-t[0],t[1],t[2]]:t})));
+  var fh2=mono(F[0],F[1],F[2],true);
+  return mk({q:'Factorise en mettant en évidence le <b>plus grand facteur commun</b> : <b>'+sumH(ex)+'</b>',ok:C(F,ts),wr:w.filter(function(c){return c.h!==facH(F,ts)}),G:facG(F,ts),key:'fac'+sumH(ex),
+   why:'Chaque terme contient <b>'+fh2+'</b>. On divise chaque terme par '+fh2+' : '+ex.map(function(t,i){return mono(t[0],t[1],t[2],true)+' → '+mono(ts[i][0],ts[i][1],ts[i][2],true)}).join(' ; ')+'.'+(isOne?' Quand un terme est égal au facteur commun, il reste <b>1</b> (et pas 0) dans la parenthèse.':' Vérifie en redéveloppant.')})}
+/* ---------- on donne cos (ou sin), il faut l'autre ---------- */
+var CV=[[1,3],[2,3],[1,4],[3,4],[2,5],[1,2],[3,5],[4,5],[5,13],[12,13],[1,5],[3,7]];
+function rootS(k,r,den,sg){var g=gcd(k,den);k/=g;den/=g;var num=(r===1?String(k):(k===1?'':k)+'√'+r);return (sg<0?M:'')+(den===1?num:frs(num,den))}
+function sqf(m){var k=1,r=m;for(var i=2;i*i<=r;i++)while(r%(i*i)===0){r/=i*i;k*=i}return [k,r]}
+var QI=['0 ; '+frs('π',2),frs('π',2)+' ; π','π ; '+frs('3π',2),frs('3π',2)+' ; 2π'];
+function gCosSin(){var v=pick(CV),n=v[0],d=v[1],q=R(1,4),fromCos=Math.random()<.75,askTan=Math.random()<.3;
+  var sgS=q<=2?1:-1,sgC=(q===1||q===4)?1:-1,kr=sqf(d*d-n*n),k=kr[0],r=kr[1],om=Math.sqrt(d*d-n*n)/d;
+  var gv=fromCos?sgC*n/d:sgS*n/d,ov=(fromCos?sgS:sgC)*om;
+  var A=fromCos?'cos a':'sin a',Bn=fromCos?'sin a':'cos a';
+  var ans,ansH,wr;
+  if(!askTan){ans=ov;ansH=rootS(k,r,d,ans<0?-1:1);
+    wr=[{h:rootS(k,r,d,ans<0?1:-1),v:-ans},{h:fh(F((ans<0?-1:1)*(d*d-n*n),d*d)),v:(ans<0?-1:1)*(d*d-n*n)/(d*d)},{h:fh(F((ans<0?-1:1)*(d-n),d)),v:(ans<0?-1:1)*(d-n)/d},{h:fh(F(-Math.sign(gv)*n,d)),v:-Math.sign(gv)*n/d}];}
+  else{var sv=fromCos?ov:gv,cv=fromCos?gv:ov;ans=sv/cv;
+    var sgT=ans<0?-1:1;ansH=fromCos?rootS(k,r,n,sgT):(r===1?fh(F(sgT*n,k)):rootS(n,r,k*r,sgT));
+    var invH=fromCos?(r===1?fh(F(sgT*n,k)):rootS(n,r,k*r,sgT)):rootS(k,r,n,sgT);
+    wr=[{h:(sgT<0?'':M)+ansH.replace(/^−/,''),v:-ans},{h:invH,v:1/ans},{h:fh(F(sgT*n,d)),v:sgT*n/d}];}
+  return mk({q:'On sait que <b>'+A+' = '+fh(F(Math.round(gv*d),d))+'</b> et que <b>a ∈ ]'+QI[q-1]+'[</b>. Calcule <b>'+(askTan?'tan a':Bn)+'</b>.',ok:{h:ansH,v:ans},wr:wr.filter(function(w){return Math.abs(w.v-ans)>1e-9}),num:ans,key:'cs'+A+gv+q+askTan,
+   why:'Formule fondamentale : '+(fromCos?'sin²a = 1 '+M+' cos²a':'cos²a = 1 '+M+' sin²a')+' = 1 '+M+' '+fh(F(n*n,d*d))+' = '+fh(F(d*d-n*n,d*d))+', donc '+Bn+' = ± '+rootS(k,r,d,1)+'. L’intervalle ]'+QI[q-1]+'[ est le <b>'+['1er','2e','3e','4e'][q-1]+' quadrant</b> : '+Bn+' y est '+((fromCos?sgS:sgC)>0?'positif':'négatif')+', donc '+Bn+' = '+rootS(k,r,d,fromCos?sgS:sgC)+'.'+(askTan?' Enfin tan a = '+frs('sin a','cos a')+' = '+ansH+'.':'')})}
+/* ---------- égalités : vrai ou faux ? ---------- */
+var S=Math.sin,Co=Math.cos;
+var IDS=[
+ {L:'sin(a + b) cos b '+M+' cos(a + b) sin b',f:function(a,b){return S(a+b)*Co(b)-Co(a+b)*S(b)},act:['sin a',function(a){return S(a)}],why:'on reconnaît sin(X '+M+' Y) avec X = a + b et Y = b, donc sin a',fk:[['sin(a + 2b)',function(a,b){return S(a+2*b)}],['cos a',function(a){return Co(a)}],['sin a cos b',function(a,b){return S(a)*Co(b)}]]},
+ {L:'cos(a + b) cos b + sin(a + b) sin b',f:function(a,b){return Co(a+b)*Co(b)+S(a+b)*S(b)},act:['cos a',function(a){return Co(a)}],why:'on reconnaît cos(X '+M+' Y) avec X = a + b et Y = b, donc cos a',fk:[['cos(a + 2b)',function(a,b){return Co(a+2*b)}],['sin a',function(a){return S(a)}],['1',function(){return 1}]]},
+ {L:'sin(a '+M+' b) cos b + cos(a '+M+' b) sin b',f:function(a,b){return S(a-b)*Co(b)+Co(a-b)*S(b)},act:['sin a',function(a){return S(a)}],why:'on reconnaît sin(X + Y) avec X = a '+M+' b et Y = b, donc sin a',fk:[['sin(a '+M+' 2b)',function(a,b){return S(a-2*b)}],['cos a',function(a){return Co(a)}]]},
+ {L:'cos(a '+M+' b) cos b '+M+' sin(a '+M+' b) sin b',f:function(a,b){return Co(a-b)*Co(b)-S(a-b)*S(b)},act:['cos a',function(a){return Co(a)}],why:'on reconnaît cos(X + Y) avec X = a '+M+' b et Y = b, donc cos a',fk:[['cos(a '+M+' 2b)',function(a,b){return Co(a-2*b)}],['sin a',function(a){return S(a)}]]},
+ {L:'sin(a + b) + sin(a '+M+' b)',f:function(a,b){return S(a+b)+S(a-b)},act:['2 sin a cos b',function(a,b){return 2*S(a)*Co(b)}],why:'en développant, les termes cos a sin b s’annulent : il reste 2 sin a cos b',fk:[['2 sin a',function(a){return 2*S(a)}],['sin(2a)',function(a){return S(2*a)}],['2 cos a sin b',function(a,b){return 2*Co(a)*S(b)}]]},
+ {L:'cos(a + b) + cos(a '+M+' b)',f:function(a,b){return Co(a+b)+Co(a-b)},act:['2 cos a cos b',function(a,b){return 2*Co(a)*Co(b)}],why:'en développant, les termes sin a sin b s’annulent : il reste 2 cos a cos b',fk:[['2 cos a',function(a){return 2*Co(a)}],['cos(2a)',function(a){return Co(2*a)}],['2 sin a sin b',function(a,b){return 2*S(a)*S(b)}]]},
+ {L:'sin(a + b) sin(a '+M+' b)',f:function(a,b){return S(a+b)*S(a-b)},act:['sin²a '+M+' sin²b',function(a,b){return S(a)*S(a)-S(b)*S(b)}],why:'on développe : sin²a cos²b '+M+' cos²a sin²b, puis on remplace cos² par 1 '+M+' sin²',fk:[['sin²a + sin²b',function(a,b){return S(a)*S(a)+S(b)*S(b)}],['sin²a '+M+' cos²b',function(a,b){return S(a)*S(a)-Co(b)*Co(b)}]]},
+ {L:'cos(a + b) cos(a '+M+' b)',f:function(a,b){return Co(a+b)*Co(a-b)},act:['cos²a '+M+' sin²b',function(a,b){return Co(a)*Co(a)-S(b)*S(b)}],why:'on développe : cos²a cos²b '+M+' sin²a sin²b, puis on remplace sin²a par 1 '+M+' cos²a',fk:[['cos²a '+M+' cos²b',function(a,b){return Co(a)*Co(a)-Co(b)*Co(b)}],['cos²a + sin²b',function(a,b){return Co(a)*Co(a)+S(b)*S(b)}]]},
+ {L:'(sin a + cos a)²',f:function(a){return Math.pow(S(a)+Co(a),2)},act:['1 + sin(2a)',function(a){return 1+S(2*a)}],why:'(sin a + cos a)² = sin²a + cos²a + 2 sin a cos a = 1 + sin(2a)',fk:[['1',function(){return 1}],['1 + 2 sin a',function(a){return 1+2*S(a)}],['sin²a + cos²a',function(){return 1}]]},
+ {L:'cos⁴a '+M+' sin⁴a',f:function(a){return Math.pow(Co(a),4)-Math.pow(S(a),4)},act:['cos(2a)',function(a){return Co(2*a)}],why:'c’est (cos²a '+M+' sin²a)(cos²a + sin²a) = cos(2a) · 1',fk:[['1',function(){return 1}],['cos(4a)',function(a){return Co(4*a)}]]},
+ {L:'sin(3a) cos a '+M+' cos(3a) sin a',f:function(a){return S(3*a)*Co(a)-Co(3*a)*S(a)},act:['sin(2a)',function(a){return S(2*a)}],why:'on reconnaît sin(3a '+M+' a) = sin(2a)',fk:[['sin(4a)',function(a){return S(4*a)}],['sin a',function(a){return S(a)}],['2 sin a',function(a){return 2*S(a)}]]},
+ {L:'cos(2a) cos a + sin(2a) sin a',f:function(a){return Co(2*a)*Co(a)+S(2*a)*S(a)},act:['cos a',function(a){return Co(a)}],why:'on reconnaît cos(2a '+M+' a) = cos a',fk:[['cos(3a)',function(a){return Co(3*a)}],['1',function(){return 1}]]},
+ {L:'2 cos²a '+M+' 1',f:function(a){return 2*Co(a)*Co(a)-1},act:['cos(2a)',function(a){return Co(2*a)}],why:'c’est une formule de Carnot',fk:[['sin²a',function(a){return S(a)*S(a)}],['cos²a',function(a){return Co(a)*Co(a)}],['2 cos a '+M+' 1',function(a){return 2*Co(a)-1}]]},
+ {L:'(1 '+M+' cos a)(1 + cos a)',f:function(a){return (1-Co(a))*(1+Co(a))},act:['sin²a',function(a){return S(a)*S(a)}],why:'c’est 1 '+M+' cos²a = sin²a',fk:[['cos²a',function(a){return Co(a)*Co(a)}],['0',function(){return 0}],['1 '+M+' cos a',function(a){return 1-Co(a)}]]}];
+var CPT=[[6,3],[6,0],[4,2],[3,3],[6,4],[0,6],[4,0],[2,4]];
+function cex(e,R){for(var i=0;i<CPT.length;i++){var a=CPT[i][0]?PIv/CPT[i][0]:0,b=CPT[i][1]?PIv/CPT[i][1]:0,l=e.f(a,b),r=R[1](a,b);
+  if(Math.abs(l-r)>1e-6){var A=CPT[i][0]?PI(1,CPT[i][0]):'0',B=CPT[i][1]?PI(1,CPT[i][1]):'0';return 'avec a = '+A+(e.f.length>1?' et b = '+B:'')+', le membre de gauche vaut '+(exH(l)||N(+l.toFixed(3)))+' et le membre de droite '+(exH(r)||N(+r.toFixed(3)))}}return ''}
+function gVF(){var e=pick(IDS),tru=Math.random()<.5,fk=pick(e.fk),R=tru?e.act:fk;
+  var otherFk=e.fk.filter(function(x){return x!==fk});
+  var ch=[];
+  function idC(h,g,ok){return {h:h,id:[e.f,g],ok:ok}}
+  var okC=tru?{h:'Vrai : '+e.why+'.',id:[e.f,R[1]]}:{h:'Faux : le membre de gauche vaut en réalité '+e.act[0]+'.',id:[e.f,e.act[1]]};
+  var wr=[{h:'Vrai, mais seulement si a'+(e.f.length>1?' et b sont des angles aigus':' est un angle aigu')+'.'}];
+  if(tru){var o=otherFk.length?otherFk[0]:fk;wr.push({h:'Faux : le membre de gauche vaut en réalité '+fk[0]+'.',id:[e.f,fk[1]]});wr.push({h:'Faux : on ne peut pas transformer un produit de sinus et de cosinus.'})}
+  else{wr.push({h:'Vrai : on distribue le sinus ou le cosinus dans les parenthèses.'});if(otherFk.length)wr.push({h:'Faux : le membre de gauche vaut en réalité '+otherFk[0][0]+'.',id:[e.f,otherFk[0][1]]});else wr.push({h:'Faux : le membre de gauche vaut toujours 0.',id:[e.f,function(){return 0}]})}
+  return mk({q:'Vrai ou faux ? Pour tous les angles'+(e.f.length>1?' a et b':' a')+' :<br><b>'+e.L+' = '+R[0]+'</b>',ok:okC,wr:wr,key:'vf'+e.L+R[0],
+   why:tru?'C’est vrai : '+e.why+'.':'C’est faux : '+e.why+'. Un contre-exemple le prouve : '+cex(e,R)+'.'})}
+GENS=[OLD[0],gCosSin,gCosSin,gFact,gFact,gVF,gVF,OLD[1],OLD[5],gSimpson,OLD[6]];
 
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p3',"Transformer une expression, vérifier une identité",'./')};
 </script></body></html>
