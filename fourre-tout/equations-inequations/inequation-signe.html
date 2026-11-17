@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Inéquation du 1er degré : savoir quand le signe change</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+<title>Inéquation du 1er degré : savoir quand le sens de l’inéquation change</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
@@ -70,8 +70,8 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 @media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
 </style></head><body><div class="wrap">
 <div class="top"><a href="index.html">← Liste des savoir-faire</a><span>Savoir-faire 2 / 5</span></div>
-<h1>Inéquation du 1er degré : savoir quand le signe change</h1>
-<div class="card goal"><span class="badge">Objectif</span><div>Résoudre une inéquation du 1er degré et savoir <b>quand il faut changer le sens</b> du signe.</div></div>
+<h1>Inéquation du 1er degré : savoir quand le sens de l’inéquation change</h1>
+<div class="card goal"><span class="badge">Objectif</span><div>Résoudre une inéquation du 1er degré et savoir <b>quand il faut changer le sens</b> de l’inéquation.</div></div>
 <div class="card"><span class="badge">Feuille d’explication</span><h2>1. Ce qui ne change jamais le sens</h2>
 <p>Ajouter ou soustraire le même nombre aux deux membres.</p>
 <p class="def">x + 3 &lt; 7 &nbsp;⇒&nbsp; x &lt; 4</p>
@@ -87,7 +87,7 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
 <div style="flex:1 1 200px;text-align:center"><b style="color:#2A9D8F">f(x) = 0,5x + 1,5 : croissante</b><div id="g1"></div><small>x₁ &lt; x₂ donne f(x₁) &lt; f(x₂)</small></div>
 <div style="flex:1 1 200px;text-align:center"><b style="color:#E76F51">g(x) = −0,5x + 2 : décroissante</b><div id="g2"></div><small>x₁ &lt; x₂ donne g(x₁) &gt; g(x₂)</small></div></div>
-<p style="margin-top:12px">Multiplier par un nombre k, c’est appliquer la fonction <b>x ↦ kx</b>. Si k &gt; 0 elle est croissante (ordre conservé). Si k &lt; 0 elle est <b>décroissante</b> : l’ordre est inversé, donc le sens du signe aussi.</p></div>
+<p style="margin-top:12px">Multiplier par un nombre k, c’est appliquer la fonction <b>x ↦ kx</b>. Si k &gt; 0 elle est croissante (ordre conservé). Si k &lt; 0 elle est <b>décroissante</b> : l’ordre est inversé, donc le sens de l’inéquation aussi.</p></div>
 <div class="card key"><h2>4. Méthode</h2>
 <p><b>−2x + 1 &gt; 7</b></p>
 <p>−2x &gt; 6 &nbsp;(on soustrait 1 des deux côtés)<br>x <b>&lt;</b> −3 &nbsp;(on divise par <b>−2</b> : <b>le sens change</b>)<br>S = ]−∞ ; −3[</p>
@@ -356,5 +356,5 @@ for(var i=-6;i<=6;i++){var x=160+i*22;s+='<line x1="'+x+'" y1="40" x2="'+x+'" y2
 s+='<path d="M '+(160+2*22)+' 30 Q 160 0 '+(160-2*22)+' 30" fill="none" stroke="#E76F51" stroke-width="2"/><path d="M '+(160+5*22)+' 30 Q 160 -25 '+(160-5*22)+' 30" fill="none" stroke="#E76F51" stroke-width="2" stroke-dasharray="4 3"/>';
 return s+'<text x="160" y="14" font-size="11" text-anchor="middle" fill="#E76F51">× (−1)</text></svg>'}
 $('mir').innerHTML=mirror();$('g1').innerHTML=lineGraph(0.5,1.5,-2,2,'f');$('g2').innerHTML=lineGraph(-0.5,2,-2,2,'g');
-document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p2',"Inéquation du 1er degré : savoir quand le signe change",'index.html')};
+document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p2',"Inéquation du 1er degré : savoir quand le sens de l’inéquation change",'index.html')};
 </script></body></html>
