@@ -84,12 +84,12 @@ sub{font-size:.75em}
 <h1>Le mouvement rectiligne uniforme (MRU)</h1>
 <div class="card goal"><span class="badge">Objectif</span><div>Connaître la loi du MRU, le <b>reconnaître</b> sur un graphique et calculer une vitesse, une position ou un instant.</div></div>
 <div class="card key"><span class="badge">À connaître</span><p>Un <b>MRU</b> : la trajectoire est une droite et la <b>vitesse est constante</b>. Donc a = 0.</p>
-<p class="f"><b>x(t) = x<sub>0</sub> + v (t − t<sub>0</sub>)</b> &nbsp;&nbsp; v = <span class="fr"><span>Δx</span><span>Δt</span></span></p></div>
+<p class="f"><b>x = x<sub>0</sub> + v Δt</b> &nbsp;&nbsp; v = <span class="fr"><span>Δx</span><span>Δt</span></span></p></div>
 <div class="card"><span class="badge">Se faire une image</span><p>Le même MRU (x<sub>0</sub> = 2 m, v = 3 m/s) vu sur les trois graphiques :</p><div id="g2"></div>
 <ul class="pts"><li>Sur x(t), la <b>pente</b> de la droite est la vitesse. Elle monte : v &gt; 0 ; elle descend : v &lt; 0.</li><li>À l’<b>arrêt</b> : x(t) est horizontale ; v(t) est sur l’axe (v = 0).</li></ul></div>
 <div class="card warn"><b>Attention.</b> Une droite horizontale sur <b>v(t)</b> n’est pas un arrêt : c’est un MRU. L’arrêt, c’est v = 0.<br>Pour passer de km/h à m/s, on divise par 3,6 ; dans l’autre sens, on multiplie par 3,6.</div>
 <div class="card ex"><span class="badge">Exemple</span><p>x<sub>0</sub> = 20 m, v = −4 m/s, t<sub>0</sub> = 0 s. Où est le mobile à t = 3 s ? Quand passe-t-il en x = 0 ?</p>
-<p class="f">x(3) = 20 + (−4) · 3 = 8 m<br>0 = 20 − 4 t &nbsp;donc&nbsp; t = 5 s</p></div>
+<p class="f">x = 20 + (−4) · 3 = 8 m<br>0 = 20 − 4 Δt &nbsp;donc&nbsp; Δt = 5 s, soit t = 5 s</p></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
 <h2>Quiz : 10 questions</h2>
 <p>Chaque faute ajoute <b>3 questions</b> pour consolider. Garde un brouillon et une calculatrice à côté de toi.</p>
@@ -347,12 +347,12 @@ GENS.push(function(){var st,t1,dt,x1,dx,v,x0,xe,n=0;
 GENS.push(function(){var x0=R(-20,40),v=sgn()*R(2,9),t=R(2,12),x=x0+v*t;
   var o=numC(x,[x0-v*t,v*t,x0+v,x0*t+v,x+v],'m');
   return mk({q:'Un mobile en MRU part de <b>x<sub>0</sub> = '+pf(x0)+' m</b> à t<sub>0</sub> = 0 s, avec <b>v = '+pf(v)+' m/s</b>. Où est-il à <b>t = '+t+' s</b> ?',ok:o.ok,wr:o.wr,num:x,key:'l'+x0+v+t,
-   why:'Loi du MRU : x(t) = x<sub>0</sub> + v (t '+M+' t<sub>0</sub>) = '+pf(x0)+' + ('+pf(v)+') · '+t+' = <b>'+pf(x)+' m</b>.'+(v<0?' La vitesse est négative : la position diminue.':'')})});
+   why:'Loi du MRU : x = x<sub>0</sub> + v Δt, avec Δt = '+t+' s : x = '+pf(x0)+' + ('+pf(v)+') · '+t+' = <b>'+pf(x)+' m</b>.'+(v<0?' La vitesse est négative : la position diminue.':'')})});
 /* 7. loi du MRU : quand arrive-t-il ? */
 GENS.push(function(){var x0=R(0,30),v=sgn()*R(2,8),t=R(3,15),X=x0+v*t;
   var o=numC(t,[X/v,(X+x0)/v,-t,t+1,Math.abs(X-x0)],'s');
   return mk({q:'Un mobile en MRU part de x<sub>0</sub> = '+pf(x0)+' m à t<sub>0</sub> = 0 s avec v = '+pf(v)+' m/s. À quel instant passe-t-il en <b>x = '+pf(X)+' m</b> ?',ok:o.ok,wr:o.wr,num:t,key:'q'+x0+v+t,
-   why:pf(X)+' = '+pf(x0)+' + ('+pf(v)+') · t, donc ('+pf(v)+') · t = '+pf(X-x0)+' et t = '+frs(pf(X-x0),pf(v))+' = <b>'+t+' s</b>.'})});
+   why:'x = x<sub>0</sub> + v Δt : '+pf(X)+' = '+pf(x0)+' + ('+pf(v)+') · Δt, donc ('+pf(v)+') · Δt = '+pf(X-x0)+' et Δt = '+frs(pf(X-x0),pf(v))+' = '+t+' s. Comme t<sub>0</sub> = 0 s, il y passe à <b>t = '+t+' s</b>.'})});
 /* 8. conversion km/h ↔ m/s */
 GENS.push(function(){var ms=pick([5,10,15,20,25,30,35]),kmh=ms*3.6,toMs=Math.random()<.5;
   var o=toMs?numC(ms,[kmh*3.6,kmh/3.6*10,kmh/60,ms+2],'m/s'):numC(kmh,[ms/3.6,ms*60,kmh/10,kmh+18],'km/h');

@@ -84,7 +84,7 @@ sub{font-size:.75em}
 <h1>Rencontre de deux mobiles et distance d’arrêt</h1>
 <div class="card goal"><span class="badge">Objectif</span><div>Calculer le <b>lieu et l’instant</b> de la rencontre de deux mobiles en MRU, et la <b>distance d’arrêt</b> d’un véhicule.</div></div>
 <div class="card"><span class="badge">Comprendre</span><h2>Deux voitures face à face</h2><p>Clique sur « Suivant ».</p><div id="meet"></div></div>
-<div class="card key"><span class="badge">Méthode : la rencontre</span><ol class="steps"><li>Choisir <b>un seul repère</b> pour les deux mobiles (origine, sens, t<sub>0</sub>).</li><li>Écrire la loi de chacun : x<sub>A</sub> = x<sub>0A</sub> + v<sub>A</sub> t et x<sub>B</sub> = x<sub>0B</sub> + v<sub>B</sub> t, avec les <b>signes</b> des vitesses.</li><li>Rencontre : <b>x<sub>A</sub> = x<sub>B</sub></b>. On résout pour trouver t.</li><li>On remplace t dans une des lois pour trouver x.</li></ol><p>Sur un graphique x(t), la rencontre est le point où les deux droites se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
+<div class="card key"><span class="badge">Méthode : la rencontre</span><ol class="steps"><li>Choisir <b>un seul repère</b> pour les deux mobiles (origine, sens, t<sub>0</sub>).</li><li>Écrire la loi de chacun avec <b>(t − t<sub>0</sub>)</b> : x<sub>A</sub> = x<sub>0A</sub> + v<sub>A</sub> (t − t<sub>0A</sub>) et x<sub>B</sub> = x<sub>0B</sub> + v<sub>B</sub> (t − t<sub>0B</sub>), avec les <b>signes</b> des vitesses. t est le même pour les deux : c’est l’heure lue sur une seule horloge. Si un mobile part plus tard, son t<sub>0</sub> n’est pas 0.</li><li>Rencontre : <b>x<sub>A</sub> = x<sub>B</sub></b>. On résout pour trouver t.</li><li>On remplace t dans une des lois pour trouver x.</li></ol><p>Sur un graphique x(t), la rencontre est le point où les deux droites se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
 <div class="card"><h2>La distance d’arrêt</h2><p>Distance d’arrêt = distance de <b>réaction</b> + distance de <b>freinage</b>.</p>
 <ul class="pts"><li><b>Réaction</b> (le conducteur n’a pas encore freiné) : MRU, d<sub>r</sub> = v · t<sub>r</sub>.</li><li><b>Freinage</b> : MRUA jusqu’à v = 0. Durée : Δt = <span class="fr"><span>v</span><span>|a|</span></span> ; distance : d<sub>f</sub> = <span class="fr"><span>v²</span><span>2 |a|</span></span>.</li></ul>
 <p>Toujours convertir la vitesse en m/s d’abord (÷ 3,6).</p></div>
@@ -322,9 +322,14 @@ GENS.push(function(){var kind=pick(['face','face','pour']),ask=pick(['t','x']),t
   var xm=vA*ts,ans=ask==='t'?ts:xm,un=ask==='t'?'s':'m';
   var c=ask==='t'?[L/vA,kind==='face'?L/Math.abs(vA-b)||ts+3:L/(vA+vB),ts+1,L/(vA+Math.abs(vB))+(kind==='face'?1:0)]:[L-xm,L,vA*(ts+1),xm/2];
   var o=numC(ans,c,un);
-  var eqs=kind==='face'?'x<sub>A</sub> = '+vA+' t et x<sub>B</sub> = '+L+' '+M+' '+b+' t. '+vA+' t = '+L+' '+M+' '+b+' t, donc '+(vA+b)+' t = '+L+' et t = '+ts+' s':'x<sub>A</sub> = '+vA+' t et x<sub>B</sub> = '+L+' + '+vB+' t. '+vA+' t = '+L+' + '+vB+' t, donc '+(vA-vB)+' t = '+L+' et t = '+ts+' s';
+  var eqs=kind==='face'?'x<sub>A</sub> = 0 + '+vA+' (t '+M+' 0) = '+vA+' t et x<sub>B</sub> = '+L+' '+M+' '+b+' (t '+M+' 0) = '+L+' '+M+' '+b+' t. '+vA+' t = '+L+' '+M+' '+b+' t, donc '+(vA+b)+' t = '+L+' et t = '+ts+' s':'x<sub>A</sub> = '+vA+' (t '+M+' 0) = '+vA+' t et x<sub>B</sub> = '+L+' + '+vB+' (t '+M+' 0) = '+L+' + '+vB+' t. '+vA+' t = '+L+' + '+vB+' t, donc '+(vA-vB)+' t = '+L+' et t = '+ts+' s';
   return mk({q:'Deux mobiles en MRU sur la même droite. <b>A</b> part de x = 0 avec v = +'+vA+' m/s. Au même instant, <b>B</b> part de x = '+L+' m avec v = '+sg2(vB)+' m/s ('+(kind==='face'?'il va vers A':'dans le même sens que A')+'). '+(ask==='t'?'Au bout de combien de temps se rencontrent-ils ?':'En quelle position x se rencontrent-ils ?'),ok:o.ok,wr:o.wr,num:ans,key:'m'+kind+vA+vB+L+ask,
    why:'À la rencontre, ils sont au <b>même endroit au même instant</b> : x<sub>A</sub> = x<sub>B</sub>. '+eqs+'. Position : x = '+vA+' × '+ts+' = '+xm+' m.'})});
+/* 1b. B part plus tard : t − t0 */
+GENS.push(function(){var ts,t0,vA,b,L,n=0;do{ts=R(4,12);t0=R(1,ts-2);vA=R(2,6);b=R(2,6);L=vA*ts+b*(ts-t0);n++}while(n<200&&L>300);
+  var xm=vA*ts,o=numC(ts,[L/(vA+b),ts-t0,(L-b*t0)/(vA+b),ts+t0],'s');
+  return mk({q:'<b>A</b> part de x = 0 à t = 0 s avec v = +'+vA+' m/s. <b>B</b> part de x = '+L+' m, vers A, avec v = '+M+b+' m/s, mais seulement à <b>t = '+t0+' s</b>. À quel instant t se rencontrent-ils ?',ok:o.ok,wr:o.wr,num:ts,key:'tl'+vA+b+L+t0,
+   why:'B démarre à t<sub>0B</sub> = '+t0+' s : x<sub>B</sub> = '+L+' '+M+' '+b+' (t '+M+' '+t0+'). A : x<sub>A</sub> = '+vA+' (t '+M+' 0) = '+vA+' t. Rencontre : '+vA+' t = '+L+' '+M+' '+b+' t + '+(b*t0)+', donc '+(vA+b)+' t = '+(L+b*t0)+' et <b>t = '+ts+' s</b> (position : x = '+xm+' m). Si on oublie le t<sub>0</sub> de B, on trouve '+pf(L/(vA+b))+' s : faux.'})});
 /* 2. rencontre : lecture graphique */
 GENS.push(function(){var ts,vA,b,xs,xb,T,hi,st,n=0;
   do{ts=R(2,5);vA=R(1,4);b=R(1,4);xs=vA*ts;xb=xs+b*ts;T=Math.min(8,ts+Math.floor(xs/b));hi=Math.max(xb,vA*T);st=[5,4,2,1].filter(function(s){return xs%s===0&&Math.ceil(hi/s)<=10})[0];n++}while(n<500&&(T<ts+1||!st));
@@ -364,7 +369,7 @@ function meetSteps(){var vA=6,vB=-4,L=100,ts=10,T=14;
   {eq:'A : x<sub>0</sub> = 0, v = +6 m/s &nbsp; B : x<sub>0</sub> = 100 m, v = '+M+'4 m/s',vis:road(0,vA,vB,L)+mGraph(0,vA,vB,L,T),txt:'Deux voitures roulent l’une vers l’autre, en MRU. On choisit un seul axe pour les deux : origine au départ de A, sens de A vers B. B a donc une vitesse <b>négative</b>.'},
   {eq:'t = 4 s',vis:road(4,vA,vB,L)+mGraph(4,vA,vB,L,T),txt:'Après 4 s : A est en x = 24 m, B en x = 100 '+M+' 16 = 84 m. On trace leurs positions en fonction du temps : deux droites.'},
   {eq:'t = 10 s',vis:road(10,vA,vB,L)+mGraph(10,vA,vB,L,T,[10,60]),txt:'Après 10 s, ils sont au <b>même endroit</b> : x = 60 m. Sur le graphique, les deux droites <b>se croisent</b>.'},
-  {eq:'x<sub>A</sub> = x<sub>B</sub>',vis:mGraph(10,vA,vB,L,T,[10,60]),txt:'<b>Par le calcul.</b> x<sub>A</sub> = 6 t et x<sub>B</sub> = 100 '+M+' 4 t. Rencontre : 6 t = 100 '+M+' 4 t, donc 10 t = 100 et <b>t = 10 s</b>. Position : x = 6 × 10 = <b>60 m</b>.'}]}
+  {eq:'x<sub>A</sub> = x<sub>B</sub>',vis:mGraph(10,vA,vB,L,T,[10,60]),txt:'<b>Par le calcul.</b> Les deux partent à t<sub>0</sub> = 0 s : x<sub>A</sub> = 0 + 6 (t '+M+' 0) = 6 t et x<sub>B</sub> = 100 '+M+' 4 (t '+M+' 0) = 100 '+M+' 4 t. Rencontre : 6 t = 100 '+M+' 4 t, donc 10 t = 100 et <b>t = 10 s</b>. Position : x = 6 × 10 = <b>60 m</b>.'}]}
 stepper($('meet'),meetSteps,{});
 
 
