@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,top=1.5cm,bottom=1.5cm,left=2.3cm,right=2.3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{longtable,array,booktabs}
+\usepackage{fancyhdr}
+\newcommand{\barre}[1]{\leavevmode\setbox0\hbox{#1}\rlap{\rule[0.55ex]{\wd0}{0.5pt}}\box0}
+\definecolor{bleu}{HTML}{1F4E79}
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small 5\textsuperscript{e} Mathématiques --- Suites}
+\rhead{\small Numérotation à partir de $u_0$}
+\cfoot{\small\thepage}
+\rfoot{\footnotesize Aide de l'IA (AIA)}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}
+% ---- lignes du tableau ----
+\newcommand{\case}{$\square$}
+\newcommand{\sect}[1]{\midrule\multicolumn{2}{@{}l}{\rule{0pt}{4ex}\textbf{\large\color{bleu}#1}}\\[0.6ex]\midrule}
+\newcommand{\ligne}[1]{#1 & \case\\}                         % savoir-faire simple
+\newcommand{\groupe}[1]{\rule{0pt}{3.6ex}\textbf{#1} & \\} % titre d'un groupe
+\newcommand{\sous}[1]{\hangindent=2.1em\hangafter=1\hspace{1.2em}$\circ$ #1 & \case\\}  % ligne d'un groupe
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{bleu} Tableau des savoir-faire}\\[1mm]
+Les suites numériques
+\end{center}
+\vspace{-2mm}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{12.6cm}>{\centering\arraybackslash}p{2.9cm}@{}}
+\toprule
+ & \textbf{Éval. (x ou v)}\\
+\endhead
+\bottomrule
+\endlastfoot
+
+\sect{À revoir avant de commencer}
+\ligne{Calculer avec des puissances}
+\ligne{Augmenter ou diminuer de $t\,\%$ : multiplier par $1+\frac{t}{100}$ ou par $1-\frac{t}{100}$}
+\ligne{Résoudre une équation du 1\textsuperscript{er} degré et un système de deux équations}
+
+\sect{1. Généralités sur les suites}
+\groupe{Connaître les définitions}
+\sous{l'ensemble des naturels $\mathbb{N}=\{0\,;1\,;2\,;3\,;\ldots\}$, qui numérote les termes à partir de $u_0$}
+\sous{une suite : à chaque naturel $n$, on associe un réel $u_n$, le terme de rang $n$}
+\sous{une suite définie en extension (liste des termes : $3\,;5\,;7\,;9\,;\ldots$)}
+\sous{une suite définie en compréhension (par son terme général $u_n=f(n)$)}
+\sous{une suite définie par récurrence ($u_0$ donné et $u_{n+1}=f(u_n)$)}
+\sous{le terme général d'une suite}
+\sous{une suite croissante, strictement croissante, décroissante, strictement décroissante}
+\sous{une suite monotone}
+\groupe{Calculer des termes}
+\sous{d'une suite définie en fonction du rang : $u_n=f(n)$}
+\sous{d'une suite définie par récurrence : $u_0$ donné et $u_{n+1}=f(u_n)$}
+\ligne{Passer d'une écriture à l'autre (trouver une formule à partir des premiers termes)}
+\ligne{Représenter graphiquement une suite, sur un axe et dans le plan}
+\groupe{Déterminer le sens de variation}
+\sous{avec le signe de $u_{n+1}-u_n$}
+\sous{en comparant $\frac{u_{n+1}}{u_n}$ à $1$ (termes strictement positifs)}
+\ligne{Donner un exemple de suite qui vérifie des conditions données}
+
+\sect{2. Suites arithmétiques}
+\ligne{Reconnaître une suite arithmétique ($u_{n+1}-u_n$ constant) et donner sa raison $r$}
+\ligne{Connaître le terme général : $u_n=u_0+n\,r$, et aussi $u_n=u_p+(n-p)\,r$}
+\groupe{Rechercher un terme, la raison ou le rang}
+\sous{à partir du premier terme et de la raison}
+\sous{à partir de deux termes quelconques}
+\groupe{Somme de termes consécutifs}
+\sous{calculer $S=\text{nombre de termes}\cdot\frac{\text{premier}+\text{dernier}}{2}$, par exemple $u_0+\ldots+u_{n-1}=n\,\frac{u_0+u_{n-1}}{2}$}
+\sous{démontrer cette formule}
+\ligne{Décrire la croissance (linéaire) et le sens de variation selon le signe de $r$}
+
+\pagebreak
+\sect{3. Suites géométriques}
+\ligne{Reconnaître une suite géométrique ($\frac{u_{n+1}}{u_n}$ constant) et donner sa raison $q$}
+\ligne{Connaître le terme général : $u_n=u_0\,q^{\,n}$, et aussi $u_n=u_p\,q^{\,n-p}$}
+\groupe{Rechercher un terme, la raison ou le rang}
+\sous{à partir du premier terme et de la raison}
+\sous{à partir de deux termes quelconques}
+\sous{avec la moyenne géométrique : $u_n^2=u_{n-1}\,u_{n+1}$}
+\groupe{Somme de termes consécutifs}
+\sous{calculer $u_0+u_1+\ldots+u_{n-1}=u_0\,\frac{1-q^{\,n}}{1-q}$ \;($q\neq1$)}
+\sous{démontrer cette formule}
+\ligne{Décrire la croissance (exponentielle) et le sens de variation selon $u_0$ et $q$}
+\ligne{Distinguer un accroissement constant ($+\,r$, arithmétique) d'un taux de croissance constant ($\times\, q$, géométrique)}
+
+\sect{4. Limite d'une suite}
+\ligne{Définir la limite d'une suite et expliquer cette définition à l'aide d'un schéma}
+\ligne{Donner des exemples de suites convergentes et de suites non convergentes}
+\ligne{Conjecturer la limite d'une suite à l'aide de la calculatrice ou d'un tableur}
+\ligne{Vérifier la valeur d'une limite à l'aide de la définition}
+\groupe{Déterminer la limite}
+\sous{d'une suite arithmétique (selon le signe de $r$)}
+\sous{d'une suite géométrique (selon la valeur de $q$)}
+\ligne{Calculer une somme infinie de termes d'une suite géométrique : $u_0+u_1+u_2+\ldots=\frac{u_0}{1-q}$ si $|q|<1$}
+
+\sect{5. Applications financières}
+\groupe{Placement à intérêts simples (suite arithmétique)}
+\sous{calculer le capital final : $C_n=C_0\,\bigl(1+n\,\frac{t}{100}\bigr)$, avec le taux $t$ en \%}
+\sous{trouver le taux, l'intérêt ou la durée}
+\groupe{Placement à intérêts composés (suite géométrique)}
+\sous{calculer le capital final : $C_n=C_0\,\bigl(1+\frac{t}{100}\bigr)^n$}
+\sous{trouver le taux, l'intérêt ou la durée}
+\ligne{Comparer intérêts simples et intérêts composés}
+\ligne{Calculer la valeur de versements réguliers (annuités) avec une somme géométrique}
+\ligne{Réaliser un tableau d'amortissement d'un prêt avec un tableur}
+
+\sect{6. Résoudre un problème}
+\ligne{Traduire un énoncé par une suite (récurrence ou terme général) ou par une somme de termes}
+\ligne{Résoudre un problème faisant intervenir des suites dans un contexte nouveau (géométrie, population, médicament, \dots)}
+\end{longtable}
+\end{document}
