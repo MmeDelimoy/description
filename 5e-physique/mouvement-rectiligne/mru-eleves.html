@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Le mouvement rectiligne uniforme (MRU)</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;margin:4px 0 10px}
+.top a{color:var(--navy);text-decoration:none;font-weight:600}
+h1{font-size:25px;line-height:1.2;margin:6px 0 4px;color:var(--navy)}
+h2{font-size:20px;margin:0 0 8px;color:var(--navy)}
+.lead{color:#4a5a6c;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.goal{border-left:6px solid var(--teal);background:#EAF6F4}
+.warn{border-left:6px solid var(--coral);background:#FDF0EC}
+.key{border-left:6px solid var(--sun);background:#FFF8DC}
+.badge{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 2px;font-size:.92em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;min-height:46px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.coral{background:var(--coral)}
+.btn[disabled]{opacity:.35}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.eqline{font-size:26px;text-align:center;margin:8px 0;min-height:44px;color:var(--ink)}
+.stepbox{min-height:72px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.chip{animation:pop .45s ease both;transform-box:fill-box;transform-origin:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--navy)}
+.stw{overflow-x:auto}
+table.st{border-collapse:collapse;margin:8px auto;font-size:17px}
+table.st th.lab{text-align:left;padding:6px 6px;font-size:15px;font-weight:700;white-space:nowrap;border-right:2px solid var(--ink)}
+table.st td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line);min-width:30px}
+table.st tr:first-child td,table.st tr:first-child th{border-bottom:2px solid var(--ink)}
+table.st td.pt{border-left:1.5px solid #8895a5;border-right:1.5px solid #8895a5;font-weight:700;min-width:34px}
+table.st td.pt.forb{border-left:3px double var(--ink);border-right:3px double var(--ink);color:var(--coral)}
+table.st .sp{color:var(--teal);font-weight:700;font-size:20px}
+table.st .sn{color:var(--coral);font-weight:700;font-size:20px}
+table.st td.on{background:#CFEFEA}
+table.st tr.res th{color:var(--navy)}
+.inf{display:block;font-size:14px}.inf.l{text-align:left}.inf.r{text-align:right}
+svg.nl{width:100%;max-width:420px;display:block;margin:6px auto}
+svg.gr,svg.bal{width:100%;max-width:420px;display:block;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;font-size:15px;color:#4a5a6c;margin-bottom:6px}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.bar>div{height:100%;background:var(--teal);width:0;transition:width .4s}
+.qtext{font-size:19px;margin:6px 0 12px}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:18px;min-height:50px;color:var(--ink)}
+.ch.good{border-color:var(--teal);background:#E3F5F1}
+.ch.bad{border-color:var(--coral);background:#FDECE7}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;background:#F0F4F9}
+.fb.ok{background:#E3F5F1}.fb.ko{background:#FDECE7}
+.big{font-size:42px;text-align:center}
+.cards{display:grid;gap:12px}
+.item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.item .n{flex:none;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:20px}
+.item.done .n{background:var(--teal)}
+.item b{display:block;color:var(--navy);font-size:18px}
+.item small{color:#4a5a6c;display:block}
+.tag{display:inline-block;background:#EEF3F9;border-radius:8px;padding:1px 8px;font-size:13px;margin:4px 6px 0 0;color:#3b4b5d}
+ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
+.def{font-size:18px}
+.foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
+@media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+@media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
+
+.f{font-size:18px;margin:8px 0;line-height:2}.f b{color:var(--navy)}
+.steps{padding-left:22px}.steps li{margin:8px 0}
+table.sg{border-collapse:collapse;margin:8px auto;font-size:15px}table.sg td,table.sg th{border:1px solid var(--line);padding:5px 8px;text-align:center}
+.ex{border-left:6px solid var(--blue);background:#EEF4FF}
+svg.pg{width:100%;max-width:440px;height:auto;display:block;background:#fff;border:1px solid #E2E8F0;border-radius:10px;margin:6px auto 10px}
+svg.pg text{font:11px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;fill:#334155}
+svg.pg .gr{stroke:#E2E8F0;stroke-width:1}svg.pg .ax{stroke:#1F2A44;stroke-width:1.6}svg.pg .z{stroke:#1F2A44;stroke-width:1.3}
+.trio{display:flex;flex-wrap:wrap;gap:6px}.trio>div{flex:1;min-width:30%}.trio p{text-align:center;margin:2px 0;font-weight:700}
+.ch svg.pg{max-width:220px;margin:2px auto}
+sub{font-size:.75em}
+</style></head><body><div class="wrap">
+<div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 2 / 6</span></div>
+<h1>Le mouvement rectiligne uniforme (MRU)</h1>
+<div class="card goal"><span class="badge">Objectif</span><div>Connaître la loi du MRU, le <b>reconnaître</b> sur un graphique et calculer une vitesse, une position ou un instant.</div></div>
+<div class="card key"><span class="badge">À connaître</span><p>Un <b>MRU</b> : la trajectoire est une droite et la <b>vitesse est constante</b>. Donc a = 0.</p>
+<p class="f"><b>x(t) = x<sub>0</sub> + v (t − t<sub>0</sub>)</b> &nbsp;&nbsp; v = <span class="fr"><span>Δx</span><span>Δt</span></span></p></div>
+<div class="card"><span class="badge">Se faire une image</span><p>Le même MRU (x<sub>0</sub> = 2 m, v = 3 m/s) vu sur les trois graphiques :</p><div id="g2"></div>
+<ul class="pts"><li>Sur x(t), la <b>pente</b> de la droite est la vitesse. Elle monte : v &gt; 0 ; elle descend : v &lt; 0.</li><li>À l’<b>arrêt</b> : x(t) est horizontale ; v(t) est sur l’axe (v = 0).</li></ul></div>
+<div class="card warn"><b>Attention.</b> Une droite horizontale sur <b>v(t)</b> n’est pas un arrêt : c’est un MRU. L’arrêt, c’est v = 0.<br>Pour passer de km/h à m/s, on divise par 3,6 ; dans l’autre sens, on multiplie par 3,6.</div>
+<div class="card ex"><span class="badge">Exemple</span><p>x<sub>0</sub> = 20 m, v = −4 m/s, t<sub>0</sub> = 0 s. Où est le mobile à t = 3 s ? Quand passe-t-il en x = 0 ?</p>
+<p class="f">x(3) = 20 + (−4) · 3 = 8 m<br>0 = 20 − 4 t &nbsp;donc&nbsp; t = 5 s</p></div>
+<div class="card" id="testcard"><span class="badge">Teste-toi</span>
+<h2>Quiz : 10 questions</h2>
+<p>Chaque faute ajoute <b>3 questions</b> pour consolider. Garde un brouillon et une calculatrice à côté de toi.</p>
+<div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
+<div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
+<div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
+<script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
+var M='−', EPS=1e-9;
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[R(0,a.length-1)]}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a}
+function F(n,d){d=(d===undefined)?1:d;if(d<0){n=-n;d=-d}var g=gcd(n,d)||1;return{n:n/g,d:d/g}}
+function fv(f){return f.n/f.d}
+function feq(a,b){return a.n===b.n&&a.d===b.d}
+function fcmp(a,b){return a.n*b.d-b.n*a.d}
+function N(n){return n<0?M+(-n):''+n}
+function frs(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'}
+function FR(n,d){var f=F(n,d);if(f.d===1)return N(f.n);return (f.n<0?M:'')+frs(Math.abs(f.n),f.d)}
+function fh(f){return FR(f.n,f.d)}
+function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
+function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
+function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
+function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
+var LT='&lt;',GT='&gt;';
+/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
+function ng(n){return n<0?'('+N(n)+')':N(n)}
+function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
+function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
+function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
+function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
+/* éléments de réponse */
+function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
+function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
+function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
+function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
+function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
+/* analyse du signe d'un produit/quotient de facteurs du 1er degré
+   factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
+function mids(roots){var k=roots.length,m=[];for(var i=0;i<=k;i++){m.push(k===0?0:(i===0?fv(roots[0])-1:(i===k?fv(roots[k-1])+1:(fv(roots[i-1])+fv(roots[i]))/2)))}return m}
+function analyse(factors,K,rel){
+  var roots=[];factors.forEach(function(f){var r=F(-f.b,f.a);if(!roots.some(function(q){return feq(q,r)}))roots.push(r)});
+  roots.sort(fcmp);var k=roots.length,mi=mids(roots),iv=[],pt=[];
+  mi.forEach(function(m){var s=K>0?1:-1;factors.forEach(function(f){s*=(f.a*m+f.b)>0?1:-1});iv.push(s)});
+  roots.forEach(function(r){var zd=false;factors.forEach(function(f){if(f.p<0&&feq(F(-f.b,f.a),r))zd=true});pt.push(zd?'forb':'zero')});
+  var eq=(rel==='>='||rel==='<='),want=(rel==='>'||rel==='>=')?1:-1,els=[];
+  for(var i=0;i<=k;i++){els.push({t:'iv',inS:iv[i]===want,i:i});if(i<k)els.push({t:'pt',inS:pt[i]==='zero'&&eq,i:i})}
+  var parts=[],cur=null;
+  els.forEach(function(e,idx){if(e.inS){if(!cur)cur={start:idx};cur.end=idx}else if(cur){parts.push(cur);cur=null}});
+  if(cur)parts.push(cur);
+  parts=parts.map(function(c){var s=els[c.start],e=els[c.end],p={};
+    if(s.t==='iv'){p.lo=s.i===0?null:roots[s.i-1];p.loI=false}else{p.lo=roots[s.i];p.loI=true}
+    if(e.t==='iv'){p.hi=e.i===k?null:roots[e.i];p.hiI=false}else{p.hi=roots[e.i];p.hiI=true}
+    return p});
+  return {roots:roots,iv:iv,pt:pt,parts:parts,factors:factors,K:K,rel:rel,mids:mi};
+}
+function sg(s){return s>0?'+':s<0?M:'0'}
+function tableHtml(an,show,hl,resLab){
+  var k=an.roots.length,rows=[];
+  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
+  an.factors.forEach(function(f){var r=F(-f.b,f.a);
+    rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
+  rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
+  var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
+  for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
+  h+='</tr>';
+  var nr=rows.length-1;
+  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
+    h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
+    for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
+      if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
+    h+='</tr>'});
+  return h+'</table></div>';
+}
+function nline(an,parts){
+  var k=an.roots.length,W=320,H=74,x0=26,x1=W-26;
+  function X(i){return x0+(i+1)*(x1-x0)/(k+1)}
+  function idx(r){for(var i=0;i<k;i++)if(feq(an.roots[i],r))return i;return 0}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="nl" role="img" aria-label="droite réelle">';
+  s+='<line x1="8" y1="34" x2="'+(W-8)+'" y2="34" stroke="#5b6b7b" stroke-width="2"/>';
+  s+='<text x="8" y="16" font-size="11" fill="#5b6b7b">'+M+'∞</text><text x="'+(W-8)+'" y="16" font-size="11" fill="#5b6b7b" text-anchor="end">+∞</text>';
+  parts.forEach(function(p){var a=p.lo==null?8:X(idx(p.lo)),b=p.hi==null?W-8:X(idx(p.hi));s+='<line x1="'+a+'" y1="34" x2="'+b+'" y2="34" stroke="#2A9D8F" stroke-width="8" opacity=".85"/>'});
+  an.roots.forEach(function(r,i){var on=inParts(parts,fv(r));s+='<circle cx="'+X(i)+'" cy="34" r="6" fill="'+(on?'#1F4E79':'#fff')+'" stroke="#1F4E79" stroke-width="2"/><text x="'+X(i)+'" y="62" font-size="12" text-anchor="middle" fill="#1F2A44">'+ftxt(r)+'</text>'});
+  return s+'</svg>';
+}
+/* ===== fabrique de questions ===== */
+function mk(o){
+  var seen={};seen[o.ok.h]=1;var ws=[];
+  o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
+  function cp(w,ok){return {h:w.h,f:w.f,g:w.g,v:w.v,id:w.id,ok:ok}}
+  var all=shuffle([cp(o.ok,true)].concat(ws.map(function(w){return cp(w,false)})));
+  return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q,G:o.G,num:o.num,dom:o.dom};
+}
+/* QCM texte simple : bonne réponse + mauvaises */
+function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
+/* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
+function distract(an,extra){
+  var v=[];(extra||[]).forEach(function(p){v.push(p)});
+  var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
+  var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
+  v.push(flipBr(an.parts));                                                           // crochets inversés
+  var asProd=analyse(an.factors.map(function(f){return {a:f.a,b:f.b,p:1}}),an.K,an.rel);v.push(asProd.parts);   // dénominateurs traités comme des facteurs
+  var noDen=an.factors.filter(function(f){return f.p>0});if(noDen.length&&noDen.length<an.factors.length)v.push(analyse(noDen,an.K,an.rel).parts);
+  v.push(analyse(an.factors,-an.K,compRel(an.rel)).parts);
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
+  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
+  [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
+  var seen={},out=[];seen[setHtml(an.parts)]=1;
+  v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
+  return out;
+}
+/* choix numériques : x entier exact + valeurs fausses plausibles */
+function numOpts(x,cands,pre){
+  pre=pre||'x = ';var seen={},wr=[];seen[x]=1;
+  cands.concat([x+1,x-1,x+2,x-2,-x,x+3]).forEach(function(v){if(Math.round(v)===v&&!seen[v]){seen[v]=1;wr.push(v)}});
+  function mkc(v){return {h:pre+N(v),f:function(t){return Math.abs(t-v)<EPS}}}
+  return {ok:mkc(x),wr:wr.slice(0,6).map(mkc)};
+}
+
+/* ===== interface : maîtrise, stepper, quiz ===== */
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function $(id){return document.getElementById(id)}
+function stepper(root,getSteps,opts){
+  opts=opts||{};var i=0,steps=getSteps();
+  root.innerHTML='<div class="eqline" id="'+root.id+'_eq"></div><div id="'+root.id+'_vis"></div><div class="dots" id="'+root.id+'_dots"></div><div class="stepbox card key" id="'+root.id+'_txt"></div><div class="row"><button class="btn alt" id="'+root.id+'_p">◀ Précédent</button><button class="btn" id="'+root.id+'_n">Suivant ▶</button>'+(opts.again?'<button class="btn alt" id="'+root.id+'_a">↻ Un autre exemple</button>':'')+'</div>';
+  function draw(){var s=steps[i];
+    $(root.id+'_eq').innerHTML=s.eq||'';$(root.id+'_vis').innerHTML=s.vis||'';
+    var t=$(root.id+'_txt');t.style.animation='none';void t.offsetWidth;t.style.animation='';t.innerHTML=s.txt;
+    $(root.id+'_dots').innerHTML=steps.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>'}).join('');
+    $(root.id+'_p').disabled=(i===0);$(root.id+'_n').disabled=(i===steps.length-1);
+    if(s.after)s.after(root);}
+  $(root.id+'_p').onclick=function(){if(i>0){i--;draw()}};
+  $(root.id+'_n').onclick=function(){if(i<steps.length-1){i++;draw()}};
+  if(opts.again)$(root.id+'_a').onclick=function(){steps=getSteps(true);i=0;draw()};
+  root._redraw=draw;draw();
+}
+function setMastered(id,on){store('mr_'+id,on?'1':'0')}
+function isMastered(id){return store('mr_'+id)==='1'}
+function runQuiz(root,gens,itemId,itemLabel,hubUrl){
+  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur;
+  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[]}
+  function nextQ(){
+    for(var t=0;t<60;t++){
+      if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
+    }
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
+  }
+  function show(){
+    if(done>=planned)return end();
+    cur=nextQ();
+    var extra=planned>FIRST?' <b style="color:var(--coral)">(+'+(planned-FIRST)+' de consolidation)</b>':'';
+    var h='<div class="qhead"><span>Question '+(done+1)+' sur '+planned+extra+'</span><span>Erreurs : '+wrong+'</span></div><div class="bar"><div style="width:'+(100*done/planned)+'%"></div></div><div class="qtext">'+cur.q+'</div>';
+    cur.ch.forEach(function(c,i){h+='<button class="ch" data-i="'+i+'">'+c.h+'</button>'});
+    h+='<div id="fb"></div><div class="row" id="nx"></div>';
+    root.innerHTML=h;
+    var bs=root.querySelectorAll('.ch');
+    Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
+  }
+  function answer(i,bs){
+    var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
+    done++;
+    if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
+    else{wrong++;planned+=PEN;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
+    $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
+    $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
+  }
+  function end(){
+    setMastered(itemId,true);
+    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div><div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
+    $('again').onclick=function(){reset();show()};
+  }
+  root._peek=function(){return cur};
+  reset();show();
+}
+
+/* ===== graphiques de physique (repris du quiz du chapitre) ===== */
+var CB='#2563EB',CP='#DB2777',CO='#EA580C',CV='#7C3AED',CGR='#94A3B8';
+function pf(n){var s=String(+(+n).toFixed(2)).replace('.',',');if(s.charAt(0)==='-')s=M+s.slice(1);return s==='−0'?'0':s}
+function pSeg(x1,y1,x2,y2,c,d){return {k:'l',x1:x1,y1:y1,x2:x2,y2:y2,c:c,d:d}}
+function pDot(x,y,t,dx,dy,c,a){return {k:'p',x:x,y:y,t:t,dx:dx,dy:dy,c:c,a:a}}
+function pTxt(x,y,s,c,dx,dy,a){return {k:'t',x:x,y:y,s:s,c:c,dx:dx,dy:dy,a:a}}
+function pTri(x1,y1,x2,y2,l1,l2,left){return [pSeg(x1,y1,x2,y1,CO,1),pSeg(x2,y1,x2,y2,CO,1),pTxt((x1+x2)/2,y1,l1,CO,0,y2>=y1?15:-6,'middle'),pTxt(x2,(y1+y2)/2,l2,CO,left?-6:6,4,left?'end':'start')]}
+function pTan(f,df,t0,h){h=h||1;return pSeg(t0-h,f(t0)-df*h,t0+h,f(t0)+df*h,CO,0)}
+var PLAB={x:{xl:'t (s)',yl:'x (m)'},v:{xl:'t (s)',yl:'v (m/s)'},a:{xl:'t (s)',yl:'a (m/s²)'}};
+function pGraph(o){
+  var W=o.small?220:340,H=o.small?150:235,L=o.small?36:48,Rm=12,T=o.small?14:20,Bm=o.small?26:38;
+  var x0=o.xr[0],x1=o.xr[1],y0=o.yr[0],y1=o.yr[1];
+  function X(x){return L+(x-x0)/(x1-x0)*(W-L-Rm)}function Y(y){return H-Bm-(y-y0)/(y1-y0)*(H-T-Bm)}
+  var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(o.alt||'graphique')+'">',k,x,y;
+  for(k=0;k<=Math.round((x1-x0)/o.xt);k++){x=x0+k*o.xt;s+='<line class="gr" x1="'+X(x)+'" y1="'+T+'" x2="'+X(x)+'" y2="'+(H-Bm)+'"/>'+(o.small?'':'<text x="'+X(x)+'" y="'+(H-Bm+14)+'" text-anchor="middle">'+pf(x)+'</text>')}
+  for(k=0;k<=Math.round((y1-y0)/o.yt);k++){y=y0+k*o.yt;s+='<line class="gr" x1="'+L+'" y1="'+Y(y)+'" x2="'+(W-Rm)+'" y2="'+Y(y)+'"/>'+(o.small?'':'<text x="'+(L-6)+'" y="'+(Y(y)+4)+'" text-anchor="end">'+pf(y)+'</text>')}
+  if(o.small&&y0<=0&&y1>=0)s+='<text x="'+(L-5)+'" y="'+(Y(0)+4)+'" text-anchor="end">0</text>';
+  if(y0<0&&y1>0)s+='<line class="z" x1="'+L+'" y1="'+Y(0)+'" x2="'+(W-Rm)+'" y2="'+Y(0)+'"/>';
+  s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-Bm)+'"/><line class="ax" x1="'+L+'" y1="'+(H-Bm)+'" x2="'+(W-Rm)+'" y2="'+(H-Bm)+'"/>';
+  s+='<text x="'+(L+4)+'" y="'+(o.small?11:12)+'" font-weight="700">'+o.yl+'</text><text x="'+(W-Rm)+'" y="'+(H-5)+'" text-anchor="end" font-weight="700">'+o.xl+'</text>';
+  (o.fill||[]).forEach(function(c){var a=c.a,b=c.b,n=60,p=X(a)+','+Y(0)+' ';for(var i=0;i<=n;i++){var t=a+(b-a)*i/n;p+=X(t).toFixed(1)+','+Y(c.f(t)).toFixed(1)+' '}p+=X(b)+','+Y(0);s+='<polygon points="'+p+'" fill="'+(c.c||CO)+'" opacity=".22"/>'});
+  (o.curves||[]).forEach(function(c){var a=c.a===undefined?x0:c.a,b=c.b===undefined?x1:c.b,n=80,p='';for(var i=0;i<=n;i++){var t=a+(b-a)*i/n;p+=X(t).toFixed(1)+','+Y(c.f(t)).toFixed(1)+' '}
+    s+='<polyline fill="none" stroke="'+(c.c||CB)+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="'+p+'"/>';
+    if(c.lab)s+='<text x="'+X(c.lab[0])+'" y="'+Y(c.lab[1])+'" font-weight="700" style="fill:'+c.c+'" text-anchor="'+(c.lab[3]||'start')+'">'+c.lab[2]+'</text>'});
+  (o.g||[]).forEach(function(p){s+='<line x1="'+X(p[0])+'" y1="'+Y(p[1])+'" x2="'+X(p[0])+'" y2="'+(H-Bm)+'" stroke="'+CGR+'" stroke-dasharray="4 3"/><line x1="'+L+'" y1="'+Y(p[1])+'" x2="'+X(p[0])+'" y2="'+Y(p[1])+'" stroke="'+CGR+'" stroke-dasharray="4 3"/><circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="5" fill="#fff" stroke="#1F2A44" stroke-width="2"/>'});
+  (o.ann||[]).forEach(function(a){
+    if(a.k==='l')s+='<line x1="'+X(a.x1)+'" y1="'+Y(a.y1)+'" x2="'+X(a.x2)+'" y2="'+Y(a.y2)+'" stroke="'+(a.c||CO)+'" stroke-width="'+(a.d?2:3)+'" '+(a.d?'stroke-dasharray="5 4"':'')+'/>';
+    if(a.k==='p'){s+='<circle cx="'+X(a.x)+'" cy="'+Y(a.y)+'" r="5" fill="'+(a.c||CO)+'"/>';if(a.t)s+='<text x="'+(X(a.x)+(a.dx||0))+'" y="'+(Y(a.y)+(a.dy||0))+'" text-anchor="'+(a.a||'start')+'" font-weight="700" style="fill:'+(a.c||CO)+'">'+a.t+'</text>'}
+    if(a.k==='t')s+='<text x="'+(X(a.x)+(a.dx||0))+'" y="'+(Y(a.y)+(a.dy||0))+'" text-anchor="'+(a.a||'middle')+'" font-weight="700" style="fill:'+(a.c||CO)+'">'+a.s+'</text>'});
+  return s+'</svg>';
+}
+function pNice(lo,hi,st){var span=Math.max(hi-lo,1);if(!st)st=[1,2,4,5,10,20,25,50].filter(function(s){return span/s<=8})[0]||100;var a=Math.floor(lo/st+1e-9)*st,b=Math.ceil(hi/st-1e-9)*st;if(a===b)b+=st;return {yr:[a,b],yt:st}}
+function pGR(kind,T,curves,lo,hi,st,extra){var n=pNice(lo,hi,st),o={xl:PLAB[kind].xl,yl:PLAB[kind].yl,xr:[0,T],yr:n.yr,xt:T<=8?1:T<=16?2:5,yt:n.yt,curves:curves};for(var k in (extra||{}))o[k]=extra[k];return pGraph(o)}
+function sgn(){return Math.random()<.5?-1:1}
+function sg2(n){return (n<0?M:'+')+Math.abs(n)}
+/* choix numériques avec unité */
+function numC(ans,cands,unit){var seen={},w=[];function k(x){return pf(x)}seen[k(ans)]=1;
+  cands.forEach(function(c){if(isFinite(c)&&!seen[k(c)]){seen[k(c)]=1;w.push({h:pf(c)+' '+unit,v:c})}});
+  return {ok:{h:pf(ans)+' '+unit,v:ans},wr:w}}
+var ADOPT=['Il accélère, dans le sens de l’axe','Il accélère, dans le sens opposé à l’axe','Il décélère, dans le sens de l’axe','Il décélère, dans le sens opposé à l’axe'];
+function adIdx(acc,pos){return acc?(pos?0:1):(pos?2:3)}
+function adQ(q,idx,why){return qcm(q,ADOPT[idx],ADOPT.filter(function(_,i){return i!==idx}),why)}
+var GENS=[];
+var OPT_MRU=['MRU, dans le sens de l’axe','MRU, dans le sens opposé à l’axe','Le mobile est à l’arrêt','MRUA (accélération constante non nulle)'];
+function mruQ(text,fig,k,why){return qcm(text+fig,OPT_MRU[k],OPT_MRU.filter(function(_,i){return i!==k}),why)}
+/* 1. reconnaître sur x(t) */
+GENS.push(function(){var v=sgn()*R(1,4),T=6,x0=v>0?R(0,3)*2:-v*T+R(0,2)*2,f=function(t){return x0+v*t},hi=Math.max(f(0),f(T));
+  return mruQ('Voici le graphique de la position x(t) d’un mobile. Que fait-il ?',pGR('x',T,[{f:f,c:v>0?CB:CP}],0,hi),v>0?0:1,
+   'x(t) est une <b>droite</b> : la pente (la vitesse) est constante, c’est un <b>MRU</b>. La droite '+(v>0?'monte : x augmente, le mobile va dans le sens de l’axe.':'<b>descend</b> : x diminue, le mobile va dans le sens <b>opposé</b> à l’axe.')+pGR('x',T,[{f:f,c:v>0?CB:CP}],0,hi,undefined,{ann:pTri(1,f(1),5,f(5),'Δt = 4 s','Δx = '+pf(4*v)+' m',v<0)}))});
+/* 2. reconnaître sur v(t) */
+GENS.push(function(){var v=sgn()*R(1,6),T=6,G=pGR('v',T,[{f:function(){return v},c:v>0?CB:CP}],Math.min(v,0)-1,Math.max(v,0)+1);
+  return mruQ('Voici le graphique de la vitesse v(t) d’un mobile. Que fait-il ?',G,v>0?0:1,'v(t) est <b>horizontale</b> : la vitesse est constante (a = 0), c’est un <b>MRU</b>. v = '+pf(v)+' m/s est '+(v>0?'positive : sens de l’axe.':'<b>négative</b> : sens opposé à l’axe.')+' Il n’est pas à l’arrêt : v n’est pas nulle.')});
+/* 3. à l'arrêt sur x(t) */
+GENS.push(function(){var v=R(1,4),t1=R(3,5),T=10,xe=v*t1;
+  var G=pGR('x',T,[{f:function(t){return v*t},a:0,b:t1},{f:function(){return xe},a:t1,b:T}],0,xe+1);
+  return qcm('Voici le graphique x(t) d’un mobile. Que fait-il entre t = '+t1+' s et t = '+(T-2)+' s ?'+G,'Il est à l’arrêt',['Il continue en MRU','Il accélère','Il revient en arrière'],
+   'Entre '+t1+' s et '+(T-2)+' s, x reste égal à '+xe+' m : la courbe est horizontale, la pente est <b>nulle</b>, donc v = 0. Avant, il roulait en MRU à '+v+' m/s. Attention : sur v(t), c’est une droite horizontale <b>sur l’axe</b> (v = 0) qui veut dire « à l’arrêt ».')});
+/* 4. graphique a(t) d'un MRU */
+GENS.push(function(){var G=pGR('a',6,[{f:function(){return 0},c:CV}],-2,2,1);
+  return qcm('Voici le graphique a(t) d’un mobile : a = 0 pendant tout le mouvement. Que peut-on dire ?'+G,'Sa vitesse est constante : il est en MRU ou à l’arrêt',['Il est forcément à l’arrêt','Il ralentit','Sa position est constante'],
+   'a = 0 veut dire que la vitesse ne change pas. Cette vitesse peut être nulle (arrêt) ou non (MRU). Le graphique a(t) seul ne permet pas de les distinguer.')});
+/* 5. pente → vitesse */
+GENS.push(function(){var st,t1,dt,x1,dx,v,x0,xe,n=0;
+  do{st=pick([2,4,5]);t1=R(0,3);dt=R(2,4);x1=st*R(0,5);dx=st*sgn()*R(1,6);v=dx/dt;x0=x1-v*t1;xe=x0+6*v;n++}
+  while(n<900&&(t1+dt>6||dx%dt||Math.abs(v)>6||x0<0||xe<0||x1+dx<0||Math.max(x0,xe,x1,x1+dx)>9*st));
+  var t2=t1+dt,x2=x1+dx,hi=Math.max(x0,xe),f=function(t){return x0+v*t};
+  var fig=function(a){return pGR('x',6,[{f:f,c:v>0?CB:CP}],0,hi,st,{g:[[t1,x1],[t2,x2]],ann:a?pTri(t1,x1,t2,x2,'Δt = '+dt+' s','Δx = '+pf(dx)+' m',v<0||t2>=5):[]})};
+  var o=numC(v,[-v,dx,dt/dx,x2/t2,v*2],'m/s');
+  return mk({q:'Ce mobile est en MRU. Calcule sa vitesse, <b>avec son signe</b>, à l’aide des deux points marqués.'+fig(false),ok:o.ok,wr:o.wr,num:v,key:'p'+x1+dx+t1+dt,
+   why:'v = '+frs('Δx','Δt')+' = '+frs(pf(x2)+' '+M+' '+pf(x1),t2+' '+M+' '+t1)+' = '+frs(pf(dx),dt)+' = <b>'+pf(v)+' m/s</b>. '+(v<0?'La droite descend : la vitesse est négative.':'La droite monte : la vitesse est positive.')+fig(true)})});
+/* 6. loi du MRU : position à un instant */
+GENS.push(function(){var x0=R(-20,40),v=sgn()*R(2,9),t=R(2,12),x=x0+v*t;
+  var o=numC(x,[x0-v*t,v*t,x0+v,x0*t+v,x+v],'m');
+  return mk({q:'Un mobile en MRU part de <b>x<sub>0</sub> = '+pf(x0)+' m</b> à t<sub>0</sub> = 0 s, avec <b>v = '+pf(v)+' m/s</b>. Où est-il à <b>t = '+t+' s</b> ?',ok:o.ok,wr:o.wr,num:x,key:'l'+x0+v+t,
+   why:'Loi du MRU : x(t) = x<sub>0</sub> + v (t '+M+' t<sub>0</sub>) = '+pf(x0)+' + ('+pf(v)+') · '+t+' = <b>'+pf(x)+' m</b>.'+(v<0?' La vitesse est négative : la position diminue.':'')})});
+/* 7. loi du MRU : quand arrive-t-il ? */
+GENS.push(function(){var x0=R(0,30),v=sgn()*R(2,8),t=R(3,15),X=x0+v*t;
+  var o=numC(t,[X/v,(X+x0)/v,-t,t+1,Math.abs(X-x0)],'s');
+  return mk({q:'Un mobile en MRU part de x<sub>0</sub> = '+pf(x0)+' m à t<sub>0</sub> = 0 s avec v = '+pf(v)+' m/s. À quel instant passe-t-il en <b>x = '+pf(X)+' m</b> ?',ok:o.ok,wr:o.wr,num:t,key:'q'+x0+v+t,
+   why:pf(X)+' = '+pf(x0)+' + ('+pf(v)+') · t, donc ('+pf(v)+') · t = '+pf(X-x0)+' et t = '+frs(pf(X-x0),pf(v))+' = <b>'+t+' s</b>.'})});
+/* 8. conversion km/h ↔ m/s */
+GENS.push(function(){var ms=pick([5,10,15,20,25,30,35]),kmh=ms*3.6,toMs=Math.random()<.5;
+  var o=toMs?numC(ms,[kmh*3.6,kmh/3.6*10,kmh/60,ms+2],'m/s'):numC(kmh,[ms/3.6,ms*60,kmh/10,kmh+18],'km/h');
+  return mk({q:'Convertis : <b>'+(toMs?pf(kmh)+' km/h':ms+' m/s')+'</b> = ?',ok:o.ok,wr:o.wr,num:toMs?ms:kmh,key:'c'+ms+toMs,
+   why:'1 m/s = 3,6 km/h (3 600 m en une heure, soit 3,6 km). '+(toMs?'De km/h vers m/s, on <b>divise</b> par 3,6 : '+pf(kmh)+' ÷ 3,6 = '+ms+' m/s.':'De m/s vers km/h, on <b>multiplie</b> par 3,6 : '+ms+' × 3,6 = '+pf(kmh)+' km/h.')})});
+
+(function(){var e=document.getElementById('g2');if(!e)return;function s(k,f,lo,hi,c){return pGraph({small:true,xl:'t (s)',yl:k,xr:[0,6],yr:pNice(lo,hi).yr,xt:1,yt:pNice(lo,hi).yt,curves:[{f:f,c:c||CB}]})}
+ e.innerHTML='<div class="trio"><div><p>x(t) : une droite</p>'+s('x (m)',function(t){return 2+3*t},0,20)+'</div><div><p>v(t) : horizontale</p>'+s('v (m/s)',function(){return 3},0,4)+'</div><div><p>a(t) : nulle</p>'+s('a (m/s²)',function(){return 0},-2,2,CV)+'</div></div>'})();
+document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'b2',"Le mouvement rectiligne uniforme (MRU)",'./')};
+</script></body></html>
