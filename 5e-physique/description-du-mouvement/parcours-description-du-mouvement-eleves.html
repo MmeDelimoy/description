@@ -66,6 +66,7 @@ background:conic-gradient(var(--zc) calc(var(--p)*1%),#DDD3B3 0);box-shadow:0 4p
 .opt.bad{border-color:var(--ko);background:#FBEAEA;box-shadow:0 3px 0 var(--ko)}
 .numrow{display:flex;gap:10px;align-items:center;margin:12px 0}
 .numrow input{flex:1;font:1.25rem var(--sans);padding:11px 12px;border:1.5px solid var(--bord);border-radius:12px;background:#fff;color:var(--encre);min-width:0}
+.numrow .pm{flex:none;width:52px;height:52px;font:700 1.5rem var(--sans);border:1.5px solid var(--bord);border-radius:12px;background:#fff;color:var(--encre);cursor:pointer}
 .numrow .u{font-size:1.05rem;color:var(--gris);min-width:32px}
 .fb{line-height:1.8;border-radius:12px;padding:12px 14px;margin-top:14px;font-size:.98rem}
 .fb.ok{background:#E8F4EC;border:1px solid #B7DAC3}
@@ -675,13 +676,13 @@ function nextQ(){
   const pc=Math.round(100*sess.idx/sess.queue.length);
   let body=`<div class="sess-top"><button class="x" onclick="openStep('${sess.id}')" aria-label="Quitter">✕</button><div class="tr"><i style="width:${pc}%"></i></div><span class="sm">${sess.idx+1}/${sess.queue.length}</span></div><div class="card q"><div class="kk">${cur.title}${it.retry?' · on y revient':''}</div><p class="qq">${q.q}</p>${q.svg?`<div class="fig" id="qfig">${q.svg}</div>`:''}`;
   if(q.t==='mcq')body+=q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${o.x}</button>`).join('');
-  else if(q.t==='num')body+=`<div class="numrow"><input id="ans" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" placeholder="ta réponse"><span class="u">${q.unit}</span></div>`;
+  else if(q.t==='num')body+=`<div class="numrow"><button type="button" class="pm" id="pm" aria-label="changer le signe">±</button><input id="ans" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" placeholder="ta réponse"><span class="u">${q.unit}</span></div>`;
   else body+=`<p class="sm" id="tapmsg">Touche une intersection du quadrillage.</p>`;
   body+=`<div id="fb"></div><button class="cta" id="go" style="background:${ZONES[cur.z].col}" disabled>Valider</button></div>`;
   show(body);
   const go=$('go');
   if(q.t==='mcq'){document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(answered)return;document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');pick1=+b.dataset.i;go.disabled=false;});}
-  else if(q.t==='num'){const inp=$('ans');inp.oninput=()=>{go.disabled=!inp.value.trim();};inp.onkeydown=e=>{if(e.key==='Enter'&&!go.disabled&&!answered)check();};}
+  else if(q.t==='num'){const inp=$('ans');$('pm').onclick=()=>{if(answered)return;let v=inp.value.trim();v=/^[−–-]/.test(v)?v.replace(/^[−–-]\s*/,''):'−'+v;inp.value=v;go.disabled=!inp.value.replace(/[−–-]/g,'').trim();inp.focus();};inp.oninput=()=>{go.disabled=!inp.value.trim();};inp.onkeydown=e=>{if(e.key==='Enter'&&!go.disabled&&!answered)check();};}
   else{const svg=$('qfig').querySelector('svg');svg.addEventListener('click',e=>{if(answered)return;const t=e.target.closest('.nd');if(!t)return;
       let m=svg.querySelector('#mk');if(!m){m=document.createElementNS('http://www.w3.org/2000/svg','circle');m.setAttribute('id','mk');m.setAttribute('r','7');m.setAttribute('fill','#B8932F');m.setAttribute('stroke','#fff');m.setAttribute('stroke-width','2');svg.appendChild(m);}
       m.setAttribute('cx',t.getAttribute('cx'));m.setAttribute('cy',t.getAttribute('cy'));pick1={x:+t.dataset.x,y:+t.dataset.y};$('tapmsg').innerHTML=`Point choisi : <b>(${fr(pick1.x)} ; ${fr(pick1.y)})</b>`;go.disabled=false;});}
@@ -691,8 +692,8 @@ function parseNum(v){v=String(v).replace(/\s/g,'').replace(',','.').replace(/[�
 function check(){
   const q=sess.q,it=sess.it,s=st(sess.id);let ok=false,shown='';
   if(q.t==='mcq'){ok=!!q.opts[pick1].ok;document.querySelectorAll('.opt').forEach((b,i)=>{b.classList.remove('sel');if(q.opts[i].ok)b.classList.add('good');else if(i===pick1)b.classList.add('bad');});}
-  else if(q.t==='num'){const v=parseNum($('ans').value);if(isNaN(v)){$('fb').innerHTML=`<div class="fb ko"><b class="h">Je n’ai pas compris ta réponse.</b>Écris un nombre, par exemple 12,5.</div>`;return;}
-    ok=Math.abs(v-q.ans)<=q.tol+1e-9;shown=`<br>Réponse attendue : <b>${fr(q.ans,q.dec)}${q.unit?' '+q.unit:''}</b>`;$('ans').disabled=true;}
+  else if(q.t==='num'){const v=parseNum($('ans').value);if(isNaN(v)){$('fb').innerHTML=`<div class="fb ko"><b class="h">Je n’ai pas compris ta réponse.</b>Écris un nombre, par exemple 12,5. Pour un nombre négatif, touche ±.</div>`;return;}
+    ok=Math.abs(v-q.ans)<=q.tol+1e-9;shown=`<br>Réponse attendue : <b>${fr(q.ans,q.dec)}${q.unit?' '+q.unit:''}</b>`;$('ans').disabled=true;$('pm').disabled=true;}
   else{ok=pick1.x===q.tx&&pick1.y===q.ty;shown=`<br>Bonne position : <b>(${fr(q.tx)} ; ${fr(q.ty)})</b>`;
     const svg=$('qfig').querySelector('svg');const t=svg.querySelector(`.nd[data-x="${q.tx}"][data-y="${q.ty}"]`);
     const g=document.createElementNS('http://www.w3.org/2000/svg','circle');g.setAttribute('cx',t.getAttribute('cx'));g.setAttribute('cy',t.getAttribute('cy'));g.setAttribute('r','8');g.setAttribute('fill','none');g.setAttribute('stroke',ok?'#2E7D4F':'#A63A3A');g.setAttribute('stroke-width','3');svg.appendChild(g);}
