@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rappel : Travail, Énergie et Puissance</title>
+<style>
+  :root{
+    --blue:#2c7be5;
+    --blue-dark:#1a5cb0;
+    --orange:#ff9f43;
+    --orange-dark:#e8860f;
+    --red:#ff6b6b;
+    --red-dark:#e14b4b;
+    --green:#20c997;
+    --green-dark:#0ea472;
+    --indigo:#6c5ce7;
+    --indigo-dark:#4c3fc7;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --ink:#2d3436;
+    --muted:#6c7a89;
+    --line:#e3e8f0;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:"Segoe UI", "Nunito", "Helvetica Neue", Arial, sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, #eaf1ff 0%, transparent 45%),
+      radial-gradient(circle at 90% 10%, #fff3e6 0%, transparent 40%),
+      var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px;}
+
+  /* header */
+  header.hero{
+    padding:56px 20px 40px;
+    text-align:center;
+    max-width:880px;
+    margin:0 auto;
+  }
+  header.hero h1{
+    font-size:clamp(28px,4vw,42px);
+    margin:0 0 12px;
+    background:linear-gradient(90deg,var(--blue),var(--green));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-weight:800;
+  }
+  header.hero .subtitle{
+    color:var(--muted);
+    font-size:17px;
+    max-width:640px;
+    margin:0 auto 28px;
+  }
+  header.hero .intro{
+    text-align:left;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 24px;
+    font-size:15.5px;
+    box-shadow:0 6px 20px rgba(45,52,64,.05);
+  }
+
+  /* progress path */
+  nav.path{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin:30px auto 0;
+    max-width:880px;
+    padding:0 20px;
+    flex-wrap:wrap;
+  }
+  nav.path a{
+    text-decoration:none;
+    color:var(--muted);
+    font-size:13.5px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:999px;
+    background:var(--card);
+    border:1px solid var(--line);
+    transition:all .2s ease;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  nav.path a .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--line);
+    transition:background .2s ease;
+  }
+  nav.path a.active{
+    color:#fff;
+    background:linear-gradient(90deg,var(--blue),var(--green));
+    border-color:transparent;
+    box-shadow:0 4px 14px rgba(44,123,229,.35);
+  }
+  nav.path a.active .dot{background:#fff;}
+
+  /* capsule sections */
+  section.capsule{
+    margin:56px 0;
+    scroll-margin-top:24px;
+  }
+  .capsule-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .badge{
+    background:var(--ink);
+    color:#fff;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:5px 11px;
+    border-radius:999px;
+  }
+  .timebadge{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--muted);
+    background:#eef1f6;
+    padding:5px 11px;
+    border-radius:999px;
+  }
+  .capsule h2{
+    margin:0;
+    font-size:24px;
+    font-weight:800;
+    width:100%;
+  }
+  p.lead{
+    color:var(--muted);
+    font-size:15.5px;
+    margin:10px 0 20px;
+  }
+
+  /* sub-steps inside a capsule */
+  .substep{margin:26px 0;}
+  .substep-tag{
+    font-size:11px;font-weight:800;color:#fff;
+    text-transform:uppercase;letter-spacing:.05em;
+    display:inline-block;padding:4px 10px;border-radius:999px;
+    background:var(--indigo);margin-bottom:10px;
+  }
+  .substep h3{margin:0 0 8px;font-size:17px;font-weight:800;}
+  .substep p.txt{margin:0 0 10px;font-size:15px;}
+
+  .formula-card{
+    background:linear-gradient(135deg,#eef4ff,#f5f0ff);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 24px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .formula-card .formula{
+    font-family:Cambria,"Cambria Math",Georgia,serif;
+    font-size:27px;
+    font-weight:700;
+    color:var(--blue-dark);
+    letter-spacing:.02em;
+    margin-bottom:8px;
+  }
+  .formula-card .formula.small{font-size:21px;}
+  .formula-card .legend{
+    font-size:13px;
+    color:var(--muted);
+  }
+  .formula-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .formula-row .formula-card{flex:1;min-width:180px;margin-bottom:0;}
+  .formula-card.memo{
+    background:linear-gradient(135deg,#f1edff,#fbeeff);
+    border:1.5px dashed var(--indigo);
+    position:relative;
+  }
+  .formula-card.memo::before{
+    content:"🧠 à mémoriser par cœur";
+    display:block;
+    font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+    color:var(--indigo-dark);margin-bottom:10px;
+  }
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;line-height:1;}
+  .frac span{display:block;padding:0 3px;font-size:0.62em;}
+  .frac .num{border-bottom:2px solid currentColor;}
+  /* .vec wraps a bare letter (F, d...) with a small hand-drawn arrow floating above it.
+     IMPORTANT: .vec itself must stay a plain, unstyled inline box (no padding, no display
+     change) so it takes up exactly the same space as the letter alone and never shifts the
+     text baseline. The arrow is positioned with position:absolute (fully out of flow) and a
+     fixed top offset in em, so it can never affect the height/baseline of the line it sits on. */
+  .vec{position:relative;}
+  .vec::before{
+    content:"";
+    position:absolute;
+    top:-0.8em; left:50%;
+    width:1.05em; height:0.46em;
+    transform:translateX(-50%);
+    background-color:currentColor;
+    -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><line x1='1' y1='7' x2='23' y2='7' stroke='black' stroke-width='3.4' stroke-linecap='round'/><path d='M17 1 L30 7 L17 13 Z' fill='black'/></svg>");
+    mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><line x1='1' y1='7' x2='23' y2='7' stroke='black' stroke-width='3.4' stroke-linecap='round'/><path d='M17 1 L30 7 L17 13 Z' fill='black'/></svg>");
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-size:contain; mask-size:contain;
+    pointer-events:none;
+  }
+
+  /* concept trio (produit scalaire) */
+  .trio{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:16px 0 20px;}
+  .trio-card{
+    flex:1;min-width:150px;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px;text-align:center;box-shadow:0 4px 14px rgba(45,52,64,.05);
+  }
+  .vecicon{width:80px;height:70px;display:block;}
+
+  .cos-circle-wrap{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px;margin:14px 0 20px;text-align:center;
+    box-shadow:0 4px 14px rgba(45,52,64,.05);
+  }
+  .cos-circle{width:100%;max-width:360px;height:auto;display:block;margin:0 auto;}
+  .trio-card .sign{font-weight:800;font-size:15px;margin-top:6px;}
+  .trio-card .sign.pos{color:var(--blue-dark);}
+  .trio-card .sign.neg{color:var(--red-dark);}
+  .trio-card .sign.nul{color:var(--muted);}
+  .trio-card .desc{font-size:12.5px;color:var(--muted);margin-top:2px;}
+
+  .anim-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin:0 -4px;}
+  .anim-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:0 8px 28px rgba(45,52,64,.06);
+  }
+  canvas{
+    width:100%;height:auto;
+    display:block;
+    border-radius:12px;
+    background:linear-gradient(180deg,#fbfcff,#f3f6fb);
+  }
+  .caption-bar{
+    margin-top:12px;
+    min-height:44px;
+    background:#eef4ff;
+    border:1px solid #d7e6fb;
+    border-radius:12px;
+    padding:10px 14px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--blue-dark);
+    display:flex;
+    align-items:center;
+  }
+  .caption-bar::before{content:"💬 ";margin-right:2px;}
+  .anim-controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+  .btn{
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    font-size:14px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(45,52,64,.1);}
+  .btn:active{transform:translateY(0);}
+  .btn.primary{
+    background:linear-gradient(90deg,var(--blue),var(--blue-dark));
+    color:#fff;border-color:transparent;
+  }
+  .btn.toggle{
+    background:#fff;
+  }
+  .btn.toggle.active{
+    background:var(--blue);
+    color:#fff;
+    border-color:var(--blue);
+  }
+
+  .readouts{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:16px;
+  }
+  .readout{
+    flex:1;
+    min-width:140px;
+    background:#f7f9fc;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    text-align:center;
+  }
+  .readout .label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+  .readout .value{font-size:20px;font-weight:800;}
+  .readout.moteur .value{color:var(--blue-dark);}
+  .readout.resistant .value{color:var(--red-dark);}
+  .readout.ec .value{color:var(--orange-dark);}
+  .readout.ep .value{color:var(--blue-dark);}
+  .readout.heat .value{color:var(--red-dark);}
+  .readout.v .value{color:var(--green-dark);}
+  .readout.pw .value{color:var(--indigo-dark);}
+
+  .summary-card{
+    margin-top:16px;
+    background:#fffdf5;
+    border:1px solid #f2e6c9;
+    border-radius:var(--radius);
+    padding:18px 22px;
+    font-size:15px;
+  }
+  .summary-card p{margin:0;}
+  .legend-row{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .legend-item{display:flex;align-items:center;gap:7px;}
+  .legend-item .swatch{
+    width:14px;height:14px;border-radius:4px;display:inline-block;
+    box-shadow:0 0 0 1px rgba(0,0,0,.08);
+  }
+  .summary-card::before{
+    content:"📌 L'essentiel à retenir";
+    display:block;
+    font-weight:700;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:#b8860b;
+    margin-bottom:8px;
+  }
+
+  /* mini-quiz */
+  .mini-quiz{
+    background:#f9f8ff;
+    border:1px solid #e6e0ff;
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin:16px 0;
+  }
+  .mini-quiz-title{
+    /* NOT display:flex on purpose: a flex container vertically centers each text run and
+       inline child as its own separate flex item (box-aligned, not baseline-aligned), which
+       breaks any .vec span placed inside it (its arrow makes its box taller, so it gets
+       centered at a different height than the plain text next to it). Plain inline flow keeps
+       everything on the same text baseline, which is what we actually want here. */
+    font-weight:800;font-size:14.5px;color:var(--indigo-dark);
+    margin-bottom:14px;
+  }
+
+  /* situation cards */
+  .situation-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin-bottom:16px;
+    box-shadow:0 6px 20px rgba(45,52,64,.05);
+  }
+  .situation-card h3{
+    margin:0 0 8px;
+    font-size:16.5px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .situation-card h3 .num{
+    background:var(--green);
+    color:#fff;
+    width:26px;height:26px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;
+    flex:none;
+  }
+  .situation-card p.statement{margin:0 0 8px;font-size:15px;}
+  .situation-card p.hint{margin:0 0 14px;font-size:13px;color:var(--muted);font-style:italic;}
+  .situation-card .solution{
+    display:none;
+    background:#f2fbf7;
+    border:1px solid #cdeee0;
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:14.5px;
+    margin-top:8px;
+  }
+  .situation-card .solution.open{display:block;}
+  .situation-card .solution .step{margin:4px 0;}
+  .situation-card .solution .result{
+    font-weight:800;color:var(--green-dark);
+    font-size:16px;
+    margin-top:6px;
+  }
+
+  /* quiz (shared: mini-quiz + final quiz) */
+  .quiz-progress{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:18px;
+  }
+  .quiz-progress .track{
+    flex:1;height:10px;border-radius:999px;background:var(--line);overflow:hidden;
+  }
+  .quiz-progress .fill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    border-radius:999px;
+    transition:width .4s ease;
+  }
+  .quiz-progress .score{font-weight:800;font-size:13.5px;white-space:nowrap;}
+
+  .quiz-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin-bottom:16px;
+    box-shadow:0 6px 20px rgba(45,52,64,.05);
+  }
+  .quiz-card .q-text{font-weight:700;font-size:15.5px;margin-bottom:14px;}
+  .quiz-card .q-visual{display:flex;justify-content:center;margin-bottom:10px;}
+  .quiz-card .options{display:flex;flex-direction:column;gap:8px;}
+  .quiz-card .opt{
+    text-align:left;
+    padding:11px 14px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:#fbfcfe;
+    cursor:pointer;
+    font-size:14.5px;
+    transition:all .15s ease;
+  }
+  .quiz-card .opt:hover:not(.disabled){border-color:var(--blue);background:#eef4ff;}
+  .quiz-card .opt.correct{
+    background:#e8f9f1;border-color:var(--green);color:var(--green-dark);font-weight:700;
+  }
+  .quiz-card .opt.wrong{
+    background:#fdecec;border-color:var(--red);color:var(--red-dark);font-weight:700;
+  }
+  .quiz-card .opt.disabled{cursor:default;}
+  .quiz-card .explain{
+    display:none;
+    margin-top:12px;
+    font-size:14px;
+    background:#f7f9fc;
+    border-left:3px solid var(--blue);
+    padding:10px 14px;
+    border-radius:8px;
+    color:var(--ink);
+  }
+  .quiz-card .explain.show{display:block;}
+
+  .quiz-complete{
+    display:none;
+    margin-top:8px;
+    padding:20px 22px;
+    border-radius:var(--radius);
+    text-align:center;
+    font-weight:700;
+    font-size:15.5px;
+  }
+  .quiz-complete.show{display:block;}
+  .quiz-complete.good{background:#e8f9f1;border:1px solid var(--green);color:var(--green-dark);}
+  .quiz-complete.mid{background:#fff8e8;border:1px solid #f0d375;color:#a6740c;}
+  .quiz-complete.low{background:#fdecec;border:1px solid var(--red);color:var(--red-dark);}
+
+  /* puissance comparison */
+  .power-race{display:flex;gap:24px;justify-content:center;margin:18px 0;flex-wrap:wrap;}
+  .lane{width:120px;text-align:center;}
+  .lane-track{
+    position:relative;width:70px;height:200px;margin:0 auto 10px;
+    background:linear-gradient(180deg,#fbfcff,#eef1f7);
+    border:1px solid var(--line);border-radius:10px;
+  }
+  .lane-crate{
+    position:absolute;left:50%;bottom:4px;width:44px;height:34px;
+    margin-left:-22px;border-radius:6px;
+    background:var(--orange);border:2px solid var(--orange-dark);
+    transition:bottom 0s linear;
+  }
+  .lane .name{font-weight:800;font-size:13.5px;}
+  .lane .clock{font-size:13px;color:var(--muted);margin-top:4px;}
+  .lane .power{font-weight:800;font-size:15px;color:var(--indigo-dark);margin-top:2px;min-height:20px;}
+
+  .power-conclusion{
+    display:none;
+    margin-top:6px;
+    padding:14px 18px;
+    border-radius:var(--radius);
+    text-align:center;
+    font-weight:700;
+    font-size:15px;
+    background:#eef1fb;
+    border:1px solid var(--indigo);
+    color:var(--indigo-dark);
+  }
+  .power-conclusion.show{display:block;}
+
+  footer{
+    text-align:center;
+    padding:40px 20px 60px;
+    color:var(--muted);
+    font-size:14px;
+  }
+  footer .sig{font-weight:700;color:var(--ink);margin-top:6px;}
+
+  @media (max-width:600px){
+    .readouts{flex-direction:column;}
+    .formula-row{flex-direction:column;}
+    .trio{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<p style="max-width:880px;margin:0 auto;padding:14px 20px 0"><a href="./" style="color:#1a5cb0;font-weight:700;text-decoration:none">← Rappels</a></p>
+<header class="hero">
+  <h1>Travail, Énergie et Puissance</h1>
+  <p class="subtitle">Un petit rappel tout en douceur avant d'attaquer l'oscillateur harmonique — pas de panique si ça semble loin, on reprend tout depuis le début, en petits morceaux ✨</p>
+  <div class="intro">
+    Tu as peut-être déjà vu ces notions, ou peut-être pas — dans les deux cas, ce rappel part de zéro et avance pas à pas : une idée à la fois, un mini-quiz pour vérifier que c'est bien compris, puis on passe à la suite. Regarde les animations autant de fois que tu veux, il n'y a aucune urgence.
+  </div>
+</header>
+
+<nav class="path" id="pathNav">
+  <a href="#cap-travail" class="dot-link"><span class="dot"></span>1. Travail</a>
+  <a href="#cap-energie" class="dot-link"><span class="dot"></span>2. Énergie</a>
+  <a href="#cap-puissance" class="dot-link"><span class="dot"></span>3. Puissance</a>
+  <a href="#cap-situations" class="dot-link"><span class="dot"></span>4. Situations</a>
+  <a href="#cap-quiz" class="dot-link"><span class="dot"></span>5. Quiz</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- ===================== CAPSULE 1 : TRAVAIL ===================== -->
+  <section class="capsule" id="cap-travail">
+    <div class="capsule-header"><span class="badge">Capsule 1</span><span class="timebadge">⏱ environ 6 min</span><h2>Le travail d'une force</h2></div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 1 · la formule</span>
+      <p class="txt">Quand une force agit sur un objet qui se déplace, on peut calculer son <strong>travail</strong> : une grandeur qui mesure si cette force aide le mouvement, le freine, ou n'a aucun effet.</p>
+      <div class="formula-card">
+        <div class="formula">W = <span class="vec">F</span> · <span class="vec">d</span></div>
+        <div class="legend">le point « · » est un <strong>produit scalaire</strong> entre le vecteur force <span class="vec">F</span> et le vecteur déplacement <span class="vec">d</span></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 2 · c'est quoi, un produit scalaire ?</span>
+      <h3>Le produit scalaire de deux vecteurs</h3>
+      <p class="txt">Petite précision de vocabulaire avant d'aller plus loin, elle va tout éclairer. Une grandeur peut être <strong>vectorielle</strong> ou <strong>scalaire</strong>. Une grandeur vectorielle a besoin d'une flèche pour être décrite complètement : une direction, un sens, une longueur — c'est le cas de la force <span class="vec">F</span> et du déplacement <span class="vec">d</span>. Une grandeur scalaire, elle, n'est qu'un nombre (avec éventuellement un signe) : pas de direction ni de sens — c'est le cas du travail W et, tu le verras bientôt, de la puissance P.</p>
+      <p class="txt">C'est justement ce que fait le <strong>produit scalaire</strong> : il prend deux vecteurs (<span class="vec">F</span> et <span class="vec">d</span>) et les combine pour donner un résultat qui n'est plus un vecteur mais... un scalaire (W). D'où son nom : un « produit » entre deux vecteurs, mais un résultat « scalaire ».</p>
+      <p class="txt">Concrètement, ce produit scalaire mesure à quel point les deux vecteurs pointent <strong>dans la même direction</strong>. Il ne dépend que de l'angle θ entre eux — et son signe suffit déjà à savoir si le travail aide ou freine le mouvement, avant même de calculer quoi que ce soit :</p>
+      <div class="trio">
+        <div class="trio-card">
+          <div id="icon-pos" class="vecicon"></div>
+          <div class="sign pos">Positif</div>
+          <div class="desc">vecteurs dans la même direction (0° ≤ θ &lt; 90°)</div>
+        </div>
+        <div class="trio-card">
+          <div id="icon-nul" class="vecicon"></div>
+          <div class="sign nul">Nul</div>
+          <div class="desc">vecteurs perpendiculaires (θ = 90°)</div>
+        </div>
+        <div class="trio-card">
+          <div id="icon-neg" class="vecicon"></div>
+          <div class="sign neg">Négatif</div>
+          <div class="desc">vecteurs qui s'opposent (90° &lt; θ ≤ 180°)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 3 · mini-quiz</span>
+      <div class="mini-quiz">
+        <div class="mini-quiz-title">🎯 Le produit scalaire <span class="vec">F</span> · <span class="vec">d</span> est-il positif, négatif ou nul ?</div>
+        <div class="quiz-progress">
+          <div class="track"><div class="fill" id="mqA-fill"></div></div>
+          <div class="score" id="mqA-score">0 / 5</div>
+        </div>
+        <div id="mqA-container"></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 4 · maintenant, on calcule</span>
+      <h3>Passons aux vrais calculs, avec cos θ</h3>
+      <p class="txt">Le signe, tu le connais déjà. Voici comment on calcule la <strong>valeur</strong> du travail : W = F · d · cos θ. Ici, F et d ne sont plus des vecteurs : ce sont des nombres, appelés les <strong>normes</strong> des vecteurs <span class="vec">F</span> et <span class="vec">d</span> — c'est-à-dire la longueur de leur flèche. On note la norme d'un vecteur avec deux barres verticales de chaque côté : F = ‖<span class="vec">F</span>‖ et d = ‖<span class="vec">d</span>‖.</p>
+      <div class="formula-card">
+        <div class="formula small">W = F · d · cos&nbsp;θ</div>
+        <div class="legend">W en joules (J) &nbsp;·&nbsp; F = ‖<span class="vec">F</span>‖ en newtons (N) &nbsp;·&nbsp; d = ‖<span class="vec">d</span>‖ en mètres (m) &nbsp;·&nbsp; θ = angle entre <span class="vec">F</span> et <span class="vec">d</span></div>
+      </div>
+
+      <p class="txt">Un détail important : c'est le signe de cos θ qui donne son signe au travail. Le cercle ci-dessous montre où il est positif et où il devient négatif (l'angle entre deux vecteurs ne dépasse jamais 180°, un demi-cercle suffit donc) :</p>
+      <div class="cos-circle-wrap">
+        <div id="cos-circle-holder"></div>
+      </div>
+      <p class="txt">Tant que l'angle est inférieur à 90°, cos θ est positif : la force aide le mouvement, le travail est <strong>moteur</strong> (positif). Dès que l'angle dépasse 90°, cos θ devient négatif : la force s'oppose au mouvement, le travail est <strong>résistant</strong> (négatif). C'est exactement le cas du frottement dans l'animation ci-dessous : il agit à 180° du déplacement (cos 180° = -1), donc son travail est toujours négatif.</p>
+
+      <div class="anim-scroll">
+        <div class="anim-card">
+          <canvas id="canvas-travail" width="680" height="260" role="img" aria-label="Chariot tiré par une corde inclinée, avec les vecteurs force et déplacement, pendant qu'un frottement le freine."></canvas>
+          <p class="sr-only">Un chariot est tiré par une corde. La force de traction (100 N) fait un angle avec le sol qui peut être de 60° ou de 90°. Un frottement de 20 N s'oppose au mouvement. Les valeurs du travail moteur et du travail résistant se calculent en direct pendant que le chariot avance de 5 mètres.</p>
+          <div class="caption-bar" id="caption-travail">Clique sur « Lancer l'animation » pour commencer.</div>
+          <div class="anim-controls">
+            <button class="btn primary" id="btn-play-travail">▶ Lancer l'animation</button>
+            <button class="btn" id="btn-replay-travail">↺ Recommencer</button>
+            <button class="btn toggle active" id="btn-angle-60">θ = 60° (cas général)</button>
+            <button class="btn toggle" id="btn-angle-90">θ = 90° (cas particulier)</button>
+          </div>
+          <div class="readouts">
+            <div class="readout moteur"><span class="label">Travail moteur (traction)</span><span class="value" id="val-w-traction">0 J</span></div>
+            <div class="readout resistant"><span class="label">Travail résistant (frottement)</span><span class="value" id="val-w-friction">0 J</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="txt">Regarde bien la formule : le temps n'y apparaît nulle part ! Le travail ne dépend que de la force, de la distance parcourue et de l'angle — <strong>pas du temps</strong>. Que le chariot avance vite ou lentement, tant qu'il parcourt la même distance avec la même force et le même angle, le travail est identique. Par contre, si la force agit sur une <strong>plus grande distance</strong> (à force et angle constants), le travail augmente : il est proportionnel à d.</p>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 4bis · mini-quiz</span>
+      <div class="mini-quiz">
+        <div class="mini-quiz-title">🎯 Distance, temps : qu'est-ce qui change le travail ?</div>
+        <div class="quiz-progress">
+          <div class="track"><div class="fill" id="mqE-fill"></div></div>
+          <div class="score" id="mqE-score">0 / 3</div>
+        </div>
+        <div id="mqE-container"></div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <p>Force qui aide à avancer → travail <strong>positif</strong>. Force qui freine → travail <strong>négatif</strong>. Force perpendiculaire au déplacement → travail <strong>nul</strong> (car cos 90° = 0). Et retiens bien : le travail dépend de la distance parcourue, jamais du temps mis pour la parcourir.</p>
+    </div>
+  </section>
+
+  <!-- ===================== CAPSULE 2 : ENERGIE ===================== -->
+  <section class="capsule" id="cap-energie">
+    <div class="capsule-header"><span class="badge">Capsule 2</span><span class="timebadge">⏱ environ 8 min</span><h2>L'énergie mécanique et sa conservation</h2></div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 1 · l'énergie potentielle</span>
+      <p class="txt">Un objet en hauteur possède de l'<strong>énergie potentielle de pesanteur</strong> : le stock d'énergie qu'il pourrait libérer en tombant.</p>
+      <div class="formula-card memo">
+        <div class="formula">Ep = m · g · h</div>
+        <div class="legend">m = masse (kg) &nbsp;·&nbsp; g = 10 m/s² (à Bruxelles comme ailleurs, on arrondit) &nbsp;·&nbsp; h = hauteur (m)</div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 2 · mini-quiz</span>
+      <div class="mini-quiz">
+        <div class="mini-quiz-title">🎯 Comment varie l'énergie potentielle ?</div>
+        <div class="quiz-progress">
+          <div class="track"><div class="fill" id="mqB-fill"></div></div>
+          <div class="score" id="mqB-score">0 / 3</div>
+        </div>
+        <div id="mqB-container"></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 3 · l'énergie cinétique</span>
+      <p class="txt">Un objet en mouvement possède de l'<strong>énergie cinétique</strong> : l'énergie liée à sa vitesse.</p>
+      <div class="formula-card memo">
+        <div class="formula">Ec = <span class="frac"><span class="num">1</span><span>2</span></span> · m · v²</div>
+        <div class="legend">m = masse (kg) &nbsp;·&nbsp; v = vitesse (m/s)</div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 4 · mini-quiz (attention, piège !)</span>
+      <div class="mini-quiz">
+        <div class="mini-quiz-title">🎯 Comment varie l'énergie cinétique ?</div>
+        <div class="quiz-progress">
+          <div class="track"><div class="fill" id="mqC-fill"></div></div>
+          <div class="score" id="mqC-score">0 / 3</div>
+        </div>
+        <div id="mqC-container"></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 5 · une grandeur qui ne change jamais</span>
+      <p class="txt">Pendant longtemps, les physiciens ont cherché une grandeur qui reste <strong>constante</strong> pendant le mouvement d'un objet — même quand il accélère, ralentit, monte ou descend. Ils l'ont trouvée : c'est la somme Ec + Ep, qu'on appelle l'<strong>énergie mécanique</strong>. Tant qu'il n'y a pas de frottement, elle ne bouge jamais : elle se contente de changer de forme.</p>
+      <p class="txt">Pour bien sentir cette idée, imagine deux <strong>gourdes</strong> reliées entre elles : une gourde « énergie potentielle » et une gourde « énergie cinétique ». À elles deux, elles contiennent toujours la <strong>même quantité totale d'eau</strong> — rien ne s'ajoute, rien ne disparaît. Quand l'objet descend, de l'eau passe de la gourde potentielle vers la gourde cinétique : Ep diminue pendant qu'Ec augmente, exactement de la même quantité. Quand l'objet remonte, l'eau repart dans l'autre sens. L'eau change de gourde, mais le total ne bouge pas : c'est exactement ce que fait l'énergie mécanique.</p>
+      <div class="formula-card">
+        <div class="formula small">Em = Ec + Ep = constante (sans frottement)</div>
+      </div>
+      <p class="txt">Tu vas retrouver cette image juste en dessous : le <strong>réservoir</strong> à droite de l'animation, c'est exactement nos deux gourdes empilées l'une sur l'autre. La partie bleue (Ep) et la partie orange (Ec) changent de taille pendant que la bille descend, mais la hauteur totale du réservoir — la somme des deux — ne change jamais (sauf si tu actives le frottement, qui ouvre une petite fuite vers la chaleur).</p>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 6 · on regarde ça en mouvement</span>
+      <div class="legend-row">
+        <span class="legend-item"><span class="swatch" style="background:#2c7be5"></span>Énergie potentielle (Ep)</span>
+        <span class="legend-item"><span class="swatch" style="background:#ff9f43"></span>Énergie cinétique (Ec)</span>
+        <span class="legend-item" id="legend-heat" style="display:none;"><span class="swatch" style="background:#ff6b6b"></span>Chaleur (frottement)</span>
+      </div>
+      <div class="anim-scroll">
+        <div class="anim-card">
+          <canvas id="canvas-energie" width="680" height="320" role="img" aria-label="Bille qui descend une piste, avec un réservoir d'énergie qui montre la répartition entre énergie potentielle et énergie cinétique."></canvas>
+          <p class="sr-only">Une bille de 2 kg descend une piste haute de 5 mètres. Un réservoir d'énergie à droite montre la répartition entre énergie potentielle (bleu) et énergie cinétique (orange) : le total reste toujours à 100 joules. En mode « avec frottement », une partie de cette énergie (36 joules) se transforme en chaleur, et la bille arrive en bas à 8 m/s au lieu de 10 m/s.</p>
+          <div class="caption-bar" id="caption-energie">Clique sur « Lancer l'animation » pour commencer.</div>
+          <div class="anim-controls">
+            <button class="btn primary" id="btn-play-energie">▶ Lancer l'animation</button>
+            <button class="btn" id="btn-replay-energie">↺ Recommencer</button>
+            <button class="btn toggle active" id="btn-mode-sans">Sans frottement</button>
+            <button class="btn toggle" id="btn-mode-avec">Avec frottement</button>
+          </div>
+          <div class="readouts">
+            <div class="readout ep"><span class="label">Énergie potentielle</span><span class="value" id="val-ep">100 J</span></div>
+            <div class="readout ec"><span class="label">Énergie cinétique</span><span class="value" id="val-ec">0 J</span></div>
+            <div class="readout heat" id="readout-heat" style="display:none;"><span class="label">Chaleur (frottement)</span><span class="value" id="val-heat">0 J</span></div>
+            <div class="readout v"><span class="label">Vitesse</span><span class="value" id="val-v">0 m/s</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <p><strong>Sans frottement</strong> : l'énergie mécanique (100 J) reste constante, elle passe juste de potentielle à cinétique. <strong>Avec frottement</strong> : une partie de cette énergie se transforme en chaleur, mais le total ne change toujours pas — l'énergie ne se perd jamais, elle se transforme.</p>
+    </div>
+  </section>
+
+  <!-- ===================== CAPSULE 3 : PUISSANCE ===================== -->
+  <section class="capsule" id="cap-puissance">
+    <div class="capsule-header"><span class="badge">Capsule 3</span><span class="timebadge">⏱ environ 5 min</span><h2>La puissance</h2></div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 1 · pourquoi une nouvelle grandeur ?</span>
+      <p class="txt">Deux ouvriers soulèvent la <strong>même caisse</strong> à la <strong>même hauteur</strong> : ils fournissent exactement le même travail. Mais si l'un le fait en 2 secondes et l'autre en 8 secondes, on sent bien qu'il y a une différence ! C'est ça, la <strong>puissance</strong> : la rapidité avec laquelle un travail est effectué.</p>
+      <div class="formula-card memo">
+        <div class="formula">P = <span class="frac"><span class="num">W</span><span>t</span></span></div>
+        <div class="legend">P en watts (W) &nbsp;·&nbsp; W en joules (J) &nbsp;·&nbsp; t en secondes (s) &nbsp;·&nbsp; 1 W = 1 J/s</div>
+      </div>
+      <p class="txt" style="font-size:13.5px;color:var(--muted);">Petit bonus : si la force est constante, on peut aussi écrire P = F · v (utile mais pas indispensable à retenir aujourd'hui).</p>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 2 · on regarde ça en action</span>
+      <p class="txt">Les deux ouvriers ci-dessous soulèvent chacun une caisse identique, sur la même hauteur : <strong>même travail (800 J) pour les deux</strong>. Ce qui va changer, c'est uniquement le temps qu'ils mettent — et donc leur puissance. Regarde le chronomètre, et la puissance affichée à l'arrivée : retiens bien l'idée clé, <strong>même travail, puissance différente</strong>.</p>
+      <div class="anim-card">
+        <div class="power-race">
+          <div class="lane">
+            <div class="lane-track"><div class="lane-crate" id="crate-a"></div></div>
+            <div class="name">Ouvrier A (rapide)</div>
+            <div class="clock" id="clock-a">t = 0,0 s</div>
+            <div class="power" id="power-a"></div>
+          </div>
+          <div class="lane">
+            <div class="lane-track"><div class="lane-crate" id="crate-b"></div></div>
+            <div class="name">Ouvrier B (lent)</div>
+            <div class="clock" id="clock-b">t = 0,0 s</div>
+            <div class="power" id="power-b"></div>
+          </div>
+        </div>
+        <div class="anim-controls" style="justify-content:center;">
+          <button class="btn primary" id="btn-play-power">▶ Comparer</button>
+          <button class="btn" id="btn-replay-power">↺ Recommencer</button>
+        </div>
+        <div class="power-conclusion" id="power-conclusion"></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 3 · mini-quiz</span>
+      <div class="mini-quiz">
+        <div class="mini-quiz-title">🎯 As-tu bien compris la puissance ?</div>
+        <div class="quiz-progress">
+          <div class="track"><div class="fill" id="mqD-fill"></div></div>
+          <div class="score" id="mqD-score">0 / 2</div>
+        </div>
+        <div id="mqD-container"></div>
+      </div>
+    </div>
+
+    <div class="substep">
+      <span class="substep-tag">Étape 4 · un calcul, avec des chiffres ronds</span>
+      <div class="situation-card">
+        <h3><span class="num">⚡</span> Un treuil de chantier</h3>
+        <p class="statement">Un treuil effectue un travail de <strong>3000&nbsp;J</strong> pour soulever un sac, en <strong>15&nbsp;secondes</strong>. Quelle est sa puissance ?</p>
+        <p class="hint">Essaie de calculer avant de cliquer !</p>
+        <button class="btn toggle" data-target="sol-p1">Voir la solution</button>
+        <div class="solution" id="sol-p1">
+          <div class="step">P = W / t</div>
+          <div class="step">P = 3000 / 15</div>
+          <div class="result">P = 200 W</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <p>La puissance, c'est la rapidité du travail : P = W / t. À travail égal, plus c'est rapide, plus la puissance est grande.</p>
+    </div>
+  </section>
+
+  <!-- ===================== CAPSULE 4 : SITUATIONS ===================== -->
+  <section class="capsule" id="cap-situations">
+    <div class="capsule-header"><span class="badge">Capsule 4</span><span class="timebadge">⏱ environ 5 min</span><h2>Quelques situations pour s'entraîner</h2></div>
+    <p class="lead">Voici trois situations où la conservation de l'énergie permet de calculer une vitesse, une hauteur ou une perte d'énergie — avec des chiffres qui tombent juste, promis !</p>
+
+    <div class="situation-card">
+      <h3><span class="num">1</span> Une luge sans frottement</h3>
+      <p class="statement">Une luge part sans vitesse du sommet d'une pente de <strong>20&nbsp;m</strong> de haut, sans aucun frottement (g&nbsp;=&nbsp;10&nbsp;m/s²). Quelle est sa vitesse en bas de la pente ?</p>
+      <p class="hint">Essaie de calculer avant de cliquer !</p>
+      <button class="btn toggle" data-target="sol-1">Voir la solution</button>
+      <div class="solution" id="sol-1">
+        <div class="step">Conservation de l'énergie mécanique : Ep(sommet) = Ec(bas)</div>
+        <div class="step">m·g·h = ½·m·v² &nbsp;→&nbsp; la masse se simplifie : v² = 2·g·h</div>
+        <div class="step">v² = 2 × 10 × 20 = 400</div>
+        <div class="result">v = √400 = 20 m/s</div>
+      </div>
+    </div>
+
+    <div class="situation-card">
+      <h3><span class="num">2</span> Une balle lancée vers le haut</h3>
+      <p class="statement">Une balle est lancée verticalement vers le haut à <strong>10&nbsp;m/s</strong> (sans frottement, g&nbsp;=&nbsp;10&nbsp;m/s²). Quelle hauteur maximale atteint-elle ?</p>
+      <p class="hint">Essaie de calculer avant de cliquer !</p>
+      <button class="btn toggle" data-target="sol-2">Voir la solution</button>
+      <div class="solution" id="sol-2">
+        <div class="step">Conservation de l'énergie mécanique : Ec(départ) = Ep(sommet)</div>
+        <div class="step">½·m·v² = m·g·h &nbsp;→&nbsp; h = v² / (2·g)</div>
+        <div class="step">h = 10² / (2 × 10) = 100 / 20</div>
+        <div class="result">h = 5 m</div>
+      </div>
+    </div>
+
+    <div class="situation-card">
+      <h3><span class="num">3</span> Un skieur, avec frottement</h3>
+      <p class="statement">Un skieur de <strong>60&nbsp;kg</strong> part du sommet d'une piste de <strong>45&nbsp;m</strong> de haut. À cause des frottements, il arrive en bas à <strong>20&nbsp;m/s</strong> au lieu des 30&nbsp;m/s attendus sans frottement. Quelle énergie a été transformée en chaleur ?</p>
+      <p class="hint">Essaie de calculer avant de cliquer !</p>
+      <button class="btn toggle" data-target="sol-3">Voir la solution</button>
+      <div class="solution" id="sol-3">
+        <div class="step">Énergie mécanique de départ : Ep = m·g·h = 60 × 10 × 45 = 27 000 J = 27 kJ</div>
+        <div class="step">Énergie cinétique réelle à l'arrivée : Ec = ½·m·v² = ½ × 60 × 20² = 12 000 J = 12 kJ</div>
+        <div class="step">Énergie perdue = Ep de départ − Ec réelle = 27 kJ − 12 kJ</div>
+        <div class="result">Énergie transformée en chaleur = 15 kJ</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CAPSULE 5 : QUIZ ===================== -->
+  <section class="capsule" id="cap-quiz">
+    <div class="capsule-header"><span class="badge">Capsule 5</span><span class="timebadge">⏱ environ 4 min</span><h2>À toi de jouer !</h2></div>
+    <p class="lead">Le grand quiz final, sur tout ce qu'on a vu. Aucune pression : si tu te trompes, l'explication est juste là pour t'aider à comprendre.</p>
+
+    <div class="quiz-progress">
+      <div class="track"><div class="fill" id="quiz-fill"></div></div>
+      <div class="score" id="quiz-score">0 / 7 bonnes réponses</div>
+    </div>
+
+    <div id="quiz-container"></div>
+    <div class="quiz-complete" id="quiz-complete"></div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Tu es prêt·e pour la suite ! On va justement réutiliser la conservation de l'énergie mécanique pour comprendre le mouvement de l'oscillateur harmonique. N'hésite pas à revenir sur cette page aussi souvent que nécessaire avant d'attaquer ce chapitre.</p>
+  <div class="sig">— Mme Delimoy</div>
+  <p style="margin-top:14px;font-size:13px">Aide de l’IA (AIA) · Ressource de Mme Delimoy</p>
+</footer>
+
+<script>
+/* ===================== UTILITAIRES GÉNÉRAUX ===================== */
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp01(t){return Math.max(0,Math.min(1,t));}
+function easeInPow(t,p){return Math.pow(clamp01(t),p);}
+
+function drawRoundedRect(ctx,x,y,w,h,r,fill,stroke){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  lw=lw||3;
+  const headlen=10;
+  const angle=Math.atan2(y2-y1,x2-x1);
+  ctx.strokeStyle=color;
+  ctx.fillStyle=color;
+  ctx.lineWidth=lw;
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-headlen*Math.cos(angle-Math.PI/6), y2-headlen*Math.sin(angle-Math.PI/6));
+  ctx.lineTo(x2-headlen*Math.cos(angle+Math.PI/6), y2-headlen*Math.sin(angle+Math.PI/6));
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Dessine une lettre (F, d, ...) avec une petite flèche tracée à la main juste au-dessus,
+// pour éviter de dépendre d'un glyphe Unicode combiné qui ne s'affiche pas sur toutes les polices.
+function drawVecLabel(ctx, letter, x, y, color, fontPx){
+  fontPx = fontPx || 15;
+  ctx.textAlign = 'left';
+  ctx.font = 'bold ' + fontPx + 'px sans-serif';
+  ctx.fillStyle = color;
+  ctx.fillText(letter, x, y);
+  const w = ctx.measureText(letter).width;
+  const midX = x + w/2;
+  const topY = y - fontPx*0.95;
+  const halfLen = Math.max(7, w*0.6);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(midX-halfLen, topY);
+  ctx.lineTo(midX+halfLen, topY);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(midX+halfLen+4, topY);
+  ctx.lineTo(midX+halfLen-4, topY-3.5);
+  ctx.lineTo(midX+halfLen-4, topY+3.5);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawAngleArc(ctx,cx,cy,radius,startDeg,endDeg,color){
+  const start = -startDeg*Math.PI/180;
+  const end = -endDeg*Math.PI/180;
+  ctx.strokeStyle=color;
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.arc(cx,cy,radius,Math.min(start,end),Math.max(start,end));
+  ctx.stroke();
+}
+
+// Petit générateur d'icône SVG : deux vecteurs partant d'un même point,
+// aux angles donnés (0° = droite, sens trigonométrique).
+//
+// Bug corrigé ici : les <marker> SVG utilisent par défaut markerUnits="strokeWidth", ce qui
+// multiplie leur taille par l'épaisseur du trait (ici 4) — un marker "9x9" devenait donc
+// ~36x36, débordant du viewBox et donnant des flèches à la fois trop grosses ET coupées.
+// On fixe markerUnits="userSpaceOnUse" pour une taille de marker fixe et prévisible, et on
+// place refX sur la pointe (et non le centre) du triangle pour que la pointe tombe exactement
+// sur le point d'arrivée de la ligne, sans le dépasser.
+function svgVectorPair(angle1, angle2, color1, color2, uid){
+  const cx=50, cy=50, len=30;
+  function endpoint(a){ const rad=-a*Math.PI/180; return {x:cx+len*Math.cos(rad), y:cy+len*Math.sin(rad)}; }
+  const p1=endpoint(angle1), p2=endpoint(angle2);
+  return '<svg viewBox="0 0 100 90" class="vecicon" aria-hidden="true">'
+    + '<defs>'
+    + '<marker id="ar'+uid+'a" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0.5,0.5 L9.5,5 L0.5,9.5 Z" fill="'+color1+'"/></marker>'
+    + '<marker id="ar'+uid+'b" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0.5,0.5 L9.5,5 L0.5,9.5 Z" fill="'+color2+'"/></marker>'
+    + '</defs>'
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+p1.x.toFixed(1)+'" y2="'+p1.y.toFixed(1)+'" stroke="'+color1+'" stroke-width="4" stroke-linecap="round" marker-end="url(#ar'+uid+'a)"/>'
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+p2.x.toFixed(1)+'" y2="'+p2.y.toFixed(1)+'" stroke="'+color2+'" stroke-width="4" stroke-linecap="round" marker-end="url(#ar'+uid+'b)"/>'
+    + '<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="#2d3436"/>'
+    + '</svg>';
+}
+
+// Petit cercle trigonométrique montrant où cos θ est positif (0°-90°, travail moteur)
+// et négatif (90°-180°, travail résistant). L'angle entre deux vecteurs ne dépasse
+// jamais 180°, donc un demi-cercle suffit. Construit point par point (polylignes)
+// plutôt qu'avec des commandes d'arc SVG, pour éviter toute erreur de sens de rotation.
+function svgCosCircle(){
+  const cx=160, cy=130, r=95;
+  function pt(deg){ const rad=deg*Math.PI/180; return {x:cx+r*Math.cos(rad), y:cy-r*Math.sin(rad)}; }
+  function arcPoints(a1,a2,steps){
+    const pts=[];
+    for(let i=0;i<=steps;i++){
+      const d = a1 + (a2-a1)*(i/steps);
+      const p = pt(d);
+      pts.push(p.x.toFixed(1)+','+p.y.toFixed(1));
+    }
+    return pts.join(' ');
+  }
+  const p60 = pt(60), p150 = pt(150);
+  return '<svg viewBox="0 0 320 210" class="cos-circle" aria-hidden="true">'
+    + '<line x1="'+(cx-r-15)+'" y1="'+cy+'" x2="'+(cx+r+15)+'" y2="'+cy+'" stroke="#c7cdd6" stroke-width="2"/>'
+    + '<polyline points="'+arcPoints(0,90,24)+'" fill="none" stroke="#2c7be5" stroke-width="5" stroke-linecap="round"/>'
+    + '<polyline points="'+arcPoints(90,180,24)+'" fill="none" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>'
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+p60.x.toFixed(1)+'" y2="'+p60.y.toFixed(1)+'" stroke="#2c7be5" stroke-width="3"/>'
+    + '<circle cx="'+p60.x.toFixed(1)+'" cy="'+p60.y.toFixed(1)+'" r="4.5" fill="#2c7be5"/>'
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+p150.x.toFixed(1)+'" y2="'+p150.y.toFixed(1)+'" stroke="#ff6b6b" stroke-width="3"/>'
+    + '<circle cx="'+p150.x.toFixed(1)+'" cy="'+p150.y.toFixed(1)+'" r="4.5" fill="#ff6b6b"/>'
+    + '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="#2d3436"/>'
+    + '<text x="'+(cx+r+18)+'" y="'+(cy+5)+'" font-size="14" fill="#2d3436" font-weight="700">0°</text>'
+    + '<text x="'+(cx-8)+'" y="'+(cy-r-10)+'" font-size="14" fill="#2d3436" font-weight="700">90°</text>'
+    + '<text x="'+(cx-r-40)+'" y="'+(cy+5)+'" font-size="14" fill="#2d3436" font-weight="700">180°</text>'
+    + '<text x="'+(cx+34)+'" y="'+(cy+34)+'" font-size="13" fill="#1a5cb0" font-weight="700">cos θ &gt; 0</text>'
+    + '<text x="'+(cx+34)+'" y="'+(cy+50)+'" font-size="12" fill="#1a5cb0">travail moteur</text>'
+    + '<text x="'+(cx-152)+'" y="'+(cy+34)+'" font-size="13" fill="#e14b4b" font-weight="700">cos θ &lt; 0</text>'
+    + '<text x="'+(cx-152)+'" y="'+(cy+50)+'" font-size="12" fill="#e14b4b">travail résistant</text>'
+    + '<text x="'+(p60.x+9).toFixed(1)+'" y="'+(p60.y-6).toFixed(1)+'" font-size="12" fill="#1a5cb0" font-weight="700">60°</text>'
+    + '<text x="'+(p150.x-36).toFixed(1)+'" y="'+(p150.y-6).toFixed(1)+'" font-size="12" fill="#e14b4b" font-weight="700">150°</text>'
+    + '</svg>';
+}
+
+/* icônes du trio (positif / nul / négatif) */
+document.getElementById('icon-pos').innerHTML = svgVectorPair(20, 0, '#2c7be5', '#0ea472', 'trioPos');
+document.getElementById('icon-nul').innerHTML = svgVectorPair(90, 0, '#2c7be5', '#0ea472', 'trioNul');
+document.getElementById('icon-neg').innerHTML = svgVectorPair(160, 0, '#2c7be5', '#0ea472', 'trioNeg');
+
+document.getElementById('cos-circle-holder').innerHTML = svgCosCircle();
+
+/* ===================== ANIMATION 1 : TRAVAIL ===================== */
+(function(){
+  const canvas = document.getElementById('canvas-travail');
+  const ctx = canvas.getContext('2d');
+  const Wc = canvas.width, Hc = canvas.height;
+  const captionEl = document.getElementById('caption-travail');
+
+  const groundY = 195;
+  const crateW = 58, crateH = 44;
+  const xStart = 60;
+  const xEnd = 520;
+  let angleDeg = 60;
+  const F_traction = 100;
+  const dist_m = 5;
+  const F_friction = 20;
+
+  let progress = 0;
+  let animating = false;
+  let startTime = null;
+  const duration = 3400;
+
+  const captions60 = [
+    "Le chariot est tiré par une corde inclinée à 60°, avec une force de 100 N, sur 5 m.",
+    "Cette force tire en partie dans le sens du mouvement : son travail est positif → W = 100 × 5 × cos(60°) = +250 J. Travail moteur.",
+    "Le frottement (20 N) s'oppose toujours au mouvement (θ = 180°) : W = -20 × 5 = -100 J. Travail résistant.",
+    "Bilan : une force qui aide donne un travail positif, une force qui freine donne un travail négatif."
+  ];
+  const captions90 = [
+    "Cette fois, la corde est verticale : la force est perpendiculaire au déplacement (θ = 90°).",
+    "Le travail moteur de cette force est nul : W = F × d × cos(90°) = F × d × 0 = 0 J.",
+    "Une force perpendiculaire au mouvement ne l'aide pas à avancer, mais ne le freine pas non plus.",
+    "C'est exactement le cas « nul » du mini-quiz : produit scalaire nul quand θ = 90°."
+  ];
+
+  function updateCaption(t, captions){
+    const idx = Math.min(captions.length-1, Math.floor(t*captions.length));
+    captionEl.textContent = captions[idx];
+  }
+
+  function drawScene(t){
+    ctx.clearRect(0,0,Wc,Hc);
+
+    ctx.strokeStyle = '#c7cdd6';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(20, groundY);
+    ctx.lineTo(Wc-20, groundY);
+    ctx.stroke();
+    ctx.strokeStyle = '#dfe4ec';
+    ctx.lineWidth = 1.5;
+    for(let hx=20; hx<Wc-20; hx+=14){
+      ctx.beginPath();
+      ctx.moveTo(hx, groundY+4);
+      ctx.lineTo(hx-8, groundY+14);
+      ctx.stroke();
+    }
+
+    const x = lerp(xStart, xEnd, t);
+    const crateTopY = groundY - crateH;
+    const attachX = x + crateW;
+    const attachY = crateTopY + crateH*0.32;
+
+    const ropeLen = 130;
+    const ang = angleDeg*Math.PI/180;
+    const anchorX = attachX + ropeLen*Math.cos(ang);
+    const anchorY = attachY - ropeLen*Math.sin(ang);
+    ctx.strokeStyle = '#a9836a';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(attachX, attachY);
+    ctx.lineTo(anchorX, anchorY);
+    ctx.stroke();
+    ctx.fillStyle = '#6d4c41';
+    ctx.beginPath();
+    ctx.arc(anchorX, anchorY, 9, 0, Math.PI*2);
+    ctx.fill();
+
+    drawRoundedRect(ctx, x, crateTopY, crateW, crateH, 9, '#ff9f43', '#e8860f');
+    ctx.strokeStyle = 'rgba(255,255,255,.55)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x+10, crateTopY+8); ctx.lineTo(x+crateW-10, crateTopY+8);
+    ctx.moveTo(x+10, crateTopY+crateH-8); ctx.lineTo(x+crateW-10, crateTopY+crateH-8);
+    ctx.stroke();
+
+    const fArrowLen = 78;
+    const fx2 = attachX + fArrowLen*Math.cos(ang);
+    const fy2 = attachY - fArrowLen*Math.sin(ang);
+    drawArrow(ctx, attachX, attachY, fx2, fy2, '#2c7be5', 4);
+    drawVecLabel(ctx, 'F', fx2+8, fy2-4, '#2c7be5', 17);
+
+    drawAngleArc(ctx, attachX, attachY, 42, 0, angleDeg, '#2c7be5');
+    ctx.fillStyle = '#2c7be5';
+    ctx.font = '13px sans-serif';
+    ctx.fillText('θ = '+angleDeg+'°', attachX+46, attachY-16);
+
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle = '#b7c0cc';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(attachX, attachY);
+    ctx.lineTo(attachX+50, attachY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const ffx1 = x + crateW*0.35, ffy1 = groundY+2;
+    drawArrow(ctx, ffx1, ffy1, ffx1-46, ffy1, '#ff6b6b', 4);
+    ctx.fillStyle = '#ff6b6b';
+    ctx.font = 'bold 15px sans-serif';
+    ctx.fillText('f', ffx1-56, ffy1+5);
+
+    const crateCenterStartX = xStart + crateW/2;
+    const crateCenterX = x + crateW/2;
+    const dArrowY = groundY + 30;
+    ctx.strokeStyle = '#0ea472';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(crateCenterStartX, dArrowY-7);
+    ctx.lineTo(crateCenterStartX, dArrowY+7);
+    ctx.stroke();
+    if(crateCenterX > crateCenterStartX+2){
+      drawArrow(ctx, crateCenterStartX, dArrowY, crateCenterX, dArrowY, '#20c997', 4);
+    }
+    const dMidX = (crateCenterStartX+crateCenterX)/2;
+    drawVecLabel(ctx, 'd', dMidX-8, dArrowY+22, '#0ea472', 15);
+
+    ctx.fillStyle = '#6c7a89';
+    ctx.font = '12.5px sans-serif';
+    ctx.fillText('d parcourue : ' + (dist_m*t).toFixed(1).replace('.',',') + ' m', 20, 24);
+    ctx.fillText('F = 100 N   ·   f = 20 N   ·   d total = 5 m', 20, 42);
+
+    const d = dist_m*t;
+    const Wtraction = F_traction*d*Math.cos(ang);
+    const Wfriction = -F_friction*d;
+    document.getElementById('val-w-traction').textContent = Math.round(Wtraction) + ' J';
+    document.getElementById('val-w-friction').textContent = Math.round(Wfriction) + ' J';
+
+    updateCaption(t, angleDeg===90 ? captions90 : captions60);
+  }
+
+  function step(ts){
+    if(!startTime) startTime = ts;
+    const elapsed = ts - startTime;
+    progress = clamp01(elapsed/duration);
+    drawScene(progress);
+    if(progress < 1 && animating){
+      requestAnimationFrame(step);
+    } else {
+      animating = false;
+    }
+  }
+
+  function play(){
+    startTime = null;
+    animating = true;
+    requestAnimationFrame(step);
+  }
+
+  document.getElementById('btn-play-travail').addEventListener('click', play);
+  document.getElementById('btn-replay-travail').addEventListener('click', play);
+
+  const btn60 = document.getElementById('btn-angle-60');
+  const btn90 = document.getElementById('btn-angle-90');
+  btn60.addEventListener('click', function(){
+    angleDeg = 60;
+    btn60.classList.add('active'); btn90.classList.remove('active');
+    play();
+  });
+  btn90.addEventListener('click', function(){
+    angleDeg = 90;
+    btn90.classList.add('active'); btn60.classList.remove('active');
+    play();
+  });
+
+  drawScene(0);
+})();
+
+/* ===================== ANIMATION 2 : ENERGIE ===================== */
+(function(){
+  const canvas = document.getElementById('canvas-energie');
+  const ctx = canvas.getContext('2d');
+  const Wc = canvas.width, Hc = canvas.height;
+  const captionEl = document.getElementById('caption-energie');
+
+  const m = 2, g = 10, h0 = 5;
+  const Em_total = m*g*h0; // 100 J
+
+  const P0 = {x:70, y:50};
+  const C  = {x:70, y:250};
+  const P2 = {x:430, y:250};
+
+  function bezier(t, p0,c,p2){
+    const it = 1-t;
+    return {
+      x: it*it*p0.x + 2*it*t*c.x + t*t*p2.x,
+      y: it*it*p0.y + 2*it*t*c.y + t*t*p2.y
+    };
+  }
+
+  let frictionMode = false;
+  let progress = 0;
+  let animating = false;
+  let startTime = null;
+
+  const captionsSans = [
+    "La bille (2 kg) part du sommet d'une piste de 5 m de haut, sans vitesse au départ.",
+    "Toute son énergie est de l'énergie potentielle : Ep = m·g·h = 2 × 10 × 5 = 100 J.",
+    "Elle se transforme peu à peu en énergie cinétique — regarde le réservoir : le total reste toujours à 100 J.",
+    "En bas, toute l'énergie est cinétique : Ec = 100 J, ce qui donne une vitesse de 10 m/s."
+  ];
+  const captionsAvec = [
+    "Cette fois, la piste est rugueuse : des frottements s'exercent pendant toute la descente.",
+    "Résultat : elle arrive en bas moins vite, 8 m/s au lieu de 10 m/s.",
+    "L'énergie manquante n'a pas disparu — regarde la barre rouge : elle s'est transformée en chaleur.",
+    "Au total : 64 J d'énergie cinétique + 36 J de chaleur = toujours 100 J. Rien ne se perd."
+  ];
+
+  function updateCaption(t){
+    const list = frictionMode ? captionsAvec : captionsSans;
+    const idx = Math.min(list.length-1, Math.floor(t*list.length));
+    captionEl.textContent = list[idx];
+  }
+
+  function energyAt(t){
+    const Ep = Em_total*(1-t);
+    let Ec, Eheat;
+    if(frictionMode){
+      Ec = 64*t;
+      Eheat = 36*t;
+    } else {
+      Ec = 100*t;
+      Eheat = 0;
+    }
+    return {Ep, Ec, Eheat};
+  }
+
+  function drawStackedBar(t){
+    const barX = 490, barW = 90;
+    const barTop = 46, barBottom = 262;
+    const barH = barBottom - barTop;
+    const pxPerJ = barH/100;
+
+    ctx.strokeStyle = '#c7cdd6';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(barX-8, barBottom); ctx.lineTo(barX+barW+8, barBottom);
+    ctx.stroke();
+    ctx.fillStyle = '#8a97a6';
+    ctx.font = '11px sans-serif';
+    [0,25,50,75,100].forEach(function(v){
+      const y = barBottom - v*pxPerJ;
+      ctx.strokeStyle = '#e3e8f0';
+      ctx.beginPath(); ctx.moveTo(barX-8,y); ctx.lineTo(barX+barW+8,y); ctx.stroke();
+      ctx.fillText(v+' J', barX+barW+12, y+4);
+    });
+
+    ctx.setLineDash([5,4]);
+    ctx.strokeStyle = '#20c997';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(barX-8, barTop); ctx.lineTo(barX+barW+8, barTop);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#0ea472';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText('Énergie totale = 100 J', barX-8, barTop-8);
+
+    const e = energyAt(t);
+    let y = barBottom;
+
+    const hEc = e.Ec*pxPerJ;
+    ctx.fillStyle = '#ff9f43';
+    ctx.fillRect(barX, y-hEc, barW, hEc);
+    y -= hEc;
+
+    if(e.Eheat > 0){
+      const hHeat = e.Eheat*pxPerJ;
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fillRect(barX, y-hHeat, barW, hHeat);
+      y -= hHeat;
+    }
+
+    const hEp = e.Ep*pxPerJ;
+    ctx.fillStyle = '#2c7be5';
+    ctx.fillRect(barX, y-hEp, barW, hEp);
+
+    ctx.strokeStyle = '#2d3436';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(barX, barTop, barW, barH);
+
+    document.getElementById('val-ep').textContent = Math.round(e.Ep) + ' J';
+    document.getElementById('val-ec').textContent = Math.round(e.Ec) + ' J';
+    const v = Math.sqrt(2*e.Ec/m);
+    document.getElementById('val-v').textContent = String(Math.round(v*10)/10).replace('.',',') + ' m/s';
+    const heatRO = document.getElementById('readout-heat');
+    if(frictionMode){
+      heatRO.style.display = '';
+      document.getElementById('val-heat').textContent = Math.round(e.Eheat) + ' J';
+    } else {
+      heatRO.style.display = 'none';
+    }
+  }
+
+  function drawScene(rawT){
+    ctx.clearRect(0,0,Wc,Hc);
+
+    ctx.strokeStyle = '#8a97a6';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(P0.x, P0.y);
+    ctx.quadraticCurveTo(C.x, C.y, P2.x, P2.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(P2.x, P2.y);
+    ctx.lineTo(440, P2.y);
+    ctx.stroke();
+
+    ctx.setLineDash([3,4]);
+    ctx.strokeStyle = '#c7cdd6';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(P0.x-30, P0.y); ctx.lineTo(P0.x-30, P2.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#6c7a89';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('h = 5 m', P0.x-28, (P0.y+P2.y)/2);
+
+    const easedT = frictionMode ? easeInPow(rawT, 1.15) : easeInPow(rawT, 1.7);
+    const pos = bezier(easedT, P0, C, P2);
+
+    ctx.fillStyle = frictionMode ? 'rgba(255,107,107,.18)' : 'rgba(32,201,151,.18)';
+    for(let i=1;i<=4;i++){
+      const tt = Math.max(0, easedT - i*0.03);
+      const p = bezier(tt, P0, C, P2);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 11-i, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = frictionMode ? '#ff6b6b' : '#20c997';
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 13, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#2d3436';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#2d3436';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('m = 2 kg', 20, 24);
+    ctx.fillText(frictionMode ? 'piste rugueuse (avec frottement)' : 'piste sans frottement', 20, 40);
+
+    drawStackedBar(easedT);
+    updateCaption(easedT);
+  }
+
+  function step(ts){
+    if(!startTime) startTime = ts;
+    const duration = frictionMode ? 11000 : 9000;
+    const elapsed = ts - startTime;
+    progress = clamp01(elapsed/duration);
+    drawScene(progress);
+    if(progress < 1 && animating){
+      requestAnimationFrame(step);
+    } else {
+      animating = false;
+    }
+  }
+
+  const legendHeat = document.getElementById('legend-heat');
+
+  function play(){
+    startTime = null;
+    animating = true;
+    requestAnimationFrame(step);
+  }
+
+  document.getElementById('btn-play-energie').addEventListener('click', play);
+  document.getElementById('btn-replay-energie').addEventListener('click', play);
+
+  const btnSans = document.getElementById('btn-mode-sans');
+  const btnAvec = document.getElementById('btn-mode-avec');
+
+  btnSans.addEventListener('click', function(){
+    frictionMode = false;
+    btnSans.classList.add('active');
+    btnAvec.classList.remove('active');
+    legendHeat.style.display = 'none';
+    play();
+  });
+  btnAvec.addEventListener('click', function(){
+    frictionMode = true;
+    btnAvec.classList.add('active');
+    btnSans.classList.remove('active');
+    legendHeat.style.display = '';
+    play();
+  });
+
+  drawScene(0);
+})();
+
+/* ===================== PUISSANCE : course des deux ouvriers ===================== */
+(function(){
+  const W_work = 800; // J, identique pour les deux
+  const durA = 2, durB = 8; // secondes ("physiques", affichées au chrono)
+  const trackH = 200 - 34 - 4; // hauteur utile de déplacement du haut de la caisse (px)
+
+  const crateA = document.getElementById('crate-a');
+  const crateB = document.getElementById('crate-b');
+  const clockA = document.getElementById('clock-a');
+  const clockB = document.getElementById('clock-b');
+  const powerA = document.getElementById('power-a');
+  const powerB = document.getElementById('power-b');
+  const conclusion = document.getElementById('power-conclusion');
+
+  let raf = null;
+  let t0 = null;
+  let running = false;
+
+  function reset(){
+    crateA.style.bottom = '4px';
+    crateB.style.bottom = '4px';
+    clockA.textContent = 't = 0,0 s';
+    clockB.textContent = 't = 0,0 s';
+    powerA.textContent = '';
+    powerB.textContent = '';
+    conclusion.classList.remove('show');
+    conclusion.textContent = '';
+  }
+
+  function frame(ts){
+    if(!t0) t0 = ts;
+    const elapsedReal = (ts - t0) / 1000; // secondes réelles écoulées
+    // on rejoue les 2 s / 8 s "physiques" à vitesse réelle (donc ça dure vraiment 8 s pour B)
+    const tA = clamp01(elapsedReal / durA);
+    const tB = clamp01(elapsedReal / durB);
+
+    crateA.style.bottom = (4 + tA*trackH) + 'px';
+    crateB.style.bottom = (4 + tB*trackH) + 'px';
+    clockA.textContent = 't = ' + Math.min(elapsedReal, durA).toFixed(1).replace('.',',') + ' s';
+    clockB.textContent = 't = ' + Math.min(elapsedReal, durB).toFixed(1).replace('.',',') + ' s';
+
+    if(tA >= 1 && powerA.textContent === ''){
+      powerA.textContent = 'P = ' + (W_work/durA) + ' W';
+    }
+    if(tB >= 1 && powerB.textContent === ''){
+      powerB.textContent = 'P = ' + (W_work/durB) + ' W';
+    }
+
+    if(tA < 1 || tB < 1){
+      raf = requestAnimationFrame(frame);
+    } else {
+      running = false;
+      conclusion.textContent = '⚡ Même travail (800 J chacun), puissance différente : ' + (W_work/durA) + ' W pour l’ouvrier A, contre ' + (W_work/durB) + ' W pour l’ouvrier B !';
+      conclusion.classList.add('show');
+    }
+  }
+
+  function play(){
+    if(running) return;
+    reset();
+    running = true;
+    t0 = null;
+    raf = requestAnimationFrame(frame);
+  }
+
+  document.getElementById('btn-play-power').addEventListener('click', play);
+  document.getElementById('btn-replay-power').addEventListener('click', function(){
+    if(raf) cancelAnimationFrame(raf);
+    running = false;
+    play();
+  });
+
+  reset();
+})();
+
+/* ===================== SITUATIONS / SOLUTIONS : toggle ===================== */
+document.querySelectorAll('.situation-card .btn.toggle').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    const target = document.getElementById(btn.dataset.target);
+    const isOpen = target.classList.toggle('open');
+    btn.textContent = isOpen ? 'Masquer la solution' : 'Voir la solution';
+  });
+});
+
+/* ===================== MOTEUR DE QUIZ GÉNÉRIQUE ===================== */
+function buildQuiz(containerId, fillId, scoreId, items, opts){
+  opts = opts || {};
+  const container = document.getElementById(containerId);
+  const fillEl = document.getElementById(fillId);
+  const scoreEl = document.getElementById(scoreId);
+  let score = 0, answered = 0;
+
+  items.forEach(function(item, idx){
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+
+    const qText = document.createElement('div');
+    qText.className = 'q-text';
+    qText.textContent = (idx+1) + '. ' + item.q;
+    card.appendChild(qText);
+
+    if(item.visual){
+      const vis = document.createElement('div');
+      vis.className = 'q-visual';
+      vis.innerHTML = item.visual;
+      card.appendChild(vis);
+    }
+
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'options';
+
+    const explainDiv = document.createElement('div');
+    explainDiv.className = 'explain';
+    explainDiv.textContent = item.explain;
+
+    item.options.forEach(function(optText, optIdx){
+      const optBtn = document.createElement('button');
+      optBtn.className = 'opt';
+      optBtn.textContent = optText;
+      optBtn.addEventListener('click', function(){
+        const allOpts = optsWrap.querySelectorAll('.opt');
+        if(allOpts[0].classList.contains('locked')) return;
+        allOpts.forEach(function(o){ o.classList.add('disabled','locked'); });
+
+        if(optIdx === item.correct){
+          optBtn.classList.add('correct');
+          score++;
+        } else {
+          optBtn.classList.add('wrong');
+          allOpts[item.correct].classList.add('correct');
+        }
+        answered++;
+        explainDiv.classList.add('show');
+        if(fillEl) fillEl.style.width = (answered/items.length*100) + '%';
+        if(scoreEl) scoreEl.textContent = score + ' / ' + items.length + (opts.scoreSuffix || '');
+        if(answered === items.length && opts.onComplete) opts.onComplete(score, items.length);
+      });
+      optsWrap.appendChild(optBtn);
+    });
+
+    card.appendChild(optsWrap);
+    card.appendChild(explainDiv);
+    container.appendChild(card);
+  });
+}
+
+/* ---- Mini-quiz A : signe du produit scalaire ---- */
+const mqAItems = [
+  { q:"Ces deux vecteurs sont colinéaires et pointent dans le même sens. Leur produit scalaire est :",
+    visual: svgVectorPair(0,0,'#2c7be5','#0ea472','mqa1'),
+    options:["Positif","Négatif","Nul"], correct:0,
+    explain:"θ = 0°, cos θ = 1 > 0 : le produit scalaire est positif (et maximal)." },
+  { q:"Ces deux vecteurs sont perpendiculaires. Leur produit scalaire est :",
+    visual: svgVectorPair(0,90,'#2c7be5','#0ea472','mqa2'),
+    options:["Positif","Négatif","Nul"], correct:2,
+    explain:"θ = 90°, cos θ = 0 : le produit scalaire est nul." },
+  { q:"Ces deux vecteurs sont colinéaires mais de sens opposés. Leur produit scalaire est :",
+    visual: svgVectorPair(0,180,'#2c7be5','#0ea472','mqa3'),
+    options:["Positif","Négatif","Nul"], correct:1,
+    explain:"θ = 180°, cos θ = -1 < 0 : le produit scalaire est négatif (et minimal)." },
+  { q:"Ces deux vecteurs forment un angle de 45°. Leur produit scalaire est :",
+    visual: svgVectorPair(0,45,'#2c7be5','#0ea472','mqa4'),
+    options:["Positif","Négatif","Nul"], correct:0,
+    explain:"0° < θ < 90° donc cos θ > 0 : le produit scalaire est positif." },
+  { q:"Ces deux vecteurs forment un angle de 135°. Leur produit scalaire est :",
+    visual: svgVectorPair(0,135,'#2c7be5','#0ea472','mqa5'),
+    options:["Positif","Négatif","Nul"], correct:1,
+    explain:"90° < θ < 180° donc cos θ < 0 : le produit scalaire est négatif." }
+];
+buildQuiz('mqA-container','mqA-fill','mqA-score', mqAItems);
+
+/* ---- Mini-quiz E : le travail dépend de la distance, pas du temps ---- */
+const mqEItems = [
+  { q:"Une force tire un objet deux fois plus loin, avec la même intensité et le même angle. Le travail...",
+    options:["double","ne change pas","est divisé par deux"], correct:0,
+    explain:"W = F · d · cos θ : le travail est proportionnel à la distance parcourue d." },
+  { q:"Le même objet parcourt la même distance, avec la même force et le même angle, mais deux fois plus lentement. Le travail...",
+    options:["double","est divisé par deux","ne change pas"], correct:2,
+    explain:"Le temps n'apparaît pas dans W = F · d · cos θ : le travail ne dépend pas de la vitesse à laquelle on parcourt la distance." },
+  { q:"Une force de 50 N tire un objet sur 4 m, exactement dans la direction du déplacement (θ = 0°). Quel est le travail effectué ?",
+    options:["200 J","54 J","12,5 J"], correct:0,
+    explain:"W = F · d · cos θ = 50 × 4 × cos(0°) = 50 × 4 × 1 = 200 J." }
+];
+buildQuiz('mqE-container','mqE-fill','mqE-score', mqEItems);
+
+/* ---- Mini-quiz B : proportionnalité de Ep ---- */
+const mqBItems = [
+  { q:"Un objet est deux fois plus haut (même masse). Son énergie potentielle...",
+    options:["est multipliée par 2","est multipliée par 4","ne change pas","est divisée par 2"], correct:0,
+    explain:"Ep = m·g·h est proportionnelle à h : si h double, Ep double aussi." },
+  { q:"La masse d'un objet est divisée par deux (même hauteur). Son énergie potentielle...",
+    options:["double","est divisée par deux","ne change pas","est divisée par quatre"], correct:1,
+    explain:"Ep est proportionnelle à m : diviser la masse par deux divise Ep par deux." },
+  { q:"Un objet est deux fois plus haut ET deux fois plus léger. Son énergie potentielle...",
+    options:["double","est divisée par deux","ne change pas","est multipliée par quatre"], correct:2,
+    explain:"Ep = m·g·h : ×2 sur h et ×0,5 sur m se compensent exactement (2 × 0,5 = 1)." }
+];
+buildQuiz('mqB-container','mqB-fill','mqB-score', mqBItems);
+
+/* ---- Mini-quiz C : proportionnalité de Ec ---- */
+const mqCItems = [
+  { q:"La vitesse d'un objet double (même masse). Son énergie cinétique...",
+    options:["double","est multipliée par quatre","ne change pas"], correct:1,
+    explain:"Ec = ½mv² dépend de v² : si v double, v² est multiplié par 4." },
+  { q:"La masse double (même vitesse). Son énergie cinétique...",
+    options:["double","est multipliée par quatre","ne change pas"], correct:0,
+    explain:"Ec est proportionnelle à m (pas au carré) : si m double, Ec double." },
+  { q:"La vitesse est divisée par deux (même masse). Son énergie cinétique...",
+    options:["est divisée par deux","est divisée par quatre","ne change pas"], correct:1,
+    explain:"(v/2)² = v²/4 : l'énergie cinétique est divisée par quatre." }
+];
+buildQuiz('mqC-container','mqC-fill','mqC-score', mqCItems);
+
+/* ---- Mini-quiz D : puissance ---- */
+const mqDItems = [
+  { q:"Pour un même travail effectué, plus on met de temps, plus la puissance développée est...",
+    options:["grande","petite","la même"], correct:1,
+    explain:"P = W/t : à W constant, P diminue quand t augmente." },
+  { q:"Deux moteurs fournissent chacun un travail de 1000 J. Le moteur A le fait en 2 s, le moteur B en 10 s. Lequel est le plus puissant ?",
+    options:["Le moteur A","Le moteur B","Les deux sont identiques"], correct:0,
+    explain:"P_A = 1000/2 = 500 W ; P_B = 1000/10 = 100 W. A est 5 fois plus puissant." }
+];
+buildQuiz('mqD-container','mqD-fill','mqD-score', mqDItems);
+
+/* ---- Quiz final ---- */
+const quizData = [
+  { q:"Une force est perpendiculaire à la trajectoire de l'objet (θ = 90°). Que peut-on dire de son travail ?",
+    options:["Il est positif","Il est négatif","Il est nul","Cela dépend de la vitesse"], correct:2,
+    explain:"cos(90°) = 0, donc W = F·d·cos(90°) = 0. Une force perpendiculaire au déplacement ne travaille jamais." },
+  { q:"Un objet glisse d'un point A vers un point B plus bas, sans aucun frottement. Que devient son énergie mécanique totale (Em = Ec + Ep) ?",
+    options:["Elle augmente","Elle diminue","Elle reste constante","Elle disparaît"], correct:2,
+    explain:"Sans frottement, l'énergie mécanique se conserve : ce que l'objet perd en énergie potentielle, il le regagne intégralement en énergie cinétique." },
+  { q:"À cause des frottements, une partie de l'énergie mécanique semble « disparaître ». Où part-elle réellement ?",
+    options:["Elle est détruite","Elle se transforme en énergie thermique (chaleur)","Elle se transforme en énergie électrique","Elle repart dans la force elle-même"], correct:1,
+    explain:"L'énergie ne se détruit jamais : les frottements la transforment en chaleur — c'est ce qu'on ressent par exemple sur les patins d'un vélo qui freine." },
+  { q:"Une bille de 2 kg tombe d'une hauteur de 5 m sans frottement (g = 10 m/s²). Quelle est sa vitesse à l'arrivée ?",
+    options:["5 m/s","10 m/s","20 m/s","50 m/s"], correct:1,
+    explain:"Ep = mgh = 2×10×5 = 100 J devient entièrement Ec = ½mv² = 100 J, donc v = √(2×100/2) = 10 m/s. Astuce : v = √(2gh) = √100 = 10 m/s directement !" },
+  { q:"Le travail d'une force de frottement qui s'oppose au mouvement est...",
+    options:["Toujours positif","Toujours négatif","Toujours nul","Positif ou négatif selon la vitesse"], correct:1,
+    explain:"Le frottement s'oppose toujours au déplacement (θ = 180°, cos θ = -1), son travail est donc toujours négatif : c'est un travail résistant." },
+  { q:"Un treuil effectue un travail de 2000 J en 4 secondes. Quelle est sa puissance ?",
+    options:["500 W","8000 W","250 W","2004 W"], correct:0,
+    explain:"P = W/t = 2000/4 = 500 W." },
+  { q:"À travail égal, l'appareil le plus puissant est celui qui...",
+    options:["met le plus de temps","met le moins de temps","cela ne dépend pas du temps"], correct:1,
+    explain:"P = W/t : à W fixé, moins de temps donne plus de puissance." }
+];
+
+buildQuiz('quiz-container','quiz-fill','quiz-score', quizData, {
+  scoreSuffix: ' bonnes réponses',
+  onComplete: function(score, total){
+    const el = document.getElementById('quiz-complete');
+    let cls, msg;
+    if(score >= total-1){
+      cls = 'good'; msg = "🎉 Bravo, " + score + "/" + total + " ! Tu maîtrises très bien ces notions, tu es prêt·e pour l'oscillateur harmonique.";
+    } else if(score >= total-3){
+      cls = 'mid'; msg = "👍 " + score + "/" + total + ", pas mal ! Relis les capsules où tu as eu des difficultés avant de continuer.";
+    } else {
+      cls = 'low'; msg = "💪 " + score + "/" + total + ". C'est normal si tout n'est pas encore clair — reprends les animations et les mini-quiz depuis le début, ça va venir !";
+    }
+    el.className = 'quiz-complete show ' + cls;
+    el.textContent = msg;
+  }
+});
+
+/* ===================== NAV ACTIVE STATE ===================== */
+(function(){
+  const links = document.querySelectorAll('.path a');
+  const sections = Array.from(links).map(function(l){ return document.querySelector(l.getAttribute('href')); });
+  function onScroll(){
+    let current = 0;
+    sections.forEach(function(sec, i){
+      if(sec && sec.getBoundingClientRect().top < window.innerHeight*0.4) current = i;
+    });
+    links.forEach(function(l,i){ l.classList.toggle('active', i===current); });
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
