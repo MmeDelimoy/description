@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La vague et la bouée</title>
+<style>
+:root{--bg:#f6f8fb;--ink:#14202b;--mut:#51606e;--card:#fff;--line:#cfd8e1;--acc:#0b5fa5;--red:#c62828;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:980px;margin:0 auto;padding:12px 16px 40px}
+h1{font-size:1.35rem;margin:6px 0 2px}
+p.lead{margin:0 0 10px;color:var(--mut)}
+canvas{display:block;width:100%;background:#fff;border:1px solid var(--line);border-radius:10px}
+#scene{margin-bottom:8px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px}
+.row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+button{font:inherit;padding:8px 14px;border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:8px;cursor:pointer;min-height:40px}
+button.primary{background:var(--acc);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid #ffb300;outline-offset:2px}
+label{display:flex;align-items:center;gap:8px}
+.sl{display:grid;grid-template-columns:150px 1fr 90px;gap:8px;align-items:center;margin:6px 0}
+.sl input[type=range]{width:100%}
+.sl output{font-variant-numeric:tabular-nums;text-align:right}
+.read{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+.read div{background:#f0f5fa;border-radius:8px;padding:8px 10px}
+.read b{display:block;font-size:.85rem;color:var(--mut);font-weight:600}
+.read span{font-variant-numeric:tabular-nums;font-size:1.05rem}
+.same{color:#0b6b2e;font-weight:600}.chg{color:var(--red);font-weight:600}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:600}
+ul{margin:6px 0 0 18px;padding:0}
+.note{font-size:.92rem;color:var(--mut)}
+@media (max-width:560px){.sl{grid-template-columns:1fr 70px}.sl label{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div id="nojs" style="background:#fff3cd;border:2px solid #b58100;color:#4a3500;padding:12px 14px;margin:10px;border-radius:8px;font:16px/1.4 Arial,sans-serif"><b>⚠ Cette page ne fonctionne pas dans ce lecteur.</b><br>Il bloque le JavaScript (aperçu de Smartschool, Teams, Drive, mail, appli de messagerie…). <b>Enregistre le fichier</b> sur l'appareil, puis ouvre-le avec <b>Chrome, Edge, Firefox ou Safari</b>.<br><small id="jserr"></small></div>
+
+<main>
+<p style="margin:0 0 6px"><a href="./" style="color:#0b5fa5;font-weight:700;text-decoration:none">← Généralités sur les ondes</a></p>
+<h1>La vague arrive sur la bouée</h1>
+<p class="lead">Observe l'élève sur sa bouée : la vague avance vers la droite, mais que fait la bouée&nbsp;?</p>
+
+<canvas id="scene" role="img" aria-label="Une vague se déplace horizontalement vers un élève assis sur une bouée. La bouée monte et descend sur place."></canvas>
+<canvas id="graph" role="img" aria-label="Graphique de la hauteur de la bouée en fonction du temps"></canvas>
+
+<div class="panel">
+  <div class="row">
+    <button id="play" class="primary" type="button">Pause</button>
+    <button id="replay" type="button">Rejouer l'arrivée de la vague</button>
+    <button id="mark" type="button">Marquer une crête</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <label><input id="two" type="checkbox"> Ajouter une deuxième bouée</label>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="sl"><label for="fr">Fréquence f (imposée par la source)</label><input id="fr" type="range" min="0.2" max="0.6" step="0.05" value="0.25"><output id="frO"></output></div>
+  <div class="sl"><label for="vel">Vitesse v (imposée par le milieu)</label><input id="vel" type="range" min="0.75" max="1.5" step="0.25" value="1"><output id="velO"></output></div>
+  <div class="sl"><label for="amp">Amplitude A</label><input id="amp" type="range" min="0.2" max="0.8" step="0.1" value="0.5"><output id="ampO"></output></div>
+  <div class="sl" id="dRow" hidden><label for="dist">Distance entre les bouées</label><input id="dist" type="range" min="0.5" max="2" step="0.25" value="1"><output id="distO"></output></div>
+  <div class="sl"><label for="spd">Vitesse de l'animation</label><input id="spd" type="range" min="0.25" max="2" step="0.25" value="1"><output id="spdO"></output></div>
+</div>
+
+<div class="panel">
+  <div class="read" aria-live="off">
+    <div><b>Période T = 1/f</b><span id="rT"></span></div>
+    <div><b>Vitesse de l'onde v</b><span id="rv"></span></div>
+    <div><b>Longueur d'onde λ = v / f</b><span id="rl"></span></div>
+    <div><b>Bouée A : position horizontale</b><span id="rbx"></span></div>
+    <div><b>Bouée A : hauteur</b><span id="rby"></span></div>
+    <div><b>Crête marquée : position horizontale</b><span id="rcx"></span></div>
+    <div id="phaseBox" hidden><b>Bouées A et B</b><span id="rph"></span></div>
+  </div>
+</div>
+
+<details open>
+<summary>Ce qu'il faut remarquer</summary>
+<ul>
+  <li>La crête (point rouge) <b>avance</b> vers la droite à la vitesse <i>v</i> : sa position horizontale change.</li>
+  <li>La bouée garde la <b>même position horizontale</b> : elle ne fait que monter et descendre autour de sa position d'équilibre.</li>
+  <li>Change la fréquence <i>f</i> : la longueur d'onde λ change, mais la vitesse <i>v</i> reste la même. Change <i>v</i> (curseur du milieu) : λ change aussi. On a toujours λ = v / f.</li>
+  <li>L'onde transporte de l'<b>énergie</b> d'un point à un autre, pas de la <b>matière</b>.</li>
+  <li>La courbe du bas est le « film » de la bouée : on y lit la période <i>T</i>. Elle ressemble à celle d'un oscillateur : chaque point de l'eau est un oscillateur qui reproduit le mouvement du précédent avec un retard.</li>
+  <li>Avec deux bouées : à distance λ, elles font la même chose en même temps (concordance de phase) ; à distance λ/2, elles font l'inverse (opposition de phase).</li>
+</ul>
+</details>
+<p style="text-align:center;color:#51606e;font-size:13px;margin:24px 0 8px">Aide de l’IA (AIA) · Ressource de Mme Delimoy</p>
+</main>
+
+<script>
+window.onerror=function(m,s,l){var e=document.getElementById('jserr');if(e){e.textContent='Détail technique : '+m+' (ligne '+l+')';}var n=document.getElementById('nojs');if(n)n.style.display='block';};
+
+(function(){
+"use strict";
+var SCENE_W = 14;                 // largeur de la scène en mètres
+var XB = 3.0;                     // position de la bouée A (m)
+var S = {v:1,lam:4,f:0.25,A:0.5,d:1,spd:1,t:0,play:true,two:false,real:false,markX0:null,markT0:0};
+var scene=document.getElementById('scene'), graph=document.getElementById('graph');
+var sc=scene.getContext('2d'), gc=graph.getContext('2d');
+var cw=800, sh=300, gh=170, dpr=1;
+function $(id){return document.getElementById(id);}
+function fmt(x,n){return x.toFixed(n).replace('.',',');}
+function sgn(x,n){return (x>=0?'+':'−')+fmt(Math.abs(x),n);}
+function v(){return S.v;}
+function smooth(u){u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);}
+function env(x,t){return smooth((v()*t - x)/S.lam);}
+function eta(x,t){return S.A*env(x,t)*Math.cos(2*Math.PI*(x/S.lam - S.f*t));}
+function xi(x,t){ // déplacement horizontal réel (eau profonde) : cercle de rayon A
+  return -S.A*env(x,t)*Math.sin(2*Math.PI*(x/S.lam - S.f*t));}
+function xB(){return S.two ? XB : XB;}
+function xB2(){return XB + S.d*S.lam;}
+
+function resize(){
+  dpr=window.devicePixelRatio||1;
+  var w=scene.parentElement.clientWidth-32; if(w>948) w=948; if(w<280) w=280;
+  cw=w; sh=Math.round(Math.max(w*0.40,235)); gh=Math.round(Math.max(130,w*0.2));
+  scene.style.height=sh+'px'; graph.style.height=gh+'px';
+  scene.width=Math.round(cw*dpr); scene.height=Math.round(sh*dpr);
+  graph.width=Math.round(cw*dpr); graph.height=Math.round(gh*dpr);
+  scene.style.width=cw+'px'; graph.style.width=cw+'px';
+}
+
+function drawStudent(c,x,y,ang,k,body,cap,tag){
+  c.save();c.translate(x,y);c.rotate(ang);c.scale(k,k);
+  // anneau de bouée (derrière)
+  c.lineWidth=9;c.lineCap='butt';
+  c.strokeStyle='#e8561a';c.beginPath();c.ellipse(0,4,36,11,0,0,Math.PI*2);c.stroke();
+  c.strokeStyle='#fff';c.setLineDash([14,14]);c.beginPath();c.ellipse(0,4,36,11,0,0,Math.PI*2);c.stroke();c.setLineDash([]);
+  // jambes
+  c.strokeStyle='#33415c';c.lineWidth=8;c.lineCap='round';
+  c.beginPath();c.moveTo(-4,-6);c.lineTo(-18,6);c.moveTo(6,-6);c.lineTo(-6,8);c.stroke();
+  // buste
+  c.fillStyle=body;c.beginPath();c.roundRect(-13,-44,28,40,9);c.fill();
+  c.strokeStyle='#0003';c.lineWidth=1.2;c.stroke();
+  // bras levé (vers la vague, à gauche) et bras tranquille
+  c.strokeStyle=body;c.lineWidth=7;
+  c.beginPath();c.moveTo(-11,-38);c.lineTo(-27,-58);c.stroke();
+  c.beginPath();c.moveTo(12,-36);c.lineTo(24,-22);c.stroke();
+  c.fillStyle='#f1c27d';c.beginPath();c.arc(-28,-61,5,0,Math.PI*2);c.fill();c.beginPath();c.arc(25,-20,5,0,Math.PI*2);c.fill();
+  // tête, regard vers la gauche
+  c.fillStyle='#f1c27d';c.beginPath();c.arc(0,-56,12,0,Math.PI*2);c.fill();c.strokeStyle='#0003';c.lineWidth=1;c.stroke();
+  c.beginPath();c.moveTo(-12,-55);c.lineTo(-16,-52);c.lineTo(-12,-51);c.fillStyle='#f1c27d';c.fill();
+  c.fillStyle=cap;c.beginPath();c.arc(0,-58,12.5,Math.PI,0);c.fill();c.fillRect(-18,-59,16,3.5);
+  c.fillStyle='#fff';c.beginPath();c.arc(-6,-56,3.3,0,Math.PI*2);c.fill();c.fillStyle='#111';c.beginPath();c.arc(-7.2,-56,1.6,0,Math.PI*2);c.fill();
+  c.strokeStyle='#7a2e1d';c.lineWidth=1.6;c.beginPath();c.arc(-5,-50,4,0.2,1.7);c.stroke();
+  // anneau de bouée (devant)
+  c.lineWidth=9;c.strokeStyle='#e8561a';c.beginPath();c.ellipse(0,4,36,11,0,0.05,Math.PI-0.05);c.stroke();
+  c.strokeStyle='#fff';c.setLineDash([14,14]);c.beginPath();c.ellipse(0,4,36,11,0,0.05,Math.PI-0.05);c.stroke();c.setLineDash([]);
+  c.restore();
+}
+
+function arrow(c,x1,y1,x2,y2,col,w){
+  c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w||2;
+  c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+  var a=Math.atan2(y2-y1,x2-x1),h=9;
+  c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-h*Math.cos(a-0.45),y2-h*Math.sin(a-0.45));c.lineTo(x2-h*Math.cos(a+0.45),y2-h*Math.sin(a+0.45));c.closePath();c.fill();
+}
+
+function drawScene(){
+  var c=sc;c.setTransform(dpr,0,0,dpr,0,0);
+  var s=cw/SCENE_W, vy=(cw<620?1.8:1), y0=sh*0.6, font=Math.max(12,Math.round(cw/58));
+  // ciel
+  var g=c.createLinearGradient(0,0,0,sh);g.addColorStop(0,'#dcefff');g.addColorStop(1,'#f4fbff');
+  c.fillStyle=g;c.fillRect(0,0,cw,sh);
+  // niveau d'équilibre
+  c.setLineDash([6,6]);c.strokeStyle='#8aa';c.lineWidth=1;c.beginPath();c.moveTo(0,y0);c.lineTo(cw,y0);c.stroke();c.setLineDash([]);
+  // mer
+  c.beginPath();c.moveTo(0,sh);
+  var N=Math.max(120,Math.round(cw/3));
+  for(var i=0;i<=N;i++){var xm=i/N*SCENE_W;c.lineTo(i/N*cw,y0-eta(xm,S.t)*s*vy);}
+  c.lineTo(cw,sh);c.closePath();
+  var sg=c.createLinearGradient(0,y0-S.A*s*vy,0,sh);sg.addColorStop(0,'#58b0ee');sg.addColorStop(1,'#1c5e99');
+  c.fillStyle=sg;c.fill();
+  c.lineWidth=2.5;c.strokeStyle='#0d3f6b';c.beginPath();
+  for(i=0;i<=N;i++){xm=i/N*SCENE_W;var yy=y0-eta(xm,S.t)*s*vy;if(i===0)c.moveTo(0,yy);else c.lineTo(i/N*cw,yy);}
+  c.stroke();
+  // trajet de la bouée (segment vertical)
+  var bx=XB*s;
+  c.setLineDash([3,4]);c.strokeStyle='#111';c.lineWidth=1.2;
+  c.beginPath();c.moveTo(bx,y0-(S.A+0.1)*s*vy-95*Math.max(0.6,cw/800));c.lineTo(bx,y0+(S.A+0.2)*s*vy);c.stroke();c.setLineDash([]);
+  // élèves
+  var k=Math.max(0.62,cw/820);
+  function placeBuoy(x,body,cap,label){
+    var e=eta(x,S.t),sl=(eta(x+0.05,S.t)-eta(x-0.05,S.t))/0.1*vy,ang=-Math.atan(sl)*0.7;
+    var px=x*s,py=y0-e*s*vy;
+    if(S.real){
+      var R=S.A*s;
+      c.setLineDash([3,4]);c.strokeStyle='#fff';c.lineWidth=1.5;c.beginPath();c.ellipse(px,y0,R,R*vy,0,0,Math.PI*2);c.stroke();c.setLineDash([]);
+      px+=xi(x,S.t)*s;
+    }
+    drawStudent(c,px,py-4*k,ang,k,body,cap);
+    c.fillStyle='#111';c.font='700 '+font+'px system-ui,Arial';c.fillText(label,px-6,py-92*k);
+    return {x:px,y:py};
+  }
+  placeBuoy(XB,'#f4c542','#d62828','A');
+  if(S.two){var x2=Math.min(XB+S.d*S.lam,SCENE_W-0.8);placeBuoy(x2,'#7bb6ff','#1b4f9c','B');}
+  // crête marquée
+  var cxm=null;
+  if(S.markX0!==null){cxm=S.markX0+v()*(S.t-S.markT0);}
+  if(cxm!==null && cxm>=0 && cxm<=SCENE_W){
+    var cy=y0-eta(cxm,S.t)*s*vy;
+    c.fillStyle='#c62828';c.beginPath();c.arc(cxm*s,cy,6,0,Math.PI*2);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();
+    arrow(c,cxm*s+10,cy-18,cxm*s+10+Math.min(70,cw*0.09),cy-18,'#c62828',2.5);
+    c.fillStyle='#c62828';c.font='600 '+font+'px system-ui,Arial';c.fillText('crête',cxm*s+6,cy-26);
+  }
+  // légendes
+  c.fillStyle='#14202b';c.font='600 '+font+'px system-ui,Arial';
+  arrow(c,12,22,12+Math.min(110,cw*0.14),22,'#14202b',2.5);
+  c.fillText('la vague avance',12+Math.min(110,cw*0.14)+8,27);
+  // double flèche sur la bouée
+  var ay=y0+(S.A+0.35)*s*vy;
+  arrow(c,bx+30,ay-6,bx+30,ay-34,'#0b6b2e',2.5);arrow(c,bx+30,ay+2,bx+30,ay+30,'#0b6b2e',2.5);
+  c.fillStyle='#0b6b2e';c.fillText('la bouée monte et descend',bx+40,ay+4);
+}
+
+function drawGraph(){
+  var c=gc;c.setTransform(dpr,0,0,dpr,0,0);
+  var L=52,R=12,T=18,B=30,w=cw-L-R,h=gh-T-B,span=12,ym=0.9;
+  c.fillStyle='#fff';c.fillRect(0,0,cw,gh);
+  c.font=Math.max(11,Math.round(cw/72))+'px system-ui,Arial';c.textAlign='center';
+  // grille
+  c.lineWidth=1;
+  for(var k=0;k<=span;k+=(cw<520?4:2)){var gx=L+k/span*w;c.strokeStyle='#dde3ea';c.beginPath();c.moveTo(gx,T);c.lineTo(gx,T+h);c.stroke();
+    c.fillStyle='#51606e';c.textAlign=(k===span?'right':'center');c.fillText(k===span?'maintenant':('−'+(span-k)+' s'),k===span?gx+6:gx,gh-10);}
+  c.textAlign='right';
+  for(var yv=-0.5;yv<=0.51;yv+=0.5){var gy=T+h/2-yv/ym*(h/2);c.strokeStyle=yv===0?'#8aa':'#dde3ea';c.beginPath();c.moveTo(L,gy);c.lineTo(L+w,gy);c.stroke();
+    c.fillStyle='#51606e';c.fillText(fmt(yv,1),L-6,gy+4);}
+  c.save();c.translate(12,T+h/2);c.rotate(-Math.PI/2);c.textAlign='center';c.fillText('y (m)',0,0);c.restore();
+  function trace(x,col,dash){
+    c.beginPath();c.strokeStyle=col;c.lineWidth=2.5;c.setLineDash(dash);
+    var n=Math.round(w/2),first=true;
+    for(var i=0;i<=n;i++){var tt=S.t-span+i/n*span;var e=(tt<0)?0:eta(x,tt);
+      var px=L+i/n*w,py=T+h/2-e/ym*(h/2);if(first){c.moveTo(px,py);first=false;}else c.lineTo(px,py);}
+    c.stroke();c.setLineDash([]);
+  }
+  trace(XB,'#0b5fa5',[]);
+  if(S.two) trace(Math.min(XB+S.d*S.lam,SCENE_W-0.8),'#d4731a',[7,5]);
+  c.fillStyle='#14202b';c.textAlign='left';c.font='600 '+Math.max(11,Math.round(cw/72))+'px system-ui,Arial';
+  c.fillText('Hauteur de la bouée A'+(S.two?' (trait plein) et B (pointillés)':'')+' au cours du temps',L+6,T+12);
+}
+
+var lastRead=0;
+function readouts(){
+  $('rT').textContent=fmt(1/S.f,1)+' s';
+  $('rv').textContent=fmt(v(),2)+' m/s';$('rl').textContent=fmt(S.lam,2)+' m';
+  var e=eta(XB,S.t);
+  $('rbx').innerHTML='<span class="same">x = '+fmt(XB,1)+' m (ne change pas)</span>';
+  $('rby').textContent=sgn(e,2)+' m';
+  var cxm=(S.markX0===null)?null:S.markX0+v()*(S.t-S.markT0);
+  if(cxm!==null&&cxm>=0&&cxm<=SCENE_W) $('rcx').innerHTML='<span class="chg">x = '+fmt(cxm,1)+' m (change)</span>';
+  else $('rcx').textContent='— (appuie sur « Marquer une crête »)';
+  if(S.two){var r=S.d,near=Math.abs(r-Math.round(r))<0.01,half=Math.abs(r*2-Math.round(r*2))<0.01&&!near;
+    $('rph').textContent='d = '+fmt(S.d,2)+' λ = '+fmt(S.d*S.lam,1)+' m : '+(near?'concordance de phase':(half?'opposition de phase':'ni l’un ni l’autre'));}
+}
+
+function syncLabels(){
+  S.lam=S.v/S.f;
+  var dmax=Math.min(2,Math.floor((SCENE_W-0.8-XB)/S.lam*4)/4);if(dmax<0.5)dmax=0.5;$('dist').max=dmax;if(S.d>dmax){S.d=dmax;$('dist').value=dmax;}
+  $('velO').textContent=fmt(S.v,2)+' m/s';$('frO').textContent=fmt(S.f,2)+' Hz';$('ampO').textContent=fmt(S.A,1)+' m';
+  $('distO').textContent=fmt(S.d,2)+' λ';$('spdO').textContent='× '+fmt(S.spd,2);
+  $('dRow').hidden=!S.two;$('phaseBox').hidden=!S.two;
+}
+function restart(){S.t=0;S.markX0=0;S.markT0=S.lam/Math.max(v(),0.01)*0; /* crête marquée = première crête */
+  // première crête complète : à t=0 elle est en x = -λ, elle entre à l'écran en t = λ/v
+  S.markX0=-S.lam;S.markT0=0;}
+function markNow(){var x=((v()*S.t)%S.lam+S.lam)%S.lam;S.markX0=x;S.markT0=S.t;}
+
+var last=performance.now();
+function frame(now){
+  var dt=Math.min(0.1,(now-last)/1000);last=now;
+  if(S.play) S.t+=dt*S.spd;
+  drawScene();drawGraph();
+  if(now-lastRead>100){readouts();lastRead=now;}
+  requestAnimationFrame(frame);
+}
+
+function bind(id,key,fn,restartOnChange){
+  $(id).addEventListener('input',function(){
+    S[key]=parseFloat(this.value);if(fn)fn();syncLabels();if(restartOnChange)restart();
+  });
+}
+bind('vel','v',null,true);bind('fr','f',null,true);bind('amp','A',null,false);bind('dist','d',null,false);bind('spd','spd',null,false);
+$('two').addEventListener('change',function(){S.two=this.checked;syncLabels();});
+
+$('play').addEventListener('click',function(){S.play=!S.play;this.textContent=S.play?'Pause':'Lecture';});
+$('replay').addEventListener('click',function(){restart();S.play=true;$('play').textContent='Pause';});
+$('mark').addEventListener('click',markNow);
+window.addEventListener('resize',resize);
+if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h);};}
+if(!CanvasRenderingContext2D.prototype.ellipse){CanvasRenderingContext2D.prototype.ellipse=function(x,y,rx,ry,rot,a0,a1){this.save();this.translate(x,y);this.rotate(rot);this.scale(rx,ry);this.arc(0,0,1,a0,a1);this.restore();};}
+resize();restart();syncLabels();readouts();
+window.__S=S; /* utilisé uniquement pour les tests */
+requestAnimationFrame(frame);
+})();
+
+try{var _n=document.getElementById('nojs');if(_n&&!window.__jsfail)_n.style.display='none';}catch(e){}
+</script>
+</body>
+</html>

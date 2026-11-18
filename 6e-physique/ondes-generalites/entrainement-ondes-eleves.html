@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ondes — entraînement</title>
+<style>
+:root{--bg:#f6f8fb;--ink:#14202b;--mut:#51606e;--card:#fff;--line:#cfd8e1;--acc:#0b5fa5;--ok:#0b6b2e;--okbg:#e5f5ea;--ko:#a61b1b;--kobg:#fdeaea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:720px;margin:0 auto;padding:12px 14px 40px}
+h1{font-size:1.3rem;margin:6px 0 2px}
+.sub{color:var(--mut);margin:0 0 10px;font-size:.95rem}
+.bar{height:8px;background:#dde5ee;border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.top{display:flex;justify-content:space-between;font-size:.9rem;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px}
+.chip{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;background:#e8f0f8;color:#0b4a82;border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.q{font-size:1.08rem;margin:0 0 10px}
+.fig{margin:6px 0 10px;overflow-x:auto}
+.fig svg{max-width:100%;height:auto;display:block}
+.choices{display:grid;gap:8px}
+.choices.svgs{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+button.ch{font:inherit;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:12px;min-height:48px;cursor:pointer;color:var(--ink)}
+button.ch:hover{border-color:var(--acc)}
+button.ch .l{display:inline-block;width:1.6em;font-weight:700;color:var(--acc)}
+button.ch.ok{border-color:var(--ok);background:var(--okbg)}
+button.ch.ko{border-color:var(--ko);background:var(--kobg)}
+button.ch[disabled]{cursor:default}
+.num{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num input{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:10px;width:9em;min-height:48px}
+.num .pm{font:700 1.3rem system-ui,sans-serif;width:48px;min-height:48px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer}
+.num .u{color:var(--mut)}
+button.go,button.nx{font:inherit;font-weight:600;background:var(--acc);color:#fff;border:0;border-radius:10px;padding:12px 18px;min-height:48px;cursor:pointer}
+button.alt{font:inherit;background:#fff;color:var(--acc);border:2px solid var(--acc);border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #ffb300;outline-offset:2px}
+.fb{margin-top:12px;border-radius:10px;padding:10px 12px}
+.fb.ok{background:var(--okbg);border:1px solid var(--ok)}
+.fb.ko{background:var(--kobg);border:1px solid var(--ko)}
+.fb strong{display:block;margin-bottom:2px}
+.fb p{margin:4px 0 0}
+.nx{margin-top:12px}
+.sc{font-size:2.2rem;font-weight:800;margin:4px 0}
+.cats{display:grid;gap:6px;margin:8px 0}
+.cats div{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:.95rem}
+.cats .t{height:8px;background:#dde5ee;border-radius:99px;overflow:hidden;grid-column:1/-1}
+.cats .t i{display:block;height:100%;background:var(--acc)}
+.rev{margin:6px 0 0;padding-left:18px}
+.rev li{margin:6px 0}
+.hid{display:none}
+</style>
+</head>
+<body>
+<div id="nojs" style="background:#fff3cd;border:2px solid #b58100;color:#4a3500;padding:12px 14px;margin:10px;border-radius:8px;font:16px/1.4 Arial,sans-serif"><b>⚠ Cette page ne fonctionne pas dans ce lecteur.</b><br>Il bloque le JavaScript (aperçu de Smartschool, Teams, Drive, mail, appli de messagerie…). <b>Enregistre le fichier</b> sur l'appareil, puis ouvre-le avec <b>Chrome, Edge, Firefox ou Safari</b>.<br><small id="jserr"></small></div>
+
+<main>
+<p style="margin:0 0 6px"><a href="./" style="color:#0b5fa5;font-weight:700;text-decoration:none">← Généralités sur les ondes</a></p>
+<h1>Ondes mécaniques — entraînement</h1>
+<p class="sub">12 questions tirées au hasard. Réponds, lis la correction, et recommence autant que tu veux : les nombres changent.</p>
+<div class="top"><span id="prog">Question 1 / 12</span><span id="score">Score : 0</span></div>
+<div class="bar"><i id="barfill"></i></div>
+<section class="card" id="card" aria-live="polite"></section>
+<p style="text-align:center;color:#51606e;font-size:13px;margin:24px 0 8px">Aide de l’IA (AIA) · Ressource de Mme Delimoy</p>
+</main>
+<script>
+window.onerror=function(m,s,l){var e=document.getElementById('jserr');if(e){e.textContent='Détail technique : '+m+' (ligne '+l+')';}var n=document.getElementById('nojs');if(n)n.style.display='block';};
+
+(function(){
+"use strict";
+var NQ=12;
+var CATS=["Vocabulaire","Calculs","Graphiques","Futur et passé d'un point","Équation d'onde"];
+var PLAN={0:3,1:3,2:2,3:2,4:2};
+
+/* ---------- utilitaires ---------- */
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function num(x){return parseFloat(Number(x).toPrecision(10));}
+function fm(x){return String(num(x)).replace('.',',');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+/* ---------- graphiques SVG ---------- */
+function plot(o){
+  var w=o.w||330,h=o.h||(o.arrow?186:170),L=44,R=10,T=(o.arrow?32:14),B=34,pw=w-L-R,ph=h-T-B,half=ph/2;
+  var X=function(x){return L+x/o.xmax*pw;},Y=function(y){return T+half-y/o.ymax*half;};
+  var s='<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" role="img" aria-label="'+esc(o.alt||'graphique')+'" font-family="system-ui,Arial" font-size="11">';
+  s+='<rect x="0" y="0" width="'+w+'" height="'+h+'" fill="#fff"/>';
+  var k;
+  for(k=0;k<=o.xmax+1e-9;k+=o.xm){s+='<line x1="'+X(k)+'" y1="'+T+'" x2="'+X(k)+'" y2="'+(T+ph)+'" stroke="#e3e8ee"/>';}
+  for(k=0;k<=o.xmax+1e-9;k+=o.xt){s+='<line x1="'+X(k)+'" y1="'+T+'" x2="'+X(k)+'" y2="'+(T+ph)+'" stroke="#b9c4cf"/><text x="'+X(k)+'" y="'+(T+ph+14)+'" text-anchor="middle" fill="#51606e">'+fm(k)+'</text>';}
+  for(k=-o.ymax;k<=o.ymax+1e-9;k+=o.yt){s+='<line x1="'+L+'" y1="'+Y(k)+'" x2="'+(L+pw)+'" y2="'+Y(k)+'" stroke="'+(Math.abs(k)<1e-9?'#7d8c9a':'#d3dbe3')+'"/><text x="'+(L-6)+'" y="'+(Y(k)+4)+'" text-anchor="end" fill="#51606e">'+fm(k)+'</text>';}
+  s+='<text x="'+(L+pw/2)+'" y="'+(h-3)+'" text-anchor="middle" fill="#14202b">'+o.xlabel+'</text>';
+  s+='<text transform="translate(11,'+(T+half)+') rotate(-90)" text-anchor="middle" fill="#14202b">'+o.ylabel+'</text>';
+  (o.curves||[]).forEach(function(c){
+    var d='',n=240;
+    for(var i=0;i<=n;i++){var x=i/n*o.xmax;d+=(i?'L':'M')+X(x).toFixed(1)+' '+Y(c.fn(x)).toFixed(1);}
+    s+='<path d="'+d+'" fill="none" stroke="'+(c.col||'#0b3d6b')+'" stroke-width="'+(c.w||2.6)+'"'+(c.dash?' stroke-dasharray="'+c.dash+'"':'')+'/>';
+  });
+  (o.marks||[]).forEach(function(m){
+    s+='<circle cx="'+X(m.x)+'" cy="'+Y(m.y)+'" r="5.5" fill="#c62828" stroke="#fff" stroke-width="1.5"/><text x="'+(X(m.x)+9)+'" y="'+(Y(m.y)-8)+'" font-weight="700" fill="#c62828" font-size="13">'+m.label+'</text>';
+  });
+  if(o.arrow){var a=o.arrow;var ax=a.dir>0?L+8:L+pw-8,bx=a.dir>0?L+58:L+pw-58;
+    s+='<line x1="'+ax+'" y1="14" x2="'+bx+'" y2="14" stroke="#14202b" stroke-width="2.2"/><path d="M'+bx+' 14 l'+(a.dir>0?-9:9)+' -5 l0 10z" fill="#14202b"/><text x="'+(a.dir>0?bx+8:bx-8)+'" y="18" text-anchor="'+(a.dir>0?'start':'end')+'" font-weight="600" fill="#14202b">propagation</text>';}
+  return s+'</svg>';
+}
+function sinx(A,lam,sh){return function(x){return A*Math.sin(2*Math.PI*(x-(sh||0))/lam);};}
+
+/* ---------- gabarits de questions ---------- */
+/* chaque gabarit renvoie {cat,text,fig,type:'mcq'|'num'|'svg',choices,ok,unit,exp} */
+var T=[];
+function mcq(cat,text,right,wrongs,exp,fig){return {cat:cat,text:text,fig:fig||'',type:'mcq',choices:[right].concat(wrongs),ok:0,exp:exp};}
+function numq(cat,text,val,unit,exp,fig){return {cat:cat,text:text,fig:fig||'',type:'num',val:val,unit:unit,exp:exp};}
+
+/* ---- 0 : Vocabulaire ---- */
+T.push(function(){return mcq(0,"Une onde mécanique transporte…","de l'énergie, mais pas de matière",["de la matière, mais pas d'énergie","de l'énergie et de la matière","ni énergie ni matière"],"Une onde transporte de l'énergie de proche en proche. Chaque point du milieu oscille autour de sa position d'équilibre : il n'y a pas de transport de matière.");});
+T.push(function(){return mcq(0,"Une onde mécanique peut-elle se propager dans le vide ?","Non : elle a besoin d'un milieu matériel à faire osciller",["Oui, comme la vitesse de la lumière","Oui, mais plus lentement","Oui, si sa fréquence est assez grande"],"Une onde mécanique est une perturbation qui se transmet de proche en proche dans la matière. Sans milieu, rien ne peut osciller.");});
+T.push(function(){return mcq(0,"Une feuille flotte sur l'eau. Une vague passe sous elle. Que fait la feuille ?","Elle monte et descend sur place",["Elle est emportée avec la vague","Elle avance en sens inverse de la vague","Elle ne bouge pas"],"Chaque point de l'eau oscille sur place. La feuille suit ce mouvement : elle n'avance pas avec la vague.");});
+T.push(function(){var r=rnd([["onde à la surface d'un étang","2D"],["onde le long d'une corde","1D"],["son émis par un haut-parleur dans une salle","3D"],["onde le long d'un long ressort","1D"],["onde sismique dans le sol","3D"]]);
+ return mcq(0,"Quelle est la dimension de cette onde : "+r[0]+" ?",r[1],["1D","2D","3D"].filter(function(x){return x!==r[1];}),"1D : l'onde se propage selon une ligne ; 2D : sur une surface ; 3D : dans tout l'espace.");});
+T.push(function(){var r=rnd([["le son dans l'air","longitudinale"],["une onde le long d'une corde secouée verticalement","transversale"],["une onde produite en comprimant l'extrémité d'un ressort","longitudinale"],["une onde à la surface de l'eau (modèle simple)","transversale"]]);
+ return mcq(0,"Cette onde est-elle transversale ou longitudinale : "+r[0]+" ?",r[1],r[1]==="transversale"?["longitudinale"]:["transversale"],"Transversale : la perturbation est perpendiculaire à la direction de propagation. Longitudinale : elle lui est parallèle (compressions et dilatations).");});
+T.push(function(){return mcq(0,"Dans une onde longitudinale, le milieu oscille…","parallèlement à la direction de propagation",["perpendiculairement à la direction de propagation","dans une direction quelconque","il n'oscille pas"],"Longitudinale = parallèle. Exemple : le son, avec ses compressions et ses dilatations de l'air.");});
+T.push(function(){return mcq(0,"Qu'est-ce qui impose la fréquence d'une onde qui se propage sur une corde ?","La source qui la produit",["La longueur de la corde","Le milieu seul","La longueur d'onde seule"],"La fréquence est imposée par la source (le vibreur, la main…). La vitesse, elle, est imposée par le milieu.");});
+T.push(function(){return mcq(0,"Qu'est-ce qui impose la vitesse de propagation d'une onde ?","Le milieu",["La source seule","L'amplitude de l'onde","La fréquence seule"],"La vitesse dépend du milieu (par exemple, la tension et la masse de la corde). Si on change la fréquence dans le même milieu, v ne change pas : c'est λ qui change.");});
+T.push(function(){var r=rnd([["un vibreur accélère et double sa fréquence","divisée par 2"],["on triple la fréquence de la source","divisée par 3"]]);
+ return mcq(0,"Dans le même milieu, "+r[0]+". La longueur d'onde est…",r[1],["multipliée par 2","inchangée","multipliée par 3"].filter(function(x){return r[1]==="divisée par 2"?x!=="multipliée par 3"||true:true;}).slice(0,3),"v = λ·f et v ne change pas (même milieu) : si f est multipliée par un facteur, λ est divisée par ce même facteur.");});
+T.push(function(){return mcq(0,"Deux points consécutifs en concordance de phase sont séparés d'une distance égale à…","une longueur d'onde λ",["une demi-longueur d'onde λ/2","une période T","la vitesse v"],"En concordance de phase, les deux points font la même chose au même moment : d = n·λ. En opposition de phase : d = (n + ½)·λ.");});
+
+/* ---- 1 : Calculs ---- */
+T.push(function(){var l=rnd([0.2,0.4,0.5,1.5,2,3]),f=rnd([10,20,25,40,50]);var v=num(l*f);
+ return numq(1,"Une onde a une longueur d'onde λ = "+fm(l)+" m et une fréquence f = "+fm(f)+" Hz. Calcule sa vitesse de propagation.",v,"m/s","v = λ·f = "+fm(l)+" × "+fm(f)+" = "+fm(v)+" m/s.");});
+T.push(function(){var f=rnd([170,340,680]);var l=num(340/f);
+ return numq(1,"Le son se propage dans l'air à 340 m/s. Quelle est la longueur d'onde d'un son de fréquence "+fm(f)+" Hz ?",l,"m","λ = v / f = 340 / "+fm(f)+" = "+fm(l)+" m.");});
+T.push(function(){var f=rnd([2,4,5,8,10,20,50,250]);var t=num(1/f);
+ return numq(1,"Une source oscille avec une fréquence de "+fm(f)+" Hz. Quelle est la période de l'onde ?",t,"s","T = 1 / f = 1 / "+fm(f)+" = "+fm(t)+" s.");});
+T.push(function(){var t=rnd([0.02,0.04,0.1,0.2,0.5,4]);var f=num(1/t);
+ return numq(1,"La période d'une onde est T = "+fm(t)+" s. Quelle est sa fréquence ?",f,"Hz","f = 1 / T = 1 / "+fm(t)+" = "+fm(f)+" Hz.");});
+T.push(function(){var c=rnd([[3,0.5],[1.2,0.4],[0.6,0.3],[2.4,0.8],[5,2]]);var v=num(c[0]/c[1]);
+ return numq(1,"Une onde a une longueur d'onde λ = "+fm(c[0])+" m et une période T = "+fm(c[1])+" s. Calcule sa vitesse de propagation.",v,"m/s","v = λ / T = "+fm(c[0])+" / "+fm(c[1])+" = "+fm(v)+" m/s.");});
+T.push(function(){var l=rnd([20,40,50,80]),f=rnd([5,10,25]);var v=num(l/100*f);
+ return numq(1,"Sur une corde, la longueur d'onde vaut "+fm(l)+" cm et la fréquence "+fm(f)+" Hz. Calcule la vitesse en m/s.",v,"m/s","Attention aux unités : "+fm(l)+" cm = "+fm(l/100)+" m. Donc v = λ·f = "+fm(l/100)+" × "+fm(f)+" = "+fm(v)+" m/s.");});
+T.push(function(){var l=rnd([0.4,0.6,1.2,2]);var d=num(l/2);
+ return numq(1,"Une onde a pour longueur d'onde λ = "+fm(l)+" m. Quelle est la plus petite distance entre deux points en opposition de phase ?",d,"m","Opposition de phase : d = λ/2 = "+fm(l)+" / 2 = "+fm(d)+" m.");});
+
+/* ---- 2 : Graphiques ---- */
+T.push(function(){var A=rnd([1,2,3]),l=rnd([0.4,0.6,0.8,1.0,1.2]);
+ var fig=plot({xmax:2,xt:0.2,xm:0.1,ymax:3.5,yt:1,xlabel:'x (m)',ylabel:'y (cm)',alt:'profil de la corde à un instant donné',curves:[{fn:sinx(A,l)}]});
+ return numq(2,"Photo d'une corde à un instant donné. Lis la longueur d'onde λ sur le graphique.",l,"m","La photo y(x) donne λ : c'est la distance entre deux sommets consécutifs (ou entre deux points qui se répètent), ici "+fm(l)+" m.",fig);});
+T.push(function(){var A=rnd([1,2,3]),Tt=rnd([0.2,0.25,0.4,0.5]);
+ var fig=plot({xmax:1,xt:0.1,xm:0.05,ymax:3.5,yt:1,xlabel:'t (s)',ylabel:'y (cm)',alt:'mouvement d\'un point de la corde',curves:[{fn:sinx(A,Tt)}]});
+ return numq(2,"Film d'un point de la corde : y en fonction du temps. Lis la période T sur le graphique.",Tt,"s","Le film y(t) d'un point donne la période T : durée d'une oscillation complète, ici "+fm(Tt)+" s.",fig);});
+T.push(function(){var A=rnd([1,2,3]);
+ return mcq(2,"Un graphique y(x) a pour axe horizontal la position x (en m). Que peut-on y lire directement ?","La longueur d'onde λ",["La période T","La fréquence f","La vitesse v"],"y(x) est une « photo » de la corde à un instant : on y lit λ et l'amplitude. La période se lit sur y(t), le « film » d'un point.");});
+T.push(function(){var c=rnd([[0.6,0.3],[0.8,0.4],[1.0,0.5],[0.4,0.2],[1.2,0.4]]);var A=2;
+ var f1=plot({w:330,h:150,xmax:2,xt:0.2,xm:0.1,ymax:3,yt:1,xlabel:'x (m)',ylabel:'y (cm)',alt:'photo de la corde',curves:[{fn:sinx(A,c[0])}]});
+ var f2=plot({w:330,h:150,xmax:1,xt:0.1,xm:0.05,ymax:3,yt:1,xlabel:'t (s)',ylabel:'y (cm)',alt:'film d\'un point',curves:[{fn:sinx(A,c[1])}]});
+ var v=num(c[0]/c[1]);
+ return numq(2,"Voici la photo d'une corde (en haut) et le film d'un de ses points (en bas). Calcule la vitesse de propagation de l'onde.",v,"m/s","On lit λ = "+fm(c[0])+" m sur la photo et T = "+fm(c[1])+" s sur le film. Donc v = λ / T = "+fm(c[0])+" / "+fm(c[1])+" = "+fm(v)+" m/s.",f1+f2);});
+T.push(function(){var A=rnd([1,2,3]);var l=0.8;
+ var fig=plot({xmax:2,xt:0.2,xm:0.1,ymax:3.5,yt:1,xlabel:'x (m)',ylabel:'y (cm)',alt:'profil de la corde',curves:[{fn:sinx(A,l)}]});
+ return numq(2,"Lis l'amplitude de cette onde sur le graphique.",A,"cm","L'amplitude est l'élongation maximale : ici "+fm(A)+" cm.",fig);});
+
+/* ---- 3 : Futur et passé d'un point ---- */
+T.push(function(){ /* la corde un peu plus tard : choisir la bonne courbe */
+ var l=0.8,v=2.0,dt=rnd([0.05,0.1,0.15]),dx=num(v*dt),A=2;
+ var cand=[{s:dx,ok:true},{s:-dx},{s:0},{s:dx/2}];
+ var seen={},list=[];
+ cand.forEach(function(c){var key=(((c.s%l)+l)%l).toFixed(3);if(!seen[key]){seen[key]=1;list.push(c);}});
+ while(list.length<4){list.push({s:rnd([0.05,0.3,0.35])*(Math.random()<0.5?1:-1)});}
+ list=shuffle(list);
+ var letters="ABCD";
+ var choices=list.map(function(c,i){return {html:plot({w:300,h:120,xmax:2,xt:0.4,xm:0.2,ymax:3,yt:1.5,xlabel:'x (m)',ylabel:'y (cm)',alt:'proposition '+letters[i],curves:[{fn:sinx(A,l),dash:'4 3',col:'#7d8c9a',w:1.6},{fn:sinx(A,l,c.s),col:'#0b3d6b'}]}),ok:!!c.ok};});
+ return {cat:3,type:'svg',text:"Une onde se propage vers la droite à v = 2,0 m/s sur une corde. En pointillés : la corde à t = 0. Quelle proposition montre la corde à t = "+fm(dt)+" s ?",fig:'',choices:choices,exp:"En "+fm(dt)+" s, l'onde avance de v·Δt = 2,0 × "+fm(dt)+" = "+fm(dx)+" m vers la droite. On décale donc tout le profil de "+fm(dx)+" m dans le sens de propagation."};});
+T.push(function(){ /* monte ou descend */
+ var l=0.8,A=2;var f=rnd([0.1,0.15,0.35,0.4,0.6,0.65,0.85,0.9]);var xp=num(f*l);var dir=rnd([1,-1]);
+ var slope=Math.cos(2*Math.PI*f);var up=(dir>0)?(slope<0):(slope>0);
+ var fig=plot({xmax:1.6,xt:0.4,xm:0.1,ymax:3,yt:1,xlabel:'x (m)',ylabel:'y (cm)',alt:'corde avec un point P marqué',curves:[{fn:sinx(A,l)}],marks:[{x:xp,y:A*Math.sin(2*Math.PI*f),label:'P'}],arrow:{dir:dir}});
+ var side=dir>0?"à gauche":"à droite";var neigh=(dir>0?slope<0:slope>0)?"plus haut":"plus bas";
+ return mcq(3,"L'onde se propage vers "+(dir>0?"la droite":"la gauche")+". À cet instant, que va faire le point P juste après ?",up?"Il va monter":"Il va descendre",[up?"Il va descendre":"Il va monter"],"Un point va faire ce que fait le point qui le précède (côté source). Ici, la source est "+side+" de P, et la corde y est "+neigh+" : P va donc "+(up?"monter":"descendre")+".",fig);});
+T.push(function(){return mcq(3,"Pour savoir si un point de la corde va monter ou descendre, on regarde…","le point juste avant lui, du côté de la source",["le point juste après lui, du côté opposé à la source","la valeur de la longueur d'onde","l'amplitude de l'onde"],"Le point imite, avec un léger retard, le point qui le précède. Le passé d'un point, c'est ce que fait le point juste après lui.");});
+T.push(function(){var dx=rnd([0.1,0.2,0.3]);return mcq(3,"Une onde se propage à 2,0 m/s. De combien décale-t-on le profil de la corde pour la voir "+fm(dx/2)+" s plus tard ?","de "+fm(dx)+" m, dans le sens de propagation",["de "+fm(dx)+" m, dans le sens opposé à la propagation","de "+fm(num(dx/2))+" m, dans le sens de propagation","on ne le décale pas"],"Décalage = v·Δt = 2,0 × "+fm(dx/2)+" = "+fm(dx)+" m, dans le sens de propagation.");});
+
+/* ---- 4 : Équation d'onde ---- */
+T.push(function(){return mcq(4,"Une onde se propage à la vitesse v. Quel est le retard τ d'un point situé à la distance x de la source ?","τ = x / v",["τ = v / x","τ = x · v","τ = x / λ"],"Le point à la distance x reçoit la perturbation après la durée nécessaire pour la parcourir : τ = x / v.");});
+T.push(function(){var c=rnd([[3,0.5,1,0.75],[4,0.5,2,1.5],[1.2,0.4,0.6,0.75]]);/* lam,T,x,... */
+ var cases=[{lam:2,T:0.5,x:3},{lam:1.2,T:0.4,x:6},{lam:0.6,T:0.3,x:1.5},{lam:4,T:2,x:5}];var k=rnd(cases);var v=num(k.lam/k.T),tau=num(k.x/v);
+ return numq(4,"Une onde a pour longueur d'onde λ = "+fm(k.lam)+" m et pour période T = "+fm(k.T)+" s. Quel est le retard (en s) d'un point situé à "+fm(k.x)+" m de la source ?",tau,"s","v = λ / T = "+fm(v)+" m/s, puis τ = x / v = "+fm(k.x)+" / "+fm(v)+" = "+fm(tau)+" s.");});
+T.push(function(){return mcq(4,"L'équation d'une onde qui se propage vers les x positifs s'écrit y(x,t) = A sin(2π(t/T − x/λ) + φ₀). Si l'onde se propage vers les x négatifs, le signe devant x/λ devient…","+",["−","×","il ne change pas, mais A change"],"Vers les x négatifs, le point à la distance x reçoit la perturbation en avance : on écrit t/T + x/λ.");});
+T.push(function(){var cases=[{A:2,T:0.4,lam:0.8,x:0.4,t:0.3,r:2},{A:4,T:2,lam:1,x:0.25,t:1,r:4},{A:3,T:0.5,lam:2,x:1,t:0.25,r:0},{A:3,T:0.5,lam:1,x:0.75,t:0.25,r:-3},{A:5,T:1,lam:2,x:0.5,t:0.5,r:0}];
+ var k=rnd(cases);
+ var arg=2*Math.PI*(k.t/k.T-k.x/k.lam);var val=num(k.A*Math.sin(arg));val=Math.abs(val)<1e-9?0:val;
+ return numq(4,"Une onde est décrite par y(x,t) = A sin(2π(t/T − x/λ)) avec A = "+fm(k.A)+" cm, T = "+fm(k.T)+" s, λ = "+fm(k.lam)+" m. Calcule y (en cm) en x = "+fm(k.x)+" m à l'instant t = "+fm(k.t)+" s. (Calculatrice en radians.)",val,"cm","Argument : 2π(t/T − x/λ) = 2π("+fm(num(k.t/k.T))+" − "+fm(num(k.x/k.lam))+") = "+fm(num(arg/Math.PI))+" π. Donc y = "+fm(k.A)+" × sin("+fm(num(arg/Math.PI))+" π) = "+fm(val)+" cm.");});
+T.push(function(){return mcq(4,"Dans l'équation y(x,t), on fixe x et on laisse t varier. On obtient…","le mouvement d'un point de la corde (le « film »)",["la forme de la corde à un instant donné (la « photo »)","la vitesse de l'onde","la longueur d'onde"],"x fixé : on suit un seul point, qui oscille avec la période T. t fixé : on obtient le profil de la corde, de période spatiale λ.");});
+
+/* ---------- moteur du quiz ---------- */
+var Q=[],idx=0,pts=0,done=false,per=[],wrong=[],cur=null;
+var card=document.getElementById('card');
+function mkQuiz(){
+  var byCat=[[],[],[],[],[]];T.forEach(function(f,i){var q=f();byCat[q.cat].push(i);});
+  var chosen=[];
+  Object.keys(PLAN).forEach(function(c){var pool=shuffle(byCat[c]);pool.slice(0,PLAN[c]).forEach(function(i){chosen.push(i);});});
+  chosen=shuffle(chosen);
+  return chosen.map(function(i){var q=T[i]();if(q.type==='mcq'){var right=q.choices[0];q.choices=shuffle(q.choices).map(function(t){return {t:t,ok:t===right};});}return q;});
+}
+function setProg(){document.getElementById('prog').textContent='Question '+Math.min(idx+1,NQ)+' / '+NQ;document.getElementById('score').textContent='Score : '+pts;document.getElementById('barfill').style.width=(idx/NQ*100)+'%';}
+function show(){
+  cur=Q[idx];done=false;setProg();
+  var h='<span class="chip">'+esc(CATS[cur.cat])+'</span><p class="q">'+esc(cur.text)+'</p>';
+  if(cur.fig)h+='<div class="fig">'+cur.fig+'</div>';
+  if(cur.type==='num'){
+    h+='<div class="num"><button class="pm" id="pm" type="button" aria-label="changer le signe">±</button><input id="ans" type="text" inputmode="decimal" autocomplete="off" aria-label="Ta réponse" placeholder="ta réponse"><span class="u">'+esc(cur.unit)+'</span><button class="go" id="go" type="button">Valider</button></div>';
+  }else{
+    h+='<div class="choices'+(cur.type==='svg'?' svgs':'')+'" id="chs">';
+    cur.choices.forEach(function(c,i){
+      h+='<button class="ch" type="button" data-i="'+i+'"><span class="l">'+"ABCD"[i]+'</span>'+(cur.type==='svg'?c.html:esc(c.t))+'</button>';
+    });
+    h+='</div>';
+  }
+  h+='<div id="fb"></div>';
+  card.innerHTML=h;
+  if(cur.type==='num'){var pmb=document.getElementById('pm');pmb.onclick=function(){if(done)return;var e=document.getElementById('ans'),w=e.value.trim();e.value=/^[−–-]/.test(w)?w.replace(/^[−–-]\s*/,''):'−'+w;e.focus();};var inp=document.getElementById('ans');inp.focus({preventScroll:true});
+    document.getElementById('go').onclick=checkNum;inp.addEventListener('keydown',function(e){if(e.key==='Enter')checkNum();});}
+  else{[].forEach.call(card.querySelectorAll('button.ch'),function(b){b.onclick=function(){pickChoice(parseInt(b.getAttribute('data-i'),10));};});}
+}
+function finish(ok,msgHead){
+  done=true;
+  per[cur.cat]=per[cur.cat]||[0,0];per[cur.cat][1]++;if(ok){pts++;per[cur.cat][0]++;}else wrong.push(cur);
+  var fb=document.getElementById('fb');
+  fb.innerHTML='<div class="fb '+(ok?'ok':'ko')+'"><strong>'+(ok?'✔ Bien joué !':'✘ '+msgHead)+'</strong><p>'+esc(cur.exp)+'</p></div><button class="nx" id="nx" type="button">'+(idx+1<NQ?'Question suivante':'Voir mon résultat')+'</button>';
+  document.getElementById('nx').onclick=next;document.getElementById('nx').focus({preventScroll:true});
+  document.getElementById('score').textContent='Score : '+pts;
+}
+function pickChoice(i){
+  if(done)return;
+  var btns=card.querySelectorAll('button.ch');
+  [].forEach.call(btns,function(b,k){b.disabled=true;if(cur.choices[k].ok)b.classList.add('ok');});
+  var ok=cur.choices[i].ok;if(!ok)btns[i].classList.add('ko');
+  finish(ok,'Pas tout à fait.');
+}
+function checkNum(){
+  if(done)return;
+  var raw=document.getElementById('ans').value.replace(/\s/g,'').replace(',','.').replace(/[−–]/g,'-');
+  var x=parseFloat(raw);
+  if(!isFinite(x)||raw===''){document.getElementById('fb').innerHTML='<div class="fb ko"><strong>Entre un nombre (par exemple 2,5). Pour un nombre négatif, touche ±.</strong></div>';return;}
+  var ok=Math.abs(x-cur.val)<=Math.max(Math.abs(cur.val)*0.02,1e-9);
+  document.getElementById('ans').disabled=true;document.getElementById('go').disabled=true;document.getElementById('pm').disabled=true;
+  finish(ok,'La bonne réponse est '+fm(cur.val)+' '+cur.unit+'.');
+}
+function next(){idx++;if(idx>=NQ)return result();show();}
+function result(){
+  setProg();document.getElementById('barfill').style.width='100%';document.getElementById('prog').textContent='Terminé';
+  var best=null;try{best=parseInt(localStorage.getItem('ondes_ch2_best')||'0',10);if(pts>best){localStorage.setItem('ondes_ch2_best',String(pts));}}catch(e){}
+  var msg=pts>=11?"Excellent !":pts>=9?"Très bien.":pts>=6?"Bon début : relis les corrections ci-dessous.":"Reviens au cours et à la synthèse, puis recommence.";
+  var h='<p class="chip">Résultat</p><div class="sc">'+pts+' / '+NQ+'</div><p>'+msg+(best!==null&&best>0?' <span style="color:#51606e">(meilleur score sur cet appareil : '+Math.max(best,pts)+')</span>':'')+'</p><div class="cats">';
+  CATS.forEach(function(n,i){var p=per[i]||[0,0];if(!p[1])return;h+='<div><span>'+esc(n)+'</span><b>'+p[0]+' / '+p[1]+'</b><span class="t"><i style="width:'+(p[0]/p[1]*100)+'%"></i></span></div>';});
+  h+='</div>';
+  if(wrong.length){h+='<h2 style="font-size:1.05rem;margin:14px 0 4px">À revoir</h2><ul class="rev">';wrong.forEach(function(q){h+='<li><b>'+esc(q.text)+'</b><br>'+esc(q.exp)+'</li>';});h+='</ul>';}
+  h+='<p><button class="go" id="again" type="button">Recommencer avec de nouvelles questions</button></p>';
+  card.innerHTML=h;document.getElementById('again').onclick=start;
+}
+function start(){Q=mkQuiz();idx=0;pts=0;per=[];wrong=[];show();window.scrollTo(0,0);}
+window.__T={templates:T,start:start,state:function(){return {Q:Q,idx:idx,pts:pts};}}; /* utilisé uniquement pour les tests */
+start();
+})();
+
+try{var _n=document.getElementById('nojs');if(_n&&!window.__jsfail)_n.style.display='none';}catch(e){}
+</script>
+</body>
+</html>
