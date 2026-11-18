@@ -90,16 +90,14 @@ sub{font-size:.75em}
 <div class="card goal"><span class="badge">Objectif</span><div>Trouver la durée Δt d’un MRUA quand l’énoncé ne la donne pas : en connaissant <b>Δv et Δx</b>, ou <b>a et Δx</b>.</div></div>
 <div class="card key"><span class="badge">Le problème</span><p>Les deux lois du MRUA contiennent Δt :</p><p class="f">v = v<sub>0</sub> + a Δt &nbsp;&nbsp;&nbsp; Δx = v<sub>0</sub> Δt + ½ a Δt²</p>
 <p>Souvent, l’énoncé ne donne pas la durée. Deux cas fréquents :</p>
-<ul class="pts"><li><b>on connaît Δv et Δx, mais ni a ni Δt</b> : dans Δx = v<sub>0</sub>Δt + ½ (aΔt) Δt, on <b>remplace aΔt par Δv</b> (puisque Δv = aΔt). Il reste une équation du 1<sup>er</sup> degré en Δt ;</li>
+<ul class="pts"><li><b>on connaît Δv et Δx, mais ni a ni Δt</b> : dans Δx = v<sub>0</sub>Δt + <span class="fr"><span>aΔt · Δt</span><span>2</span></span>, on <b>remplace aΔt par Δv</b> (puisque Δv = aΔt) : <b>Δx = v<sub>0</sub>Δt + <span class="fr"><span>Δv · Δt</span><span>2</span></span></b>. Il reste une équation du 1<sup>er</sup> degré en Δt ;</li>
 <li><b>on connaît a et Δx, mais pas Δt</b> : Δx = v<sub>0</sub>Δt + ½aΔt² est une <b>équation du 2<sup>e</sup> degré</b> en Δt. On met tout du même côté et on utilise <b>Δ = b² − 4ac</b>.</li></ul>
 <p><b>Attention aux lettres.</b> Dans Δ = b² − 4ac, le « a » est le coefficient de Δt², pas l’accélération. Et ce Δ (le discriminant) n’a rien à voir avec le Δ de Δt ou de Δx.</p></div>
 <div class="card ex"><span class="badge">Exemple détaillé : Δv et Δx connus</span><p>Une voiture passe de 10 m/s à 20 m/s sur 75 m, avec une accélération constante. Combien de temps cela dure-t-il ? Quelle est son accélération ?</p><ol class="steps">
 <li><b>Données.</b> v<sub>0</sub> = 10 m/s, v = 20 m/s, donc Δv = 10 m/s ; Δx = 75 m. Inconnus : a et Δt.</li>
-<li><b>Remplacer aΔt par Δv.</b> Δx = v<sub>0</sub>Δt + ½ (aΔt) Δt devient 75 = 10 Δt + ½ × 10 × Δt = 15 Δt.</li>
+<li><b>Remplacer aΔt par Δv.</b> Δx = v<sub>0</sub>Δt + <span class="fr"><span>Δv · Δt</span><span>2</span></span> devient 75 = 10 Δt + <span class="fr"><span>10 Δt</span><span>2</span></span> = 10 Δt + 5 Δt = 15 Δt.</li>
 <li><b>Durée.</b> Δt = <span class="fr"><span>75</span><span>15</span></span> = <b>5 s</b>.</li>
 <li><b>Accélération.</b> a = <span class="fr"><span>Δv</span><span>Δt</span></span> = <span class="fr"><span>10</span><span>5</span></span> = <b>2 m/s²</b>.</li></ol></div>
-<div class="card"><span class="badge">La même idée, écrite autrement</span><p>En remplaçant aΔt par Δv = v − v<sub>0</sub> :</p>
-<p class="f">Δx = v<sub>0</sub>Δt + ½ (v − v<sub>0</sub>) Δt = <b><span class="fr"><span>v<sub>0</sub> + v</span><span>2</span></span> · Δt</b></p><p>Le déplacement est la <b>moyenne des deux vitesses</b> multipliée par la durée. Sur l’exemple : <span class="fr"><span>10 + 20</span><span>2</span></span> × Δt = 75, donc 15 Δt = 75 : on retrouve Δt = 5 s.</p></div>
 <div class="card ex"><span class="badge">Exemple détaillé : a et Δx connus</span><p>Une voiture roule à 10 m/s et accélère à 2 m/s². Combien de temps lui faut-il pour parcourir 24 m ?</p><ol class="steps">
 <li><b>Loi.</b> Δx = v<sub>0</sub>Δt + ½aΔt² : 24 = 10 Δt + ½ × 2 × Δt², soit 24 = 10 Δt + Δt².</li>
 <li><b>Tout du même côté.</b> Δt² + 10 Δt − 24 = 0 &nbsp;(a = 1, b = 10, c = −24).</li>
@@ -288,12 +286,12 @@ function caseA(){var v0,v,dt,dx,n=0;do{v0=R(1,15);v=v0+sgn()*R(2,12);dt=R(2,8);d
 GENS.push(function(){var c=caseA();
   var o=numC(c.dt,[[c.dx/c.v0,'tu as fait comme en MRU avec v<sub>0</sub> : la vitesse change, ce n’est pas un MRU.'],[c.dx/c.v,'tu as fait comme en MRU avec v : la vitesse change.'],[2*c.dx/Math.abs(c.dv),'tu as oublié le terme v<sub>0</sub>Δt.'],c.dx/Math.abs(c.dv),c.dt+1,c.dt+2,c.dt*2],'s');
   return mk({q:'Un mobile en MRUA passe de <b>'+c.v0+' m/s</b> à <b>'+c.v+' m/s</b> sur une distance de <b>'+pf(c.dx)+' m</b>. Combien de temps cela a-t-il duré ?',ok:o.ok,wr:o.wr,num:c.dt,key:'A'+c.v0+c.v+c.dt,
-   why:'On ne connaît ni a ni Δt, mais on connaît Δv = '+c.v+' '+M+' '+c.v0+' = '+pf(c.dv)+' m/s. Dans Δx = v<sub>0</sub>Δt + ½ (aΔt) Δt, on remplace <b>aΔt par Δv</b> : '+pf(c.dx)+' = '+c.v0+' Δt + ½ · '+(c.dv<0?'('+pf(c.dv)+')':pf(c.dv))+' · Δt = '+pf(c.v0+c.dv/2)+' Δt. Donc Δt = '+frs(pf(c.dx),pf(c.v0+c.dv/2))+' = <b>'+c.dt+' s</b>.'})});
+   why:'On ne connaît ni a ni Δt, mais on connaît Δv = '+c.v+' '+M+' '+c.v0+' = '+pf(c.dv)+' m/s. Dans Δx = v<sub>0</sub>Δt + '+frs('aΔt · Δt',2)+', on remplace <b>aΔt par Δv</b> : Δx = v<sub>0</sub>Δt + '+frs('Δv · Δt',2)+' : '+pf(c.dx)+' = '+c.v0+' Δt + '+frs((c.dv<0?'('+pf(c.dv)+')':pf(c.dv))+' Δt',2)+' = '+pf(c.v0+c.dv/2)+' Δt. Donc Δt = '+frs(pf(c.dx),pf(c.v0+c.dv/2))+' = <b>'+c.dt+' s</b>.'})});
 /* @Δv et Δx connus : calculer a */
 GENS.push(function(){var c=caseA();
   var o=numC(c.a,[c.dv/c.dx,c.a*2,c.a/2,-c.a,c.dv],'m/s²');
   return mk({q:'Un mobile en MRUA passe de <b>'+c.v0+' m/s</b> à <b>'+c.v+' m/s</b> sur <b>'+pf(c.dx)+' m</b>. Quelle est son accélération ?',ok:o.ok,wr:o.wr,num:c.a,key:'Aa'+c.v0+c.v+c.dt,
-   why:'D’abord Δt : on remplace aΔt par Δv = '+pf(c.dv)+' m/s dans Δx = v<sub>0</sub>Δt + ½ aΔt · Δt : '+pf(c.dx)+' = '+pf(c.v0+c.dv/2)+' Δt, donc Δt = '+c.dt+' s. Puis a = '+frs('Δv','Δt')+' = '+frs(pf(c.dv),c.dt)+' = <b>'+pf(c.a)+' m/s²</b>.'})});
+   why:'D’abord Δt : on remplace aΔt par Δv = '+pf(c.dv)+' m/s dans Δx = v<sub>0</sub>Δt + '+frs('aΔt · Δt',2)+' : Δx = v<sub>0</sub>Δt + '+frs('Δv · Δt',2)+', soit '+pf(c.dx)+' = '+pf(c.v0+c.dv/2)+' Δt, donc Δt = '+c.dt+' s. Puis a = '+frs('Δv','Δt')+' = '+frs(pf(c.dv),c.dt)+' = <b>'+pf(c.a)+' m/s²</b>.'})});
 function caseB(){var v0,a,dt,dx,n=0;do{v0=R(1,12);a=pick([1,2,4,-1,-2,-4]);dt=R(1,6);dx=v0*dt+a*dt*dt/2;n++}while(n<300&&(dx<=0||(a<0&&dt>=v0/-a)));
   /* ½aΔt² + v0Δt − Δx = 0 */
   var A=a/2,B=v0,C=-dx,D=B*B-4*A*C,r1=(-B+Math.sqrt(D))/(2*A),r2=(-B-Math.sqrt(D))/(2*A);return {v0:v0,a:a,dt:dt,dx:dx,A:A,B:B,C:C,D:D,r:[r1,r2].sort(function(x,y){return x-y})}}
@@ -322,10 +320,9 @@ GENS.push(function(){var t=pick([
   return qcm(t[0]+' Quelle méthode utiliser ?',t[1],t[2],'Si a et Δt sont inconnus mais Δv connu : on remplace aΔt par Δv. Si a est connu mais pas Δt, et qu’on connaît Δx : équation du 2<sup>e</sup> degré. Si v, v<sub>0</sub> et a sont connus : v = v<sub>0</sub> + aΔt suffit.')});
 /* @Reconnaître une même formule écrite autrement */
 GENS.push(function(){var t=pick([
-  ['En remplaçant aΔt par Δv, la loi Δx = v<sub>0</sub>Δt + ½aΔt² devient :','Δx = v<sub>0</sub>Δt + ½ Δv Δt',['Δx = v<sub>0</sub>Δt + ½ Δv Δt²','Δx = v<sub>0</sub> + ½ Δv Δt','Δx = Δv Δt + ½ aΔt']],
-  ['Laquelle de ces écritures est équivalente à Δx = v<sub>0</sub>Δt + ½ Δv Δt ?','Δx = '+frs('v<sub>0</sub> + v',2)+' Δt',['Δx = '+frs('v '+M+' v<sub>0</sub>',2)+' Δt','Δx = (v<sub>0</sub> + v) Δt','Δx = '+frs('v<sub>0</sub> + v',2)+' Δt²']],
+  ['En remplaçant aΔt par Δv, la loi Δx = v<sub>0</sub>Δt + ½aΔt² devient :','Δx = v<sub>0</sub>Δt + '+frs('Δv · Δt',2),['Δx = v<sub>0</sub>Δt + '+frs('Δv · Δt²',2),'Δx = v<sub>0</sub> + '+frs('Δv · Δt',2),'Δx = Δv Δt + ½ aΔt']],
   ['Dans Δt² + 10 Δt '+M+' 24 = 0, quels sont a, b et c pour calculer Δ = b² '+M+' 4ac ?','a = 1, b = 10, c = '+M+'24',['a = 10, b = 1, c = '+M+'24','a = 1, b = 10, c = 24','a = 2, b = 10, c = '+M+'24']]]);
-  return qcm(t[0],t[1],t[2],'Δv = v '+M+' v<sub>0</sub> = aΔt. Donc Δx = v<sub>0</sub>Δt + ½ ΔvΔt = (v<sub>0</sub> + ½v '+M+' ½v<sub>0</sub>)Δt = '+frs('v<sub>0</sub> + v',2)+' Δt : la moyenne des vitesses, fois la durée. Dans l’équation du 2<sup>e</sup> degré, le « a » est le coefficient de Δt² : ce n’est pas l’accélération, et ce Δ n’a rien à voir avec Δt.')});
+  return qcm(t[0],t[1],t[2],'Δv = aΔt : dans ½aΔt² = '+frs('aΔt · Δt',2)+', on remplace aΔt par Δv, d’où Δx = v<sub>0</sub>Δt + '+frs('Δv · Δt',2)+'. Dans l’équation du 2<sup>e</sup> degré, le « a » est le coefficient de Δt² : ce n’est pas l’accélération, et ce Δ n’a rien à voir avec Δt.')});
 
 GENS[0].lab="Δv et Δx connus : calculer Δt";GENS[1].lab="Δv et Δx connus : calculer a";GENS[2].lab="a et Δx connus : 2e degré";GENS[3].lab="Écrire l’équation du 2e degré";GENS[4].lab="Choisir la bonne solution";GENS[5].lab="Choisir la méthode";GENS[6].lab="Reconnaître une même formule écrite autrement";
 
