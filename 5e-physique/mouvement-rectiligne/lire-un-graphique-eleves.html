@@ -77,27 +77,35 @@ svg.pg{width:100%;max-width:440px;height:auto;display:block;background:#fff;bord
 svg.pg text{font:11px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;fill:#334155}
 svg.pg .gr{stroke:#E2E8F0;stroke-width:1}svg.pg .ax{stroke:#1F2A44;stroke-width:1.6}svg.pg .z{stroke:#1F2A44;stroke-width:1.3}
 .trio{display:flex;flex-wrap:wrap;gap:6px}.trio>div{flex:1;min-width:30%}.trio p{text-align:center;margin:2px 0;font-weight:700}
+@media (max-width:520px){.trio{flex-direction:column}.trio>div{min-width:0}}
+.stack p{text-align:center;margin:8px 0 0;font-weight:700}.stack svg.pg{max-width:400px}
+.simb .btn{font-size:15px;padding:9px 12px}.simv{text-align:center;font-weight:700;color:var(--navy);margin:4px 0;line-height:1.6}.small{font-size:.85em;font-weight:400;color:#475569}
 .ch svg.pg{max-width:220px;margin:2px auto}
-h2.part{margin:28px 0 10px;padding-top:6px;border-top:2px solid var(--line);color:var(--navy)}
+.eqs{list-style:none;padding:0;margin:6px 0}.eqs li{margin:6px 0;font-size:17px}.eqs li::before{content:"\2022  ";color:var(--blue)}
 .qbox:empty{display:none}.qbox{margin-top:10px}
 sub{font-size:.75em}
-</style></head><body><div class="wrap">
-<div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 5 / 6</span></div>
+</style></head><body><div class="wrap" id="top">
+<div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 5 / 8</span></div>
 <h1>Lire et construire un graphique : pente et aire</h1>
 <div class="card goal"><span class="badge">Objectif</span><div>Trouver une vitesse, une accélération ou un déplacement sur un graphique, et <b>construire</b> un graphique à partir d’un autre.</div></div>
 <div class="card key"><span class="badge">Deux idées</span><ul class="pts"><li>La <b>pente</b> d’un graphique donne ce qui change chaque seconde : pente de x(t) = v ; pente de v(t) = a.</li><li>L’<b>aire</b> sous un graphique donne ce qui s’accumule : aire sous v(t) = Δx ; aire sous a(t) = Δv.</li></ul></div>
-<div class="card"><span class="badge">Se faire une image</span><h2>Sur x(t) : corde et tangente</h2><div id="g5a"></div><p>La pente de la <b>corde</b> entre deux points donne la vitesse <b>moyenne</b>. La pente de la <b>tangente</b> en un point donne la vitesse à <b>cet instant</b>.</p>
-<h2>Sur v(t) : l’aire</h2><div id="g5b"></div><p>Entre t = 1 s et t = 5 s, l’aire colorée (un trapèze) vaut le déplacement Δx. Si la courbe passe sous l’axe, cette aire compte négativement.</p></div>
+<div class="card"><span class="badge">Se faire une image</span><h2>Sur x(t) : corde et tangente</h2><div id="g5a"></div>
+<ul class="pts"><li><b>Corde</b> (orange, en pointillés) entre t = 2 s et t = 5 s : sa pente est la vitesse <b>moyenne</b>, v<sub>moy</sub> = <span class="fr"><span>Δx</span><span>Δt</span></span> = <span class="fr"><span>12,5 − 2</span><span>5 − 2</span></span> = 3,5 m/s.</li>
+<li><b>Tangente</b> (verte) en t = 3 s : elle touche la courbe en un seul point et a la même inclinaison qu’elle à cet endroit. Sa pente est la vitesse <b>à cet instant</b> : v(3 s) = 3 m/s.</li></ul>
+<p>Les deux ne sont pas égales : la vitesse change pendant le mouvement.</p>
+<h2>Sur v(t) : l’aire</h2><div id="g5b"></div><p>Entre t = 1 s et t = 5 s, l’aire colorée est un trapèze : un rectangle (3 × 4 = 12 m) plus un triangle (<span class="fr"><span>4 × 4</span><span>2</span></span> = 8 m). Le déplacement vaut donc <b>Δx = 20 m</b>.</p>
+<h2>Quand la courbe passe sous l’axe</h2><div id="g5c"></div><p>De 0 à 2 s, v &gt; 0 : le mobile avance, aire = +4 m. De 2 à 4 s, v &lt; 0 : il revient, et cette aire compte <b>négativement</b> : −4 m. Δx = 4 + (−4) = <b>0 m</b> : il est revenu à son point de départ.</p></div>
 <div class="card"><h2>Où trouver quoi ?</h2><table class="sg"><tr><th>je cherche</th><th>sur x(t)</th><th>sur v(t)</th><th>sur a(t)</th></tr><tr><th>v</th><td>pente</td><td>lecture</td><td>—</td></tr><tr><th>a</th><td>forme de la parabole</td><td>pente</td><td>lecture</td></tr><tr><th>Δx</th><td>x<sub>2</sub> − x<sub>1</sub></td><td>aire</td><td>—</td></tr><tr><th>Δv</th><td>—</td><td>v<sub>2</sub> − v<sub>1</sub></td><td>aire</td></tr></table></div>
-<div class="card"><h2>Construire un graphique à partir d’un autre</h2><ul class="pts"><li><b>x(t) → v(t)</b> : on calcule la pente de x(t) à chaque instant.</li><li><b>v(t) → a(t)</b> : on calcule la pente de v(t).</li><li><b>a(t) → v(t)</b> : on part de v<sub>0</sub> et on ajoute l’aire sous a(t).</li><li><b>v(t) → x(t)</b> : on part de x<sub>0</sub> et on ajoute l’aire sous v(t) ; v constante donne une droite, v qui change régulièrement donne une parabole.</li></ul></div>
+<div class="card"><h2>Construire un graphique à partir d’un autre</h2><ul class="pts"><li><b>x(t) → v(t)</b> : on calcule la pente de x(t) à chaque instant.</li><li><b>v(t) → a(t)</b> : on calcule la pente de v(t).</li><li><b>a(t) → v(t)</b> : on part de v<sub>0</sub> et on ajoute l’aire sous a(t) ; a constante donne une droite de pente a qui part de v<sub>0</sub>.</li><li><b>v(t) → x(t)</b> : on part de x<sub>0</sub> et on ajoute l’aire sous v(t) ; v constante donne une droite, v qui change régulièrement donne une parabole.</li></ul></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
 <h2>Quiz : 10 questions</h2>
 <p>Chaque faute ajoute <b>3 questions</b> pour consolider. Garde un brouillon et une calculatrice à côté de toi.</p>
 <div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
 <div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
+<div class="top" style="margin-top:14px"><a href="accelere-decelere-eleves.html">← Point 4</a><a href="rencontre-mru-eleves.html" style="margin-left:auto">Point 6 →</a></div>
 <div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
 <script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
-var M='−', EPS=1e-9;
+var M='−', EPS=1e-9, LT='&lt;', GT='&gt;';
 function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function pick(a){return a[R(0,a.length-1)]}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
@@ -111,105 +119,17 @@ function frs(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span><
 function FR(n,d){var f=F(n,d);if(f.d===1)return N(f.n);return (f.n<0?M:'')+frs(Math.abs(f.n),f.d)}
 function fh(f){return FR(f.n,f.d)}
 function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
-function lin(a,b,v){v=v||'x';var s='';if(a!==0)s=(a===1?'':a===-1?M:N(a))+v;if(b!==0){if(a===0)s=N(b);else s+=' '+(b<0?M:'+')+' '+Math.abs(b)}return s||'0'}
-function poly2(a,b,c){var parts=[];[[a,'x²'],[b,'x'],[c,'']].forEach(function(t){var k=t[0];if(k===0)return;var ab=Math.abs(k);var body=(t[1]!==''&&ab===1)?t[1]:(ab+t[1]);parts.push([k<0,body])});if(!parts.length)return '0';var s=(parts[0][0]?M:'')+parts[0][1];for(var i=1;i<parts.length;i++)s+=' '+(parts[i][0]?M:'+')+' '+parts[i][1];return s}
-function RS(rel){return {'>':'&gt;','>=':'≥','<':'&lt;','<=':'≤'}[rel]}
-var LT='&lt;',GT='&gt;';
-/* nombre entre parenthèses s'il est négatif ; facteur (x − w) proprement écrit */
-function ng(n){return n<0?'('+N(n)+')':N(n)}
-function par(w){return w===0?'x':'(x '+(w<0?'+':M)+' '+Math.abs(w)+')'}
-function flipRel(rel){return {'>':'<','>=':'<=','<':'>','<=':'>='}[rel]}
-function compRel(rel){return {'>':'<=','>=':'<','<':'>=','<=':'>'}[rel]}
-function relOK(rel,v){if(rel==='>')return v>EPS;if(rel==='>=')return v>-EPS;if(rel==='<')return v<-EPS;return v<EPS}
-/* éléments de réponse */
-function fset(vals){return function(x){return vals.some(function(v){return Math.abs(x-fv(v))<EPS})}}
-function setEq(vals){vals=vals.slice().sort(fcmp);return vals.length?'S = {'+vals.map(fh).join(' ; ')+'}':'S = ∅'}
-function inParts(parts,x){return parts.some(function(p){var a=(p.lo==null)?true:(p.loI?x>=fv(p.lo)-EPS:x>fv(p.lo)+EPS);var b=(p.hi==null)?true:(p.hiI?x<=fv(p.hi)+EPS:x<fv(p.hi)-EPS);return a&&b})}
-function setHtml(parts){if(!parts.length)return 'S = ∅';if(parts.length===1&&parts[0].lo==null&&parts[0].hi==null)return 'S = ℝ';return 'S = '+parts.map(function(p){if(p.lo&&p.hi&&feq(p.lo,p.hi))return '{'+fh(p.lo)+'}';var l=p.lo?((p.loI?'[':']')+fh(p.lo)):']'+M+'∞';var h=p.hi?(fh(p.hi)+(p.hiI?']':'[')):'+∞[';return l+' ; '+h}).join(' ∪ ')}
-function flipBr(parts){return parts.map(function(p){return {lo:p.lo,hi:p.hi,loI:p.lo?!p.loI:false,hiI:p.hi?!p.hiI:false}})}
-/* analyse du signe d'un produit/quotient de facteurs du 1er degré
-   factors : [{a,b,p}] (p=1 numérateur, p=-1 dénominateur) ; K : constante (±1, ou le coefficient dominant) ; rel : '>','>=','<','<=' */
-function mids(roots){var k=roots.length,m=[];for(var i=0;i<=k;i++){m.push(k===0?0:(i===0?fv(roots[0])-1:(i===k?fv(roots[k-1])+1:(fv(roots[i-1])+fv(roots[i]))/2)))}return m}
-function analyse(factors,K,rel){
-  var roots=[];factors.forEach(function(f){var r=F(-f.b,f.a);if(!roots.some(function(q){return feq(q,r)}))roots.push(r)});
-  roots.sort(fcmp);var k=roots.length,mi=mids(roots),iv=[],pt=[];
-  mi.forEach(function(m){var s=K>0?1:-1;factors.forEach(function(f){s*=(f.a*m+f.b)>0?1:-1});iv.push(s)});
-  roots.forEach(function(r){var zd=false;factors.forEach(function(f){if(f.p<0&&feq(F(-f.b,f.a),r))zd=true});pt.push(zd?'forb':'zero')});
-  var eq=(rel==='>='||rel==='<='),want=(rel==='>'||rel==='>=')?1:-1,els=[];
-  for(var i=0;i<=k;i++){els.push({t:'iv',inS:iv[i]===want,i:i});if(i<k)els.push({t:'pt',inS:pt[i]==='zero'&&eq,i:i})}
-  var parts=[],cur=null;
-  els.forEach(function(e,idx){if(e.inS){if(!cur)cur={start:idx};cur.end=idx}else if(cur){parts.push(cur);cur=null}});
-  if(cur)parts.push(cur);
-  parts=parts.map(function(c){var s=els[c.start],e=els[c.end],p={};
-    if(s.t==='iv'){p.lo=s.i===0?null:roots[s.i-1];p.loI=false}else{p.lo=roots[s.i];p.loI=true}
-    if(e.t==='iv'){p.hi=e.i===k?null:roots[e.i];p.hiI=false}else{p.hi=roots[e.i];p.hiI=true}
-    return p});
-  return {roots:roots,iv:iv,pt:pt,parts:parts,factors:factors,K:K,rel:rel,mids:mi};
-}
-function sg(s){return s>0?'+':s<0?M:'0'}
-function tableHtml(an,show,hl,resLab){
-  var k=an.roots.length,rows=[];
-  if(an.cst!==undefined){var cs=an.cst>0?'+':M;rows.push({lab:N(an.cst),iv:an.mids.map(function(){return cs}),pt:an.roots.map(function(){return cs})})}
-  an.factors.forEach(function(f){var r=F(-f.b,f.a);
-    rows.push({lab:lin(f.a,f.b),iv:an.mids.map(function(m){return f.a*m+f.b>0?'+':M}),pt:an.roots.map(function(q){return feq(q,r)?'0':(fv(q)*f.a+f.b>0?'+':M)})})});
-  rows.push({lab:resLab||'Résultat',res:true,iv:an.iv.map(sg),pt:an.pt.map(function(p){return p==='forb'?'‖':'0'})});
-  var h='<div class="stw"><table class="st"><tr><th class="lab">x</th>';
-  for(var i=0;i<=k;i++){h+='<td class="iv">'+(i===0?'<span class="inf l">'+M+'∞</span>':'')+(i===k?'<span class="inf r">+∞</span>':'')+'</td>';if(i<k)h+='<td class="pt">'+fh(an.roots[i])+'</td>'}
-  h+='</tr>';
-  var nr=rows.length-1;
-  rows.forEach(function(r,ri){if(r.res?show<=nr:ri>=show)return;
-    h+='<tr'+(r.res?' class="res"':'')+'><th class="lab">'+r.lab+'</th>';
-    for(var i=0;i<=k;i++){var c=r.iv[i],on=hl&&r.res&&inParts(an.parts,an.mids[i]);h+='<td class="iv '+(c==='+'?'sp':'sn')+(on?' on':'')+'">'+c+'</td>';
-      if(i<k){var p=r.pt[i],on2=hl&&r.res&&inParts(an.parts,fv(an.roots[i]));h+='<td class="pt'+(p==='‖'?' forb':'')+(on2?' on':'')+'">'+p+'</td>'}}
-    h+='</tr>'});
-  return h+'</table></div>';
-}
-function nline(an,parts){
-  var k=an.roots.length,W=320,H=74,x0=26,x1=W-26;
-  function X(i){return x0+(i+1)*(x1-x0)/(k+1)}
-  function idx(r){for(var i=0;i<k;i++)if(feq(an.roots[i],r))return i;return 0}
-  var s='<svg viewBox="0 0 '+W+' '+H+'" class="nl" role="img" aria-label="droite réelle">';
-  s+='<line x1="8" y1="34" x2="'+(W-8)+'" y2="34" stroke="#5b6b7b" stroke-width="2"/>';
-  s+='<text x="8" y="16" font-size="11" fill="#5b6b7b">'+M+'∞</text><text x="'+(W-8)+'" y="16" font-size="11" fill="#5b6b7b" text-anchor="end">+∞</text>';
-  parts.forEach(function(p){var a=p.lo==null?8:X(idx(p.lo)),b=p.hi==null?W-8:X(idx(p.hi));s+='<line x1="'+a+'" y1="34" x2="'+b+'" y2="34" stroke="#2A9D8F" stroke-width="8" opacity=".85"/>'});
-  an.roots.forEach(function(r,i){var on=inParts(parts,fv(r));s+='<circle cx="'+X(i)+'" cy="34" r="6" fill="'+(on?'#1F4E79':'#fff')+'" stroke="#1F4E79" stroke-width="2"/><text x="'+X(i)+'" y="62" font-size="12" text-anchor="middle" fill="#1F2A44">'+ftxt(r)+'</text>'});
-  return s+'</svg>';
-}
 /* ===== fabrique de questions ===== */
 function mk(o){
   var seen={};seen[o.ok.h]=1;var ws=[];
   o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
   ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
-  function cp(w,ok){return {h:w.h,f:w.f,g:w.g,v:w.v,id:w.id,ok:ok}}
+  function cp(w,ok){return {h:w.h,f:w.f,g:w.g,v:w.v,id:w.id,tip:w.tip,ok:ok}}
   var all=shuffle([cp(o.ok,true)].concat(ws.map(function(w){return cp(w,false)})));
   return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q,G:o.G,num:o.num,dom:o.dom};
 }
 /* QCM texte simple : bonne réponse + mauvaises */
-function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return{h:h}}),why:why})}
-/* propositions d'ensembles solutions pour une analyse donnée : bonne + variantes plausibles */
-function distract(an,extra){
-  var v=[];(extra||[]).forEach(function(p){v.push(p)});
-  var inv=analyse(an.factors,an.K,compRel(an.rel));v.push(inv.parts);                 // sens opposé
-  var opp=analyse(an.factors,-an.K,an.rel);v.push(opp.parts);                         // signe oublié
-  v.push(flipBr(an.parts));                                                           // crochets inversés
-  var asProd=analyse(an.factors.map(function(f){return {a:f.a,b:f.b,p:1}}),an.K,an.rel);v.push(asProd.parts);   // dénominateurs traités comme des facteurs
-  var noDen=an.factors.filter(function(f){return f.p>0});if(noDen.length&&noDen.length<an.factors.length)v.push(analyse(noDen,an.K,an.rel).parts);
-  v.push(analyse(an.factors,-an.K,compRel(an.rel)).parts);
-  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,an.rel).parts);   // erreur de signe sur les racines
-  v.push(analyse(an.factors.map(function(f){return {a:f.a,b:-f.b,p:f.p}}),an.K,compRel(an.rel)).parts);
-  [1,-1].forEach(function(d){v.push(analyse(an.factors.map(function(f,i){return {a:f.a,b:f.b+(i===0?d*f.a:0),p:f.p}}),an.K,an.rel).parts)});
-  var seen={},out=[];seen[setHtml(an.parts)]=1;
-  v.forEach(function(p){var h=setHtml(p);if(!seen[h]){seen[h]=1;out.push({h:h,f:function(x){return inParts(p,x)}})}});
-  return out;
-}
-/* choix numériques : x entier exact + valeurs fausses plausibles */
-function numOpts(x,cands,pre){
-  pre=pre||'x = ';var seen={},wr=[];seen[x]=1;
-  cands.concat([x+1,x-1,x+2,x-2,-x,x+3]).forEach(function(v){if(Math.round(v)===v&&!seen[v]){seen[v]=1;wr.push(v)}});
-  function mkc(v){return {h:pre+N(v),f:function(t){return Math.abs(t-v)<EPS}}}
-  return {ok:mkc(x),wr:wr.slice(0,6).map(mkc)};
-}
-
+function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return typeof h==='object'?h:{h:h}}),why:why})}
 /* ===== interface : maîtrise, stepper, quiz ===== */
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 function $(id){return document.getElementById(id)}
@@ -230,13 +150,13 @@ function stepper(root,getSteps,opts){
 function setMastered(id,on){store('mr_'+id,on?'1':'0')}
 function isMastered(id){return store('mr_'+id)==='1'}
 function runQuiz(root,gens,itemId,itemLabel,hubUrl){
-  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur;
-  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[]}
+  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur,miss;
+  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[];miss={}}
   function nextQ(){
     for(var t=0;t<60;t++){
       if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
       var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
-      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;return q}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;q.lab=g.lab;return q}
     }
     var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
   }
@@ -256,17 +176,17 @@ function runQuiz(root,gens,itemId,itemLabel,hubUrl){
     var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
     done++;
     if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
-    else{wrong++;planned+=PEN;
+    else{wrong++;planned+=PEN;if(cur.lab)miss[cur.lab]=(miss[cur.lab]||0)+1;
       /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
       if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
-      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(c.tip?'<br><b>Ton erreur :</b> '+c.tip+'<br>':'')+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
     $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
     $('go').onclick=show;
     try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
   }
   function end(){
     setMastered(itemId,true);
-    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div><div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
+    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div>'+(function(){var k=Object.keys(miss);if(!k.length)return '';return '<div class="card warn" style="margin-top:12px"><b>Tes erreurs portaient sur :</b><ul class="pts" style="margin:6px 0">'+k.map(function(l){return '<li>'+l+(miss[l]>1?' (×'+miss[l]+')':'')+'</li>'}).join('')+'</ul>Relis l’explication correspondante en haut de la page avant le prochain test.</div>'})()+'<div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
     $('again').onclick=function(){reset();show()};
   }
   root._peek=function(){return cur};
@@ -288,8 +208,8 @@ function pGraph(o){
   function X(x){return L+(x-x0)/(x1-x0)*(W-L-Rm)}function Y(y){return H-Bm-(y-y0)/(y1-y0)*(H-T-Bm)}
   var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(o.alt||'graphique')+'">',k,x,y;
   for(k=0;k<=Math.round((x1-x0)/o.xt);k++){x=x0+k*o.xt;s+='<line class="gr" x1="'+X(x)+'" y1="'+T+'" x2="'+X(x)+'" y2="'+(H-Bm)+'"/>'+(o.small?'':'<text x="'+X(x)+'" y="'+(H-Bm+14)+'" text-anchor="middle">'+pf(x)+'</text>')}
-  for(k=0;k<=Math.round((y1-y0)/o.yt);k++){y=y0+k*o.yt;s+='<line class="gr" x1="'+L+'" y1="'+Y(y)+'" x2="'+(W-Rm)+'" y2="'+Y(y)+'"/>'+(o.small?'':'<text x="'+(L-6)+'" y="'+(Y(y)+4)+'" text-anchor="end">'+pf(y)+'</text>')}
-  if(o.small&&y0<=0&&y1>=0)s+='<text x="'+(L-5)+'" y="'+(Y(0)+4)+'" text-anchor="end">0</text>';
+  for(k=0;k<=Math.round((y1-y0)/o.yt);k++){y=y0+k*o.yt;s+='<line class="gr" x1="'+L+'" y1="'+Y(y)+'" x2="'+(W-Rm)+'" y2="'+Y(y)+'"/>'+((o.small&&!o.ylab)?'':'<text x="'+(L-6)+'" y="'+(Y(y)+4)+'" text-anchor="end">'+pf(y)+'</text>')}
+  if(o.small&&!o.ylab&&y0<=0&&y1>=0)s+='<text x="'+(L-5)+'" y="'+(Y(0)+4)+'" text-anchor="end">0</text>';
   if(y0<0&&y1>0)s+='<line class="z" x1="'+L+'" y1="'+Y(0)+'" x2="'+(W-Rm)+'" y2="'+Y(0)+'"/>';
   s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-Bm)+'"/><line class="ax" x1="'+L+'" y1="'+(H-Bm)+'" x2="'+(W-Rm)+'" y2="'+(H-Bm)+'"/>';
   s+='<text x="'+(L+4)+'" y="'+(o.small?11:12)+'" font-weight="700">'+o.yl+'</text><text x="'+(W-Rm)+'" y="'+(H-5)+'" text-anchor="end" font-weight="700">'+o.xl+'</text>';
@@ -310,34 +230,70 @@ function sgn(){return Math.random()<.5?-1:1}
 function sg2(n){return (n<0?M:'+')+Math.abs(n)}
 /* choix numériques avec unité */
 function numC(ans,cands,unit){var seen={},w=[];function k(x){return pf(x)}seen[k(ans)]=1;
-  cands.forEach(function(c){if(isFinite(c)&&!seen[k(c)]){seen[k(c)]=1;w.push({h:pf(c)+' '+unit,v:c})}});
+  function add(c,tip){if(typeof c!=='number'||!isFinite(c))return;c=Math.round(c*100)/100;if(unit==='s'&&c<=0)return;if(!seen[k(c)]){seen[k(c)]=1;w.push({h:pf(c)+' '+unit,v:c,tip:tip})}}
+  cands.forEach(function(c){if(c&&typeof c==='object')add(c[0],c[1]);else add(c)});
+  var fb=unit==='s'?[ans+1,ans*2,ans+2,ans/2,ans+3]:[-ans,ans+1,ans*2,ans-1,ans/2,ans+2];
+  for(var i=0;w.length<3&&i<fb.length;i++)add(fb[i]);
   return {ok:{h:pf(ans)+' '+unit,v:ans},wr:w}}
 var ADOPT=['Il accélère, dans le sens de l’axe','Il accélère, dans le sens opposé à l’axe','Il décélère, dans le sens de l’axe','Il décélère, dans le sens opposé à l’axe'];
 function adIdx(acc,pos){return acc?(pos?0:1):(pos?2:3)}
 function adQ(q,idx,why){return qcm(q,ADOPT[idx],ADOPT.filter(function(_,i){return i!==idx}),why)}
+/* ===== simulateur : un curseur t qui fait bouger le mobile et un point sur x(t), v(t), a(t) ===== */
+function sim(el,presets){if(!el)return;var P=presets[0],t=0,play=false,last=0,id=el.id;
+  el.innerHTML='<div class="row simb">'+presets.map(function(p,i){return '<button class="btn alt sp" data-i="'+i+'">'+p.lab+'</button>'}).join('')+'</div>'+
+   '<div id="'+id+'_road"></div><div class="row" style="align-items:center"><button class="btn" id="'+id+'_pl">▶ Lancer</button>'+
+   '<input type="range" id="'+id+'_t" min="0" max="6" step="0.05" value="0" style="flex:1;min-width:140px" aria-label="temps"></div>'+
+   '<div class="simv" id="'+id+'_val"></div><div id="'+id+'_g"></div>';
+  function X(s){return P.x0+P.v0*s+P.a*s*s/2}function V(s){return P.v0+P.a*s}
+  function rng(f,T,z){var lo=z?0:1e9,hi=z?0:-1e9;for(var s=0;s<=T+1e-9;s+=T/60){var y=f(s);lo=Math.min(lo,y);hi=Math.max(hi,y)}return [lo,hi]}
+  function road(){var T=P.T,r=rng(X,T,true),lo=r[0],hi=r[1];if(hi-lo<4){hi+=2;lo-=2}var W=340,H=118,L=22,R=22;
+    function px(x){return L+(x-lo)/(hi-lo)*(W-L-R)}
+    var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="le mobile sur son axe">';
+    s+='<rect x="0" y="52" width="'+W+'" height="18" fill="#E5E7EB"/>';
+    s+='<line x1="8" y1="92" x2="'+(W-8)+'" y2="92" stroke="#1F2A44" stroke-width="1.6"/><path d="M'+(W-8)+' 92 l-8 -4 v8 z" fill="#1F2A44"/><text x="'+(W-10)+'" y="110" text-anchor="end" font-weight="700">x (m)</text>';
+    var o=px(0);if(o>=6&&o<=W-6)s+='<path d="M'+(o-6)+' 86 l12 12 M'+(o+6)+' 86 l-12 12" stroke="#1D4ED8" stroke-width="2.4"/><text x="'+o+'" y="110" text-anchor="middle" font-weight="700" style="fill:#1D4ED8">O</text>';
+    for(var k=0;k<=Math.floor(t+1e-9);k++)s+='<circle cx="'+px(X(k)).toFixed(1)+'" cy="61" r="4" fill="#94A3B8"/>';
+    var m=px(X(t)),v=V(t),a=P.a;
+    s+='<circle cx="'+m.toFixed(1)+'" cy="61" r="9" fill="#DC2626"/><line x1="'+m.toFixed(1)+'" y1="70" x2="'+m.toFixed(1)+'" y2="92" stroke="#DC2626" stroke-dasharray="3 3"/>';
+    function arr(y,len,c,l){if(Math.abs(len)<1)return '';var e=m+len;return '<line x1="'+m+'" y1="'+y+'" x2="'+e+'" y2="'+y+'" stroke="'+c+'" stroke-width="3"/><path d="M'+e+' '+y+' l'+(len>0?-8:8)+' -5 v10 z" fill="'+c+'"/><text x="'+(e+(len>0?4:-4))+'" y="'+(y+4)+'" text-anchor="'+(len>0?'start':'end')+'" font-weight="700" style="fill:'+c+'">'+l+'</text>'}
+    s+=arr(38,Math.max(-70,Math.min(70,v*7)),'#2563EB','v')+arr(18,a?(a>0?30:-30):0,'#EA580C','a');
+    return s+'</svg>'}
+  function graphs(){var T=P.T,rx=rng(X,T,true),rv=rng(V,T,true),ra=[Math.min(0,P.a,-1),Math.max(0,P.a,1)];
+    function g(k,f,r){var n=pNice(r[0],r[1]);return '<div><p>'+(k==='x'?'position x(t)':k==='v'?'vitesse v(t)':'accélération a(t)')+'</p>'+pGraph({xl:'t (s)',yl:PLAB[k].yl,xr:[0,T],yr:n.yr,xt:1,yt:n.yt,curves:[{f:f,c:k==='a'?CV:CB}],ann:[pDot(t,f(t),'',0,0,'#DC2626')]})+'</div>'}
+    return '<div class="stack">'+g('x',X,rx)+g('v',V,rv)+g('a',function(){return P.a},ra)+'</div>'}
+  function draw(){$(id+'_road').innerHTML=road();$(id+'_g').innerHTML=graphs();
+    var v=V(t);$(id+'_val').innerHTML='t = '+pf(t)+' s &nbsp; x = '+pf(X(t))+' m &nbsp; v = '+pf(v)+' m/s &nbsp; a = '+pf(P.a)+' m/s²'+(P.say?'<br><span class="small">'+P.say(t)+'</span>':'');
+    $(id+'_t').value=t}
+  function setP(i){P=presets[i];t=0;play=false;$(id+'_pl').textContent='▶ Lancer';$(id+'_t').max=P.T;
+    Array.prototype.forEach.call(el.querySelectorAll('.sp'),function(b,k){b.className='btn sp '+(k===i?'':'alt')});draw()}
+  Array.prototype.forEach.call(el.querySelectorAll('.sp'),function(b){b.onclick=function(){setP(+b.getAttribute('data-i'))}});
+  $(id+'_t').oninput=function(){play=false;$(id+'_pl').textContent='▶ Lancer';t=+this.value;draw()};
+  $(id+'_pl').onclick=function(){if(play){play=false;this.textContent='▶ Lancer';return}if(t>=P.T-1e-6)t=0;play=true;last=0;this.textContent='❚❚ Pause';requestAnimationFrame(tick)};
+  function tick(now){if(!play)return;if(last){t=Math.min(P.T,t+(now-last)/1000)}last=now;draw();if(t>=P.T){play=false;$(id+'_pl').textContent='▶ Lancer';return}requestAnimationFrame(tick)}
+  setP(0)}
 var GENS=[];
-/* 1. vitesse moyenne sur une courbe */
+/* @Vitesse moyenne : pente de la corde */
 GENS.push(function(){var k=pick([.5,1]),ts=k===.5?[2,4,6]:[0,2,4,6],st=k===.5?2:4,t1,t2;do{t1=pick(ts);t2=pick(ts)}while(t2<=t1);
   var f=function(t){return k*t*t},ans=k*(t1+t2),dx=f(t2)-f(t1),dt=t2-t1;
   var fig=function(a){return pGR('x',6,[{f:f}],0,36*k,st,{g:[[t1,f(t1)],[t2,f(t2)]],ann:a?[pSeg(t1,f(t1),t2,f(t2),CO,0)].concat(pTri(t1,f(t1),t2,f(t2),'Δt = '+dt+' s','Δx = '+pf(dx)+' m',t2>=5)):[]})};
   var o=numC(ans,[f(t2)/t2,dx,2*k*t2,f(t2)/dt,dt/dx],'m/s');
   return mk({q:'Calcule la <b>vitesse moyenne</b> entre t = '+t1+' s et t = '+t2+' s, à l’aide des deux points marqués.'+fig(false),ok:o.ok,wr:o.wr,num:ans,key:'vm'+k+t1+t2,
    why:'v<sub>moy</sub> = '+frs('Δx','Δt')+' = '+frs(pf(f(t2))+' '+M+' '+pf(f(t1)),t2+' '+M+' '+t1)+' = <b>'+pf(ans)+' m/s</b> : c’est la pente de la droite qui relie les deux points (la corde).'+fig(true)})});
-/* 2. corde ou tangente */
+/* @Pente ou aire : que lit-on ? */
 GENS.push(function(){var t=pick([
-  ['Sur x(t), la vitesse <b>à un instant précis</b> est donnée par :','la pente de la tangente à la courbe en ce point',['la pente de la droite qui relie deux points','la valeur de x à cet instant','l’aire sous la courbe']],
-  ['Sur x(t), la vitesse <b>moyenne</b> entre deux instants est donnée par :','la pente de la droite qui relie les deux points',['la pente de la tangente en un point','la valeur de x au deuxième instant','l’aire sous la courbe']],
-  ['Sur v(t), l’<b>accélération</b> est donnée par :','la pente de la courbe',['l’aire sous la courbe','la valeur de v','la valeur de t']],
-  ['Sur v(t), le <b>déplacement</b> Δx est donné par :','l’aire entre la courbe et l’axe du temps',['la pente de la courbe','la valeur de v à la fin','v × t à la fin seulement']],
-  ['Sur a(t), la <b>variation de vitesse</b> Δv est donnée par :','l’aire entre la courbe et l’axe du temps',['la pente de la courbe','la valeur de a','On ne peut pas la trouver']]]);
+  ['Sur x(t), la vitesse <b>à un instant précis</b> est donnée par :','la pente de la tangente à la courbe en ce point',['la pente de la corde qui relie deux points de la courbe','la valeur de x lue sur la courbe à cet instant','l’aire entre la courbe et l’axe jusqu’à cet instant']],
+  ['Sur x(t), la vitesse <b>moyenne</b> entre deux instants est donnée par :','la pente de la corde qui relie les deux points',['la pente de la tangente à la courbe au premier point','la valeur de x lue au deuxième instant','l’aire entre la courbe et l’axe du temps']],
+  ['Sur v(t), l’<b>accélération</b> est donnée par :','la pente de la courbe',['l’aire entre la courbe et l’axe','la valeur de v lue sur la courbe','le quotient de v par t lus sur la courbe']],
+  ['Sur v(t), le <b>déplacement</b> Δx est donné par :','l’aire entre la courbe et l’axe du temps',['la pente de la courbe entre les deux instants','la valeur de v lue à la fin du mouvement','le produit v × t lu à la fin seulement']],
+  ['Sur a(t), la <b>variation de vitesse</b> Δv est donnée par :','l’aire entre la courbe et l’axe du temps',['la pente de la courbe entre les deux instants','la valeur de a lue sur la courbe','le quotient de a par t lus sur la courbe']]]);
   return qcm(t[0],t[1],t[2],'Pente d’une courbe : ce qui change « par seconde » (x(t) → v ; v(t) → a). Aire sous une courbe : ce qui s’accumule (v(t) → Δx ; a(t) → Δv).')});
-/* 3. pente de v(t) → a */
+/* @Accélération : pente de v(t) */
 GENS.push(function(){var a=sgn()*pick([1,2,3,0.5]),T=6,v0=a>0?R(0,4):-a*T+R(0,3),f=function(t){return v0+a*t},hi=Math.max(f(0),f(T));
   var fig=function(q){return pGR('v',T,[{f:f,c:CB}],0,hi,undefined,{g:[[1,f(1)],[5,f(5)]],ann:q?pTri(1,f(1),5,f(5),'Δt = 4 s','Δv = '+pf(4*a)+' m/s',true):[]})};
   var o=numC(a,[-a,4*a,f(5)/5,f(1)],'m/s²');
   return mk({q:'Calcule l’accélération de ce mobile à l’aide des deux points marqués.'+fig(false),ok:o.ok,wr:o.wr,num:a,key:'pa'+a+v0,
    why:'a = '+frs('Δv','Δt')+' = '+frs(pf(f(5))+' '+M+' '+pf(f(1)),'5 '+M+' 1')+' = <b>'+pf(a)+' m/s²</b> : la pente de v(t).'+fig(true)})});
-/* 4. aire sous v(t) → déplacement */
+/* @Déplacement : aire sous v(t) */
 GENS.push(function(){var k=R(0,2),T,f,ans,cl,why;
   if(k===0){var v=sgn()*R(2,6);T=R(3,6);f=function(){return v};ans=v*T;cl=[v,T,-ans,v/T];why='L’aire est un rectangle : '+pf(v)+' m/s × '+T+' s = <b>'+pf(ans)+' m</b>.'+(v<0?' La courbe est sous l’axe : l’aire (le déplacement) est négative.':'')}
   else if(k===1){var v1=pick([4,6,8,10]);T=pick([4,6]);f=function(t){return v1*t/T};ans=v1*T/2;cl=[v1*T,v1/T,v1,v1*T/4];why='L’aire est un triangle : '+frs('base × hauteur',2)+' = '+frs(T+' × '+v1,2)+' = <b>'+pf(ans)+' m</b>.'}
@@ -346,35 +302,58 @@ GENS.push(function(){var k=R(0,2),T,f,ans,cl,why;
   var fig=function(q){return pGR('v',T,[{f:f,c:CB}],lo,hi,undefined,q?{fill:[{f:f,a:0,b:T}]}:{})};
   var o=numC(ans,cl,'m');
   return mk({q:'Quel est le <b>déplacement</b> Δx du mobile entre t = 0 et t = '+T+' s ?'+fig(false),ok:o.ok,wr:o.wr,num:ans,key:'ar'+k+T+ans,why:'Sur v(t), le déplacement est l’<b>aire</b> entre la courbe et l’axe du temps. '+why+fig(true)})});
-/* 5. construire : de x(t) vers v(t) */
-function small(kind,T,f,lo,hi,c){return pGraph({small:true,xl:'t',yl:kind,xr:[0,T],yr:pNice(lo,hi).yr,xt:1,yt:pNice(lo,hi).yt,curves:[{f:f,c:c||CB}]})}
+function small(kind,T,f,lo,hi,c){var n=pNice(lo,hi);return pGraph({small:true,ylab:true,xl:'t',yl:kind,xr:[0,T],yr:n.yr,xt:1,yt:n.yt,curves:[{f:f,c:c||CB}]})}
+/* @Construire v(t) à partir de x(t) */
 GENS.push(function(){var v=sgn()*R(1,3),T=6,x0=v>0?2:2-v*T,fx=function(t){return x0+v*t};
   var opts=[[function(){return v},'v = '+pf(v)],[function(){return -v},'v = '+pf(-v)],[function(t){return v*t},'droite'],[function(){return 0},'0']];
   var lo=-4,hi=4;
   var ch=opts.map(function(o){return small('v',T,o[0],lo,hi)});
   return mk({q:'Voici le graphique x(t). Quel est le graphique v(t) correspondant ?'+pGR('x',T,[{f:fx}],0,Math.max(fx(0),fx(T))),ok:{h:ch[0]},wr:ch.slice(1).map(function(h){return {h:h}}),key:'cx'+v+x0,
    why:'x(t) est une droite de pente '+pf(v)+' m/s : la vitesse est <b>constante</b> et vaut '+pf(v)+' m/s. v(t) est donc une droite <b>horizontale</b> à la hauteur '+pf(v)+'.'})});
-/* 6. construire : de v(t) vers a(t) */
+/* @Construire a(t) à partir de v(t) */
 GENS.push(function(){var a=sgn()*pick([1,2]),T=6,v0=a>0?1:1-a*T,fv=function(t){return v0+a*t};
-  var opts=[function(){return a},function(){return -a},function(t){return v0+a*t},function(){return 0}];
-  var ch=opts.map(function(f){return small('a',T,f,-Math.max(3,v0+6),Math.max(3,v0+6),CV)});
+  var opts=[function(){return a},function(){return -a},function(t){return a*(t-3)/3},function(){return 0}];
+  var ch=opts.map(function(f){return small('a',T,f,-3,3,CV)});
   return mk({q:'Voici le graphique v(t). Quel est le graphique a(t) correspondant ?'+pGR('v',T,[{f:fv}],0,Math.max(fv(0),fv(T))),ok:{h:ch[0]},wr:ch.slice(1).map(function(h){return {h:h}}),key:'cv'+a+v0,
-   why:'v(t) est une droite de pente '+pf(a)+' m/s² : l’accélération est constante et vaut '+pf(a)+' m/s². a(t) est une droite horizontale à la hauteur '+pf(a)+'. Attention à l’échelle : les quatre graphiques ont la même.'})});
-/* 7. construire : de v(t) vers x(t) */
+   why:'v(t) est une droite de pente '+pf(a)+' m/s² : l’accélération est constante et vaut '+pf(a)+' m/s². a(t) est une droite horizontale à la hauteur '+pf(a)+'. Les quatre graphiques ont la même échelle.'})});
+/* @Construire x(t) à partir de v(t) */
 GENS.push(function(){var k=R(0,2),T=6,fv,ok,w,why;
   if(k===0){var v=R(1,3);fv=function(){return v};ok=function(t){return v*t};w=[function(){return v},function(t){return 0.5*t*t},function(t){return 6-v*t/3}];why='v constante et positive : x augmente régulièrement, x(t) est une <b>droite qui monte</b>.'}
   else if(k===1){fv=function(t){return t};ok=function(t){return t*t/2};w=[function(t){return t},function(t){return 18-t*t/2},function(){return 3}];why='v augmente régulièrement (a '+GT+' 0) : x(t) est une <b>parabole</b> dont la pente grandit (ouverte vers le haut).'}
   else{fv=function(t){return 6-t};ok=function(t){return 6*t-t*t/2};w=[function(t){return 6-t},function(t){return t*t/2},function(t){return 3*t}];why='v diminue régulièrement jusqu’à 0 (a '+LT+' 0) : x(t) est une parabole dont la pente diminue, jusqu’à devenir horizontale à t = 6 s.'}
   var ch=[ok].concat(w).map(function(f){return small('x',T,f,0,18)});
   return mk({q:'Voici le graphique v(t) (le mobile part de x = 0). Quel est le graphique x(t) correspondant ?'+pGR('v',T,[{f:fv}],0,6),ok:{h:ch[0]},wr:ch.slice(1).map(function(h){return {h:h}}),key:'vx'+k,why:why+' La pente de x(t) doit valoir v à chaque instant.'})});
-/* 8. aire sous a(t) → Δv */
+/* @Variation de vitesse : aire sous a(t) */
 GENS.push(function(){var a=sgn()*R(1,4),T=R(2,6),dv=a*T,v0=R(0,5);
   var fig=function(q){return pGR('a',T,[{f:function(){return a},c:CV}],Math.min(0,a),Math.max(0,a),1,q?{fill:[{f:function(){return a},a:0,b:T,c:CV}]}:{})};
   var o=numC(v0+dv,[dv,v0-dv,v0+a,a/T],'m/s');
   return mk({q:'Voici le graphique a(t). À t = 0, la vitesse vaut <b>'+v0+' m/s</b>. Quelle est la vitesse à <b>t = '+T+' s</b> ?'+fig(false),ok:o.ok,wr:o.wr,num:v0+dv,key:'av'+a+T+v0,
    why:'L’aire sous a(t) donne Δv = '+pf(a)+' × '+T+' = '+pf(dv)+' m/s. Donc v = '+v0+' + ('+pf(dv)+') = <b>'+pf(v0+dv)+' m/s</b>.'+fig(true)})});
 
-(function(){var e=document.getElementById('g5a');if(e){var f=function(t){return t*t/2};e.innerHTML=pGR('x',6,[{f:f}],0,18,2,{g:[[2,2],[5,12.5]],ann:[pSeg(2,2,5,12.5,CO,0),pTan(f,3,3,1.2),pDot(3,4.5,'',0,0,CO),pTxt(3.4,13,'corde : v moyenne',CO,0,0,'end'),pTxt(5.9,1.2,'tangente en t = 3 s',CO,0,0,'end')]})}
- var g=document.getElementById('g5b');if(g){var h=function(t){return 2+t};g.innerHTML=pGR('v',6,[{f:h}],0,8,2,{fill:[{f:h,a:1,b:5}],ann:[pTxt(3,2,'aire = Δx',CO,0,0)]})}})();
+/* @Vitesse instantanée : pente de la tangente */
+GENS.push(function(){var k=pick([.5,1]),t0=pick([1,2,3,4]),f=function(t){return k*t*t},v=2*k*t0,h=1.5;
+  var fig=function(q){return pGR('x',6,[{f:f}],0,36*k,k===.5?2:4,{ann:[pSeg(t0-h,f(t0)-v*h,t0+h,f(t0)+v*h,'#059669',0),pDot(t0,f(t0),'',0,0,'#059669'),pDot(t0-h,f(t0)-v*h,'',0,0,'#059669'),pDot(t0+h,f(t0)+v*h,'',0,0,'#059669')].concat(q?pTri(t0-h,f(t0)-v*h,t0+h,f(t0)+v*h,'Δt = 3 s','Δx = '+pf(3*v)+' m',t0+h>=5):[])})};
+  var o=numC(v,[[f(t0)/t0,'tu as calculé x ÷ t : c’est la pente depuis l’origine (une corde), pas la tangente.'],[f(t0),'tu as lu la position x, pas la vitesse.'],v/2,v+1],'m/s');
+  return mk({q:'La droite verte est la <b>tangente</b> à x(t) en t = '+t0+' s. Elle passe par les trois points verts. Quelle est la <b>vitesse</b> du mobile à t = '+t0+' s ?'+fig(false),ok:o.ok,wr:o.wr,num:v,key:'tg'+k+t0,
+   why:'La vitesse à un instant précis est la <b>pente de la tangente</b> : v = '+frs('Δx','Δt')+' = '+frs(pf(3*v),3)+' = <b>'+pf(v)+' m/s</b>.'+fig(true)})});
+/* @Déplacement quand le mobile fait demi-tour */
+GENS.push(function(){var v0=pick([2,4,6]),T=2*v0/2,a=-2,tz=v0/2,T2=pick([tz*2,tz+1,tz+2]),f=function(t){return v0+a*t};
+  var A1=v0*tz/2,A2=-(f(T2)*-1)*(T2-tz)/2,dx=A1+A2;
+  var o=numC(dx,[[A1-A2,'tu as compté positivement l’aire sous l’axe : elle est négative.'],[A1,'tu as oublié la partie sous l’axe.'],-dx,v0*T2],'m');
+  var fig=function(q){return pGR('v',T2,[{f:f}],Math.min(0,f(T2)),v0,undefined,q?{fill:[{f:f,a:0,b:tz},{f:f,a:tz,b:T2,c:CV}]}:{})};
+  return mk({q:'Voici le graphique v(t) d’un mobile. Quel est son déplacement <b>Δx</b> entre t = 0 et t = '+pf(T2)+' s ?'+fig(false),ok:o.ok,wr:o.wr,num:dx,key:'dt'+v0+T2,
+   why:'De 0 à '+pf(tz)+' s, v '+GT+' 0 : triangle au-dessus de l’axe, aire = '+frs(pf(tz)+' × '+v0,2)+' = '+pf(A1)+' m. Ensuite v '+LT+' 0 (le mobile revient) : triangle sous l’axe, aire = '+pf(A2)+' m. Δx = '+pf(A1)+' + ('+pf(A2)+') = <b>'+pf(dx)+' m</b>.'+(dx===0?' Il est revenu à son point de départ.':'')+fig(true)})});
+/* @Construire v(t) à partir de a(t) */
+GENS.push(function(){var a=sgn()*pick([1,2]),v0=a>0?R(1,2)*2:R(4,6)*2,T=6,lo=Math.min(0,v0,v0+a*T),hi=Math.max(0,v0,v0+a*T),n=pNice(lo,hi);
+  var opts=[function(t){return v0+a*t},function(t){return a*t},function(t){return v0-a*t},function(){return v0+a}];
+  var ch=opts.map(function(f){return pGraph({small:true,ylab:true,xl:'t',yl:'v',xr:[0,T],yr:n.yr,xt:1,yt:n.yt,curves:[{f:f,c:CB}]})});
+  return mk({q:'Voici le graphique a(t) d’un mobile. À t = 0, sa vitesse vaut <b>v<sub>0</sub> = '+v0+' m/s</b>. Quel est son graphique v(t) ?'+pGR('a',T,[{f:function(){return a},c:CV}],-3,3,1),ok:{h:ch[0]},wr:[{h:ch[1],tip:'ce graphique part de 0 : il oublie v<sub>0</sub>.'},{h:ch[2],tip:'la pente de ce graphique a le mauvais signe.'},{h:ch[3]}],key:'ab'+a+v0,
+   why:'a est constante et vaut '+pf(a)+' m/s² : v(t) est une <b>droite</b> de pente '+pf(a)+', qui <b>part de v<sub>0</sub> = '+v0+' m/s</b>. À t = '+T+' s : v = '+v0+' + ('+pf(a)+') × '+T+' = '+pf(v0+a*T)+' m/s.'})});
+
+GENS[0].lab="Vitesse moyenne : pente de la corde";GENS[1].lab="Pente ou aire : que lit-on ?";GENS[2].lab="Accélération : pente de v(t)";GENS[3].lab="Déplacement : aire sous v(t)";GENS[4].lab="Construire v(t) à partir de x(t)";GENS[5].lab="Construire a(t) à partir de v(t)";GENS[6].lab="Construire x(t) à partir de v(t)";GENS[7].lab="Variation de vitesse : aire sous a(t)";GENS[8].lab="Vitesse instantanée : pente de la tangente";GENS[9].lab="Déplacement quand le mobile fait demi-tour";GENS[10].lab="Construire v(t) à partir de a(t)";
+
+(function(){var e=document.getElementById('g5a');if(e){var f=function(t){return t*t/2};e.innerHTML=pGR('x',6,[{f:f}],0,18,2,{g:[[2,2],[5,12.5]],ann:[pSeg(2,2,5,12.5,CO,1),pSeg(1.6,0.3,4.4,8.7,'#059669',0),pDot(3,4.5,'',0,0,'#059669'),pTxt(5,12.5,'corde',CO,-6,-10,'end'),pTxt(4.4,8.7,'tangente',"#059669",6,4,'start')]})}
+ var g=document.getElementById('g5b');if(g){var h=function(t){return 2+t};g.innerHTML=pGR('v',6,[{f:h}],0,8,2,{fill:[{f:h,a:1,b:5}],ann:[pTxt(3,2,'aire = Δx',CO,0,0)]})}
+ var k=document.getElementById('g5c');if(k){var q=function(t){return 4-2*t};k.innerHTML=pGR('v',4,[{f:q}],-4,4,2,{fill:[{f:q,a:0,b:2},{f:q,a:2,b:4,c:CV}],ann:[pTxt(.6,1.2,'+4 m',CO,0,0),pTxt(3.4,-1.6,'−4 m',CV,0,0)]})}})();
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'b5',"Lire et construire un graphique : pente et aire",'./')};
 </script></body></html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rencontre de deux mobiles en MRU</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;margin:4px 0 10px}
+.top a{color:var(--navy);text-decoration:none;font-weight:600}
+h1{font-size:25px;line-height:1.2;margin:6px 0 4px;color:var(--navy)}
+h2{font-size:20px;margin:0 0 8px;color:var(--navy)}
+.lead{color:#4a5a6c;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.goal{border-left:6px solid var(--teal);background:#EAF6F4}
+.warn{border-left:6px solid var(--coral);background:#FDF0EC}
+.key{border-left:6px solid var(--sun);background:#FFF8DC}
+.badge{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 2px;font-size:.92em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;min-height:46px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.coral{background:var(--coral)}
+.btn[disabled]{opacity:.35}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.eqline{font-size:26px;text-align:center;margin:8px 0;min-height:44px;color:var(--ink)}
+.stepbox{min-height:72px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.chip{animation:pop .45s ease both;transform-box:fill-box;transform-origin:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--navy)}
+.stw{overflow-x:auto}
+table.st{border-collapse:collapse;margin:8px auto;font-size:17px}
+table.st th.lab{text-align:left;padding:6px 6px;font-size:15px;font-weight:700;white-space:nowrap;border-right:2px solid var(--ink)}
+table.st td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line);min-width:30px}
+table.st tr:first-child td,table.st tr:first-child th{border-bottom:2px solid var(--ink)}
+table.st td.pt{border-left:1.5px solid #8895a5;border-right:1.5px solid #8895a5;font-weight:700;min-width:34px}
+table.st td.pt.forb{border-left:3px double var(--ink);border-right:3px double var(--ink);color:var(--coral)}
+table.st .sp{color:var(--teal);font-weight:700;font-size:20px}
+table.st .sn{color:var(--coral);font-weight:700;font-size:20px}
+table.st td.on{background:#CFEFEA}
+table.st tr.res th{color:var(--navy)}
+.inf{display:block;font-size:14px}.inf.l{text-align:left}.inf.r{text-align:right}
+svg.nl{width:100%;max-width:420px;display:block;margin:6px auto}
+svg.gr,svg.bal{width:100%;max-width:420px;display:block;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;font-size:15px;color:#4a5a6c;margin-bottom:6px}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.bar>div{height:100%;background:var(--teal);width:0;transition:width .4s}
+.qtext{font-size:19px;margin:6px 0 12px}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:18px;min-height:50px;color:var(--ink)}
+.ch.good{border-color:var(--teal);background:#E3F5F1}
+.ch.bad{border-color:var(--coral);background:#FDECE7}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;background:#F0F4F9}
+.fb.ok{background:#E3F5F1}.fb.ko{background:#FDECE7}
+.big{font-size:42px;text-align:center}
+.cards{display:grid;gap:12px}
+.item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.item .n{flex:none;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:20px}
+.item.done .n{background:var(--teal)}
+.item b{display:block;color:var(--navy);font-size:18px}
+.item small{color:#4a5a6c;display:block}
+.tag{display:inline-block;background:#EEF3F9;border-radius:8px;padding:1px 8px;font-size:13px;margin:4px 6px 0 0;color:#3b4b5d}
+ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
+.def{font-size:18px}
+.foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
+@media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+@media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
+
+.f{font-size:18px;margin:8px 0;line-height:2}.f b{color:var(--navy)}
+.steps{padding-left:22px}.steps li{margin:8px 0}
+table.sg{border-collapse:collapse;margin:8px auto;font-size:15px}table.sg td,table.sg th{border:1px solid var(--line);padding:5px 8px;text-align:center}
+.ex{border-left:6px solid var(--blue);background:#EEF4FF}
+svg.pg{width:100%;max-width:440px;height:auto;display:block;background:#fff;border:1px solid #E2E8F0;border-radius:10px;margin:6px auto 10px}
+svg.pg text{font:11px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;fill:#334155}
+svg.pg .gr{stroke:#E2E8F0;stroke-width:1}svg.pg .ax{stroke:#1F2A44;stroke-width:1.6}svg.pg .z{stroke:#1F2A44;stroke-width:1.3}
+.trio{display:flex;flex-wrap:wrap;gap:6px}.trio>div{flex:1;min-width:30%}.trio p{text-align:center;margin:2px 0;font-weight:700}
+@media (max-width:520px){.trio{flex-direction:column}.trio>div{min-width:0}}
+.stack p{text-align:center;margin:8px 0 0;font-weight:700}.stack svg.pg{max-width:400px}
+.simb .btn{font-size:15px;padding:9px 12px}.simv{text-align:center;font-weight:700;color:var(--navy);margin:4px 0;line-height:1.6}.small{font-size:.85em;font-weight:400;color:#475569}
+.ch svg.pg{max-width:220px;margin:2px auto}
+.eqs{list-style:none;padding:0;margin:6px 0}.eqs li{margin:6px 0;font-size:17px}.eqs li::before{content:"\2022  ";color:var(--blue)}
+.qbox:empty{display:none}.qbox{margin-top:10px}
+sub{font-size:.75em}
+</style></head><body><div class="wrap" id="top">
+<div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 6 / 8</span></div>
+<h1>Rencontre de deux mobiles en MRU</h1>
+<div class="card goal"><span class="badge">Objectif</span><div>Trouver <b>où et quand</b> deux mobiles en MRU se rencontrent, même s’ils ne partent pas en même temps.</div></div>
+<div class="card ex"><span class="badge">L’énoncé</span><p>Une voiture A part de x = 0 m à 6 m/s. <b>5 secondes plus tard</b>, une voiture B part de x = 100 m et roule vers A à 4 m/s. Où et quand se croisent-elles ?</p></div>
+<div class="card key"><span class="badge">Le problème</span><p>Pour un MRU, l’espace parcouru vaut <b>Δx = v · Δt</b> (avec son signe), où Δt est la <b>durée pendant laquelle le mobile a roulé</b>.</p>
+<p>Mais ici, A et B n’ont pas roulé pendant la même durée : quand A roule depuis 8 s, B ne roule que depuis 3 s. On ne peut donc pas écrire « Δt » tout court pour les deux.</p>
+<p><b>La solution :</b> une seule horloge pour tout le monde.</p>
+<ul class="pts"><li><b>t</b> : l’heure lue sur l’horloge, la même pour A et pour B ;</li><li><b>t<sub>0</sub></b> : l’heure à laquelle <b>ce</b> mobile démarre (t<sub>0A</sub> = 0 s, t<sub>0B</sub> = 5 s) ;</li><li><b>Δt = t − t<sub>0</sub></b> : la durée pendant laquelle ce mobile a roulé.</li></ul>
+<table class="sg"><tr><th>horloge t</th><th>A a roulé</th><th>B a roulé</th></tr><tr><td>5 s</td><td>5 − 0 = 5 s</td><td>5 − 5 = 0 s</td></tr><tr><td>8 s</td><td>8 − 0 = 8 s</td><td>8 − 5 = 3 s</td></tr><tr><td>12 s</td><td>12 − 0 = 12 s</td><td>12 − 5 = 7 s</td></tr></table></div>
+<div class="card key"><span class="badge">La formule générale</span><p>On revient à la loi du MRU, x = x<sub>0</sub> + v Δt, en remplaçant Δt par t − t<sub>0</sub> :</p>
+<p class="f"><b>x = x<sub>0</sub> + v (t − t<sub>0</sub>)</b></p>
+<ul class="pts"><li><b>x<sub>0</sub></b> : la position du mobile au moment de son départ ;</li><li><b>v</b> : sa vitesse, avec son signe ;</li><li><b>t<sub>0</sub></b> : l’heure de son départ, lue sur l’horloge commune ;</li><li><b>t</b> : l’heure à laquelle on cherche sa position.</li></ul>
+<p>Pour notre énoncé : x<sub>A</sub> = 0 + 6 (t − 0) &nbsp;et&nbsp; x<sub>B</sub> = 100 − 4 (t − 5). Si un mobile part quand on déclenche l’horloge, t<sub>0</sub> = 0 et sa loi devient simplement x = x<sub>0</sub> + v t.</p>
+<p><b>Attention :</b> la loi de B n’est valable qu’<b>à partir de son départ</b>, pour t ≥ t<sub>0B</sub> = 5 s. Avant, B attend, immobile, en x = 100 m. Si on calculait x<sub>B</sub> à t = 2 s avec la loi, on trouverait 112 m : faux, B n’a pas encore bougé.</p></div>
+<div class="card"><span class="badge">Comprendre</span><h2>L’énoncé en images</h2><p>Clique sur « Suivant ».</p><div id="meet"></div></div>
+<div class="card ex"><span class="badge">Exemple détaillé</span><ol class="steps">
+<li><b>Repère.</b> Origine au départ de A, sens de A vers B, horloge déclenchée au départ de A.</li>
+<li><b>Données.</b> A : x<sub>0A</sub> = 0 m, v<sub>A</sub> = +6 m/s, t<sub>0A</sub> = 0 s. &nbsp;B : x<sub>0B</sub> = 100 m, v<sub>B</sub> = −4 m/s (il va vers A), t<sub>0B</sub> = 5 s.</li>
+<li><b>Lois.</b> x<sub>A</sub> = 0 + 6 (t − 0) = 6t &nbsp;et&nbsp; x<sub>B</sub> = 100 − 4 (t − 5) = 120 − 4t (pour t ≥ 5 s).</li>
+<li><b>Rencontre.</b> x<sub>A</sub> = x<sub>B</sub> : 6t = 120 − 4t, donc 10t = 120 et <b>t = 12 s</b>.</li>
+<li><b>Vérifier.</b> 12 s ≥ 5 s : la rencontre a bien lieu après le départ de B, la loi de B s’applique. Position : x = 6 × 12 = <b>72 m</b> ; avec B : 100 − 4 × (12 − 5) = 72 m.</li>
+<li><b>Phrase de réponse.</b> Les voitures se croisent 12 s après le départ de A, à 72 m du point de départ de A.</li></ol>
+<p>Sur un graphique x(t), la rencontre est le point où les deux courbes se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
+<div class="card" id="testcard"><span class="badge">Teste-toi</span>
+<h2>Quiz : 10 questions</h2>
+<p>Chaque faute ajoute <b>3 questions</b> pour consolider. Garde un brouillon et une calculatrice à côté de toi.</p>
+<div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
+<div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
+<div class="top" style="margin-top:14px"><a href="lire-un-graphique-eleves.html">← Point 5</a><a href="distance-arret-eleves.html" style="margin-left:auto">Point 7 →</a></div>
+<div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
+<script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
+var M='−', EPS=1e-9, LT='&lt;', GT='&gt;';
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[R(0,a.length-1)]}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a}
+function F(n,d){d=(d===undefined)?1:d;if(d<0){n=-n;d=-d}var g=gcd(n,d)||1;return{n:n/g,d:d/g}}
+function fv(f){return f.n/f.d}
+function feq(a,b){return a.n===b.n&&a.d===b.d}
+function fcmp(a,b){return a.n*b.d-b.n*a.d}
+function N(n){return n<0?M+(-n):''+n}
+function frs(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>'}
+function FR(n,d){var f=F(n,d);if(f.d===1)return N(f.n);return (f.n<0?M:'')+frs(Math.abs(f.n),f.d)}
+function fh(f){return FR(f.n,f.d)}
+function ftxt(f){return (f.n<0?M:'')+Math.abs(f.n)+(f.d!==1?'/'+f.d:'')}
+/* ===== fabrique de questions ===== */
+function mk(o){
+  var seen={};seen[o.ok.h]=1;var ws=[];
+  o.wr.forEach(function(w){if(!seen[w.h]){seen[w.h]=1;ws.push(w)}});
+  ws=ws.slice(0,2).concat(shuffle(ws.slice(2)).slice(0,1));
+  function cp(w,ok){return {h:w.h,f:w.f,g:w.g,v:w.v,id:w.id,tip:w.tip,ok:ok}}
+  var all=shuffle([cp(o.ok,true)].concat(ws.map(function(w){return cp(w,false)})));
+  return {q:o.q,ch:all,why:o.why,truth:o.truth,key:o.key||o.q,G:o.G,num:o.num,dom:o.dom};
+}
+/* QCM texte simple : bonne réponse + mauvaises */
+function qcm(q,ok,wr,why){return mk({q:q,ok:{h:ok},wr:wr.map(function(h){return typeof h==='object'?h:{h:h}}),why:why})}
+/* ===== interface : maîtrise, stepper, quiz ===== */
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function $(id){return document.getElementById(id)}
+function stepper(root,getSteps,opts){
+  opts=opts||{};var i=0,steps=getSteps();
+  root.innerHTML='<div class="eqline" id="'+root.id+'_eq"></div><div id="'+root.id+'_vis"></div><div class="dots" id="'+root.id+'_dots"></div><div class="stepbox card key" id="'+root.id+'_txt"></div><div class="row"><button class="btn alt" id="'+root.id+'_p">◀ Précédent</button><button class="btn" id="'+root.id+'_n">Suivant ▶</button>'+(opts.again?'<button class="btn alt" id="'+root.id+'_a">↻ Un autre exemple</button>':'')+'</div>';
+  function draw(){var s=steps[i];
+    $(root.id+'_eq').innerHTML=s.eq||'';$(root.id+'_vis').innerHTML=s.vis||'';
+    var t=$(root.id+'_txt');t.style.animation='none';void t.offsetWidth;t.style.animation='';t.innerHTML=s.txt;
+    $(root.id+'_dots').innerHTML=steps.map(function(_,k){return '<i class="'+(k===i?'on':'')+'"></i>'}).join('');
+    $(root.id+'_p').disabled=(i===0);$(root.id+'_n').disabled=(i===steps.length-1);
+    if(s.after)s.after(root);}
+  $(root.id+'_p').onclick=function(){if(i>0){i--;draw()}};
+  $(root.id+'_n').onclick=function(){if(i<steps.length-1){i++;draw()}};
+  if(opts.again)$(root.id+'_a').onclick=function(){steps=getSteps(true);i=0;draw()};
+  root._redraw=draw;draw();
+}
+function setMastered(id,on){store('mr_'+id,on?'1':'0')}
+function isMastered(id){return store('mr_'+id)==='1'}
+function runQuiz(root,gens,itemId,itemLabel,hubUrl){
+  var FIRST=10,PEN=3,planned,done,wrong,asked,bag,cur,miss;
+  function reset(){planned=FIRST;done=0;wrong=0;asked={};bag=[];miss={}}
+  function nextQ(){
+    for(var t=0;t<60;t++){
+      if(!bag.length)bag=shuffle(gens.map(function(_,i){return i}));
+      var gi=bag.pop(),g=gens[gi],q;try{q=g()}catch(e){continue}
+      if(q&&!asked[q.key]){asked[q.key]=1;q.gi=gi;q.lab=g.lab;return q}
+    }
+    var g2=gens[R(0,gens.length-1)],q2=g2();q2.gi=-1;return q2;
+  }
+  function show(){
+    if(done>=planned)return end();
+    cur=nextQ();
+    var extra=planned>FIRST?' <b style="color:var(--coral)">(+'+(planned-FIRST)+' de consolidation)</b>':'';
+    var h='<div class="qhead"><span>Question '+(done+1)+' sur '+planned+extra+'</span><span>Erreurs : '+wrong+'</span></div><div class="bar"><div style="width:'+(100*done/planned)+'%"></div></div><div class="qtext">'+cur.q+'</div>';
+    cur.ch.forEach(function(c,i){h+='<button class="ch" data-i="'+i+'">'+c.h+'</button>'});
+    h+='<div id="fb"></div><div class="row" id="nx"></div>';
+    root.innerHTML=h;
+    var bs=root.querySelectorAll('.ch');
+    Array.prototype.forEach.call(bs,function(b){b.onclick=function(){answer(+b.getAttribute('data-i'),bs)}});
+    try{if(done>0&&root.getBoundingClientRect().top<0)root.scrollIntoView({block:'start'})}catch(e){}
+  }
+  function answer(i,bs){
+    var c=cur.ch[i];Array.prototype.forEach.call(bs,function(b,k){b.disabled=true;if(cur.ch[k].ok)b.classList.add('good');else if(k===i)b.classList.add('bad')});
+    done++;
+    if(c.ok){$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+(cur.why||'')+'</div>'}
+    else{wrong++;planned+=PEN;if(cur.lab)miss[cur.lab]=(miss[cur.lab]||0)+1;
+      /* consolidation ciblée : le même type de question revient deux fois (avec d'autres valeurs) */
+      if(cur.gi>=0){bag.push(cur.gi);bag.splice(Math.max(0,bag.length-2),0,cur.gi)}
+      $('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> La bonne réponse est en vert. '+(c.tip?'<br><b>Ton erreur :</b> '+c.tip+'<br>':'')+(cur.why||'')+'<br><b>+'+PEN+' questions</b> pour consolider, dont des questions du même type.</div>'}
+    $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';
+    $('go').onclick=show;
+    try{$('go').scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
+  }
+  function end(){
+    setMastered(itemId,true);
+    root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Test terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur : sans faute.':wrong+' erreur'+(wrong>1?'s':'')+' en route, rattrapée'+(wrong>1?'s':'')+' grâce aux questions de consolidation.')+'</p><div class="fb ok" style="text-align:center;font-size:19px"><b>Tu maîtrises maintenant :</b><br>« '+itemLabel+' »</div>'+(function(){var k=Object.keys(miss);if(!k.length)return '';return '<div class="card warn" style="margin-top:12px"><b>Tes erreurs portaient sur :</b><ul class="pts" style="margin:6px 0">'+k.map(function(l){return '<li>'+l+(miss[l]>1?' (×'+miss[l]+')':'')+'</li>'}).join('')+'</ul>Relis l’explication correspondante en haut de la page avant le prochain test.</div>'})()+'<div class="row"><button class="btn alt" id="again">Refaire un test</button><a class="btn" style="text-decoration:none;display:inline-flex;align-items:center" href="'+hubUrl+'">Retour à la liste</a></div>';
+    $('again').onclick=function(){reset();show()};
+  }
+  root._peek=function(){return cur};
+  reset();show();
+}
+
+/* ===== graphiques de physique (repris du quiz du chapitre) ===== */
+var CB='#2563EB',CP='#DB2777',CO='#EA580C',CV='#7C3AED',CGR='#94A3B8';
+function pf(n){var s=String(+(+n).toFixed(2)).replace('.',',');if(s.charAt(0)==='-')s=M+s.slice(1);return s==='−0'?'0':s}
+function pSeg(x1,y1,x2,y2,c,d){return {k:'l',x1:x1,y1:y1,x2:x2,y2:y2,c:c,d:d}}
+function pDot(x,y,t,dx,dy,c,a){return {k:'p',x:x,y:y,t:t,dx:dx,dy:dy,c:c,a:a}}
+function pTxt(x,y,s,c,dx,dy,a){return {k:'t',x:x,y:y,s:s,c:c,dx:dx,dy:dy,a:a}}
+function pTri(x1,y1,x2,y2,l1,l2,left){return [pSeg(x1,y1,x2,y1,CO,1),pSeg(x2,y1,x2,y2,CO,1),pTxt((x1+x2)/2,y1,l1,CO,0,y2>=y1?15:-6,'middle'),pTxt(x2,(y1+y2)/2,l2,CO,left?-6:6,4,left?'end':'start')]}
+function pTan(f,df,t0,h){h=h||1;return pSeg(t0-h,f(t0)-df*h,t0+h,f(t0)+df*h,CO,0)}
+var PLAB={x:{xl:'t (s)',yl:'x (m)'},v:{xl:'t (s)',yl:'v (m/s)'},a:{xl:'t (s)',yl:'a (m/s²)'}};
+function pGraph(o){
+  var W=o.small?220:340,H=o.small?150:235,L=o.small?36:48,Rm=12,T=o.small?14:20,Bm=o.small?26:38;
+  var x0=o.xr[0],x1=o.xr[1],y0=o.yr[0],y1=o.yr[1];
+  function X(x){return L+(x-x0)/(x1-x0)*(W-L-Rm)}function Y(y){return H-Bm-(y-y0)/(y1-y0)*(H-T-Bm)}
+  var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(o.alt||'graphique')+'">',k,x,y;
+  for(k=0;k<=Math.round((x1-x0)/o.xt);k++){x=x0+k*o.xt;s+='<line class="gr" x1="'+X(x)+'" y1="'+T+'" x2="'+X(x)+'" y2="'+(H-Bm)+'"/>'+(o.small?'':'<text x="'+X(x)+'" y="'+(H-Bm+14)+'" text-anchor="middle">'+pf(x)+'</text>')}
+  for(k=0;k<=Math.round((y1-y0)/o.yt);k++){y=y0+k*o.yt;s+='<line class="gr" x1="'+L+'" y1="'+Y(y)+'" x2="'+(W-Rm)+'" y2="'+Y(y)+'"/>'+((o.small&&!o.ylab)?'':'<text x="'+(L-6)+'" y="'+(Y(y)+4)+'" text-anchor="end">'+pf(y)+'</text>')}
+  if(o.small&&!o.ylab&&y0<=0&&y1>=0)s+='<text x="'+(L-5)+'" y="'+(Y(0)+4)+'" text-anchor="end">0</text>';
+  if(y0<0&&y1>0)s+='<line class="z" x1="'+L+'" y1="'+Y(0)+'" x2="'+(W-Rm)+'" y2="'+Y(0)+'"/>';
+  s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-Bm)+'"/><line class="ax" x1="'+L+'" y1="'+(H-Bm)+'" x2="'+(W-Rm)+'" y2="'+(H-Bm)+'"/>';
+  s+='<text x="'+(L+4)+'" y="'+(o.small?11:12)+'" font-weight="700">'+o.yl+'</text><text x="'+(W-Rm)+'" y="'+(H-5)+'" text-anchor="end" font-weight="700">'+o.xl+'</text>';
+  (o.fill||[]).forEach(function(c){var a=c.a,b=c.b,n=60,p=X(a)+','+Y(0)+' ';for(var i=0;i<=n;i++){var t=a+(b-a)*i/n;p+=X(t).toFixed(1)+','+Y(c.f(t)).toFixed(1)+' '}p+=X(b)+','+Y(0);s+='<polygon points="'+p+'" fill="'+(c.c||CO)+'" opacity=".22"/>'});
+  (o.curves||[]).forEach(function(c){var a=c.a===undefined?x0:c.a,b=c.b===undefined?x1:c.b,n=80,p='';for(var i=0;i<=n;i++){var t=a+(b-a)*i/n;p+=X(t).toFixed(1)+','+Y(c.f(t)).toFixed(1)+' '}
+    s+='<polyline fill="none" stroke="'+(c.c||CB)+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="'+p+'"/>';
+    if(c.lab)s+='<text x="'+X(c.lab[0])+'" y="'+Y(c.lab[1])+'" font-weight="700" style="fill:'+c.c+'" text-anchor="'+(c.lab[3]||'start')+'">'+c.lab[2]+'</text>'});
+  (o.g||[]).forEach(function(p){s+='<line x1="'+X(p[0])+'" y1="'+Y(p[1])+'" x2="'+X(p[0])+'" y2="'+(H-Bm)+'" stroke="'+CGR+'" stroke-dasharray="4 3"/><line x1="'+L+'" y1="'+Y(p[1])+'" x2="'+X(p[0])+'" y2="'+Y(p[1])+'" stroke="'+CGR+'" stroke-dasharray="4 3"/><circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="5" fill="#fff" stroke="#1F2A44" stroke-width="2"/>'});
+  (o.ann||[]).forEach(function(a){
+    if(a.k==='l')s+='<line x1="'+X(a.x1)+'" y1="'+Y(a.y1)+'" x2="'+X(a.x2)+'" y2="'+Y(a.y2)+'" stroke="'+(a.c||CO)+'" stroke-width="'+(a.d?2:3)+'" '+(a.d?'stroke-dasharray="5 4"':'')+'/>';
+    if(a.k==='p'){s+='<circle cx="'+X(a.x)+'" cy="'+Y(a.y)+'" r="5" fill="'+(a.c||CO)+'"/>';if(a.t)s+='<text x="'+(X(a.x)+(a.dx||0))+'" y="'+(Y(a.y)+(a.dy||0))+'" text-anchor="'+(a.a||'start')+'" font-weight="700" style="fill:'+(a.c||CO)+'">'+a.t+'</text>'}
+    if(a.k==='t')s+='<text x="'+(X(a.x)+(a.dx||0))+'" y="'+(Y(a.y)+(a.dy||0))+'" text-anchor="'+(a.a||'middle')+'" font-weight="700" style="fill:'+(a.c||CO)+'">'+a.s+'</text>'});
+  return s+'</svg>';
+}
+function pNice(lo,hi,st){var span=Math.max(hi-lo,1);if(!st)st=[1,2,4,5,10,20,25,50].filter(function(s){return span/s<=8})[0]||100;var a=Math.floor(lo/st+1e-9)*st,b=Math.ceil(hi/st-1e-9)*st;if(a===b)b+=st;return {yr:[a,b],yt:st}}
+function pGR(kind,T,curves,lo,hi,st,extra){var n=pNice(lo,hi,st),o={xl:PLAB[kind].xl,yl:PLAB[kind].yl,xr:[0,T],yr:n.yr,xt:T<=8?1:T<=16?2:5,yt:n.yt,curves:curves};for(var k in (extra||{}))o[k]=extra[k];return pGraph(o)}
+function sgn(){return Math.random()<.5?-1:1}
+function sg2(n){return (n<0?M:'+')+Math.abs(n)}
+/* choix numériques avec unité */
+function numC(ans,cands,unit){var seen={},w=[];function k(x){return pf(x)}seen[k(ans)]=1;
+  function add(c,tip){if(typeof c!=='number'||!isFinite(c))return;c=Math.round(c*100)/100;if(unit==='s'&&c<=0)return;if(!seen[k(c)]){seen[k(c)]=1;w.push({h:pf(c)+' '+unit,v:c,tip:tip})}}
+  cands.forEach(function(c){if(c&&typeof c==='object')add(c[0],c[1]);else add(c)});
+  var fb=unit==='s'?[ans+1,ans*2,ans+2,ans/2,ans+3]:[-ans,ans+1,ans*2,ans-1,ans/2,ans+2];
+  for(var i=0;w.length<3&&i<fb.length;i++)add(fb[i]);
+  return {ok:{h:pf(ans)+' '+unit,v:ans},wr:w}}
+var ADOPT=['Il accélère, dans le sens de l’axe','Il accélère, dans le sens opposé à l’axe','Il décélère, dans le sens de l’axe','Il décélère, dans le sens opposé à l’axe'];
+function adIdx(acc,pos){return acc?(pos?0:1):(pos?2:3)}
+function adQ(q,idx,why){return qcm(q,ADOPT[idx],ADOPT.filter(function(_,i){return i!==idx}),why)}
+/* ===== simulateur : un curseur t qui fait bouger le mobile et un point sur x(t), v(t), a(t) ===== */
+function sim(el,presets){if(!el)return;var P=presets[0],t=0,play=false,last=0,id=el.id;
+  el.innerHTML='<div class="row simb">'+presets.map(function(p,i){return '<button class="btn alt sp" data-i="'+i+'">'+p.lab+'</button>'}).join('')+'</div>'+
+   '<div id="'+id+'_road"></div><div class="row" style="align-items:center"><button class="btn" id="'+id+'_pl">▶ Lancer</button>'+
+   '<input type="range" id="'+id+'_t" min="0" max="6" step="0.05" value="0" style="flex:1;min-width:140px" aria-label="temps"></div>'+
+   '<div class="simv" id="'+id+'_val"></div><div id="'+id+'_g"></div>';
+  function X(s){return P.x0+P.v0*s+P.a*s*s/2}function V(s){return P.v0+P.a*s}
+  function rng(f,T,z){var lo=z?0:1e9,hi=z?0:-1e9;for(var s=0;s<=T+1e-9;s+=T/60){var y=f(s);lo=Math.min(lo,y);hi=Math.max(hi,y)}return [lo,hi]}
+  function road(){var T=P.T,r=rng(X,T,true),lo=r[0],hi=r[1];if(hi-lo<4){hi+=2;lo-=2}var W=340,H=118,L=22,R=22;
+    function px(x){return L+(x-lo)/(hi-lo)*(W-L-R)}
+    var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="le mobile sur son axe">';
+    s+='<rect x="0" y="52" width="'+W+'" height="18" fill="#E5E7EB"/>';
+    s+='<line x1="8" y1="92" x2="'+(W-8)+'" y2="92" stroke="#1F2A44" stroke-width="1.6"/><path d="M'+(W-8)+' 92 l-8 -4 v8 z" fill="#1F2A44"/><text x="'+(W-10)+'" y="110" text-anchor="end" font-weight="700">x (m)</text>';
+    var o=px(0);if(o>=6&&o<=W-6)s+='<path d="M'+(o-6)+' 86 l12 12 M'+(o+6)+' 86 l-12 12" stroke="#1D4ED8" stroke-width="2.4"/><text x="'+o+'" y="110" text-anchor="middle" font-weight="700" style="fill:#1D4ED8">O</text>';
+    for(var k=0;k<=Math.floor(t+1e-9);k++)s+='<circle cx="'+px(X(k)).toFixed(1)+'" cy="61" r="4" fill="#94A3B8"/>';
+    var m=px(X(t)),v=V(t),a=P.a;
+    s+='<circle cx="'+m.toFixed(1)+'" cy="61" r="9" fill="#DC2626"/><line x1="'+m.toFixed(1)+'" y1="70" x2="'+m.toFixed(1)+'" y2="92" stroke="#DC2626" stroke-dasharray="3 3"/>';
+    function arr(y,len,c,l){if(Math.abs(len)<1)return '';var e=m+len;return '<line x1="'+m+'" y1="'+y+'" x2="'+e+'" y2="'+y+'" stroke="'+c+'" stroke-width="3"/><path d="M'+e+' '+y+' l'+(len>0?-8:8)+' -5 v10 z" fill="'+c+'"/><text x="'+(e+(len>0?4:-4))+'" y="'+(y+4)+'" text-anchor="'+(len>0?'start':'end')+'" font-weight="700" style="fill:'+c+'">'+l+'</text>'}
+    s+=arr(38,Math.max(-70,Math.min(70,v*7)),'#2563EB','v')+arr(18,a?(a>0?30:-30):0,'#EA580C','a');
+    return s+'</svg>'}
+  function graphs(){var T=P.T,rx=rng(X,T,true),rv=rng(V,T,true),ra=[Math.min(0,P.a,-1),Math.max(0,P.a,1)];
+    function g(k,f,r){var n=pNice(r[0],r[1]);return '<div><p>'+(k==='x'?'position x(t)':k==='v'?'vitesse v(t)':'accélération a(t)')+'</p>'+pGraph({xl:'t (s)',yl:PLAB[k].yl,xr:[0,T],yr:n.yr,xt:1,yt:n.yt,curves:[{f:f,c:k==='a'?CV:CB}],ann:[pDot(t,f(t),'',0,0,'#DC2626')]})+'</div>'}
+    return '<div class="stack">'+g('x',X,rx)+g('v',V,rv)+g('a',function(){return P.a},ra)+'</div>'}
+  function draw(){$(id+'_road').innerHTML=road();$(id+'_g').innerHTML=graphs();
+    var v=V(t);$(id+'_val').innerHTML='t = '+pf(t)+' s &nbsp; x = '+pf(X(t))+' m &nbsp; v = '+pf(v)+' m/s &nbsp; a = '+pf(P.a)+' m/s²'+(P.say?'<br><span class="small">'+P.say(t)+'</span>':'');
+    $(id+'_t').value=t}
+  function setP(i){P=presets[i];t=0;play=false;$(id+'_pl').textContent='▶ Lancer';$(id+'_t').max=P.T;
+    Array.prototype.forEach.call(el.querySelectorAll('.sp'),function(b,k){b.className='btn sp '+(k===i?'':'alt')});draw()}
+  Array.prototype.forEach.call(el.querySelectorAll('.sp'),function(b){b.onclick=function(){setP(+b.getAttribute('data-i'))}});
+  $(id+'_t').oninput=function(){play=false;$(id+'_pl').textContent='▶ Lancer';t=+this.value;draw()};
+  $(id+'_pl').onclick=function(){if(play){play=false;this.textContent='▶ Lancer';return}if(t>=P.T-1e-6)t=0;play=true;last=0;this.textContent='❚❚ Pause';requestAnimationFrame(tick)};
+  function tick(now){if(!play)return;if(last){t=Math.min(P.T,t+(now-last)/1000)}last=now;draw();if(t>=P.T){play=false;$(id+'_pl').textContent='▶ Lancer';return}requestAnimationFrame(tick)}
+  setP(0)}
+var GENS=[];
+/* @Rencontre : calculer t ou x */
+GENS.push(function(){var kind=pick(['face','face','pour']),ask=pick(['t','x']),ts=R(2,10),vA,vB,L,b;
+  if(kind==='face'){vA=R(2,8);b=R(1,6);vB=-b;L=ts*(vA+b)}else{vA=R(3,9);vB=R(1,vA-2);L=ts*(vA-vB)}
+  var xm=vA*ts,ans=ask==='t'?ts:xm,un=ask==='t'?'s':'m';
+  var c=ask==='t'?[L/vA,kind==='face'?L/Math.abs(vA-b)||ts+3:L/(vA+vB),ts+1,L/(vA+Math.abs(vB))+(kind==='face'?1:0)]:[L-xm,L,vA*(ts+1),xm/2];
+  var o=numC(ans,c,un);
+  var eqs=kind==='face'?'x<sub>A</sub> = 0 + '+vA+' (t '+M+' 0) = '+vA+' t et x<sub>B</sub> = '+L+' '+M+' '+b+' (t '+M+' 0) = '+L+' '+M+' '+b+' t. '+vA+' t = '+L+' '+M+' '+b+' t, donc '+(vA+b)+' t = '+L+' et t = '+ts+' s':'x<sub>A</sub> = '+vA+' (t '+M+' 0) = '+vA+' t et x<sub>B</sub> = '+L+' + '+vB+' (t '+M+' 0) = '+L+' + '+vB+' t. '+vA+' t = '+L+' + '+vB+' t, donc '+(vA-vB)+' t = '+L+' et t = '+ts+' s';
+  return mk({q:'Deux mobiles en MRU sur la même droite. <b>A</b> part de x = 0 avec v = +'+vA+' m/s. Au même instant, <b>B</b> part de x = '+L+' m avec v = '+sg2(vB)+' m/s ('+(kind==='face'?'il va vers A':'dans le même sens que A')+'). '+(ask==='t'?'Au bout de combien de temps se rencontrent-ils ?':'En quelle position x se rencontrent-ils ?'),ok:o.ok,wr:o.wr,num:ans,key:'m'+kind+vA+vB+L+ask,
+   why:'À la rencontre, ils sont au <b>même endroit au même instant</b> : x<sub>A</sub> = x<sub>B</sub>. '+eqs+'. Position : x = '+vA+' × '+ts+' = '+xm+' m.'})});
+/* @Rencontre : un mobile part plus tard */
+GENS.push(function(){var ts,t0,vA,b,L,n=0;do{ts=R(4,12);t0=R(1,ts-2);vA=R(2,6);b=R(2,6);L=vA*ts+b*(ts-t0);n++}while(n<200&&L>300);
+  var xm=vA*ts,o=numC(ts,[[L/(vA+b),'tu as oublié que B part plus tard : sa loi est x<sub>B</sub> = '+L+' '+M+' '+b+' (t '+M+' '+t0+').'],[ts-t0,'c’est la durée pendant laquelle B a roulé (t '+M+' t<sub>0B</sub>), pas l’heure de la rencontre.'],(L-b*t0)/(vA+b),ts+t0],'s');
+  return mk({q:'<b>A</b> part de x = 0 à t = 0 s avec v = +'+vA+' m/s. <b>B</b> part de x = '+L+' m, vers A, avec v = '+M+b+' m/s, mais seulement à <b>t = '+t0+' s</b>. À quel instant t se rencontrent-ils ?',ok:o.ok,wr:o.wr,num:ts,key:'tl'+vA+b+L+t0,
+   why:'B démarre à t<sub>0B</sub> = '+t0+' s : x<sub>B</sub> = '+L+' '+M+' '+b+' (t '+M+' '+t0+'). A : x<sub>A</sub> = '+vA+' (t '+M+' 0) = '+vA+' t. Rencontre : '+vA+' t = '+L+' '+M+' '+b+' t + '+(b*t0)+', donc '+(vA+b)+' t = '+(L+b*t0)+' et <b>t = '+ts+' s</b> (position : x = '+xm+' m). Si on oublie le t<sub>0</sub> de B, on trouve '+pf(L/(vA+b))+' s : faux.'})});
+/* @Rencontre : lire le graphique */
+GENS.push(function(){var ts,vA,b,xs,xb,T,hi,st,n=0;
+  do{ts=R(2,5);vA=R(1,4);b=R(1,4);xs=vA*ts;xb=xs+b*ts;T=Math.min(8,ts+Math.floor(xs/b));hi=Math.max(xb,vA*T);st=[5,4,2,1].filter(function(s){return xs%s===0&&Math.ceil(hi/s)<=10})[0];n++}while(n<500&&(T<ts+1||!st));
+  var fig=function(q){return pGR('x',T,[{f:function(t){return vA*t},c:CB,lab:[T*.85,vA*T*.85+hi*.05,'A',CB]},{f:function(t){return xb-b*t},c:CP,lab:[.25,xb-hi*.07,'B',CP]}],0,hi,st,{ann:q?[pDot(ts,xs,'rencontre',0,-12,CO,'middle'),pSeg(ts,0,ts,xs,CO,1),pSeg(0,xs,ts,xs,CO,1)]:[]})};
+  var ok='à t = '+ts+' s, en x = '+xs+' m',w=['à t = '+xs+' s, en x = '+ts+' m','à t = '+(ts+1)+' s, en x = '+(vA*(ts+1))+' m','à t = '+(ts-1)+' s, en x = '+(vA*(ts-1))+' m','à t = 0 s, en x = '+xb+' m'].filter(function(x){return x!==ok});
+  return qcm('Voici les graphiques x(t) de deux mobiles A et B. Où et quand se rencontrent-ils ?'+fig(false),ok,w,'Ils se rencontrent là où les courbes <b>se croisent</b> : même instant <b>et</b> même position. On lit t sur l’axe horizontal et x sur l’axe vertical.'+fig(true))});
+/* @Droites parallèles : pas de rencontre */
+GENS.push(function(){var vA=R(1,4),d=R(1,3)*2,T=8,hi=d+vA*T,p=R(2,7);
+  var G=pGR('x',T,[{f:function(t){return vA*t},c:CB,lab:[6.3,vA*6.3-hi*.08,'A',CB]},{f:function(t){return d+vA*t},c:CP,lab:[5.5,d+vA*5.5+hi*.05,'B',CP]}],0,hi);
+  return qcm('A et B se rencontrent-ils ?'+G,'Non, jamais : ils ont la même vitesse',['Oui, à t = '+p+' s, quand A rattrape B','Oui, si on prolonge le graphique assez loin','Non, car B est parti plus loin que A'],'Les droites sont <b>parallèles</b> : même pente, donc même vitesse. L’écart de '+d+' m ne change jamais.')});
+/* @Rencontre : mettre en équation */
+GENS.push(function(){var vA=R(2,6),L=pick([100,120,150,200]),b=R(2,5),face=Math.random()<.5;
+  var xb=face?L+' '+M+' '+b+' t':L+' + '+b+' t';
+  return qcm('A part de x = 0 avec v = +'+vA+' m/s. B part au même instant de x = '+L+' m avec v = '+(face?M:'+')+b+' m/s. Quelle équation donne l’instant de la rencontre ?',vA+' t = '+xb,[vA+' t + '+(face?L+' + '+b+' t':L+' '+M+' '+b+' t')+' = 0',vA+' t = '+L,vA+' + t = '+L+(face?' '+M+' ':' + ')+b],
+   'On écrit la loi du MRU pour chaque mobile (x = x<sub>0</sub> + v t), puis on écrit qu’ils sont au même endroit : <b>x<sub>A</sub> = x<sub>B</sub></b>.')});
+/* ----- animation : la rencontre, B part plus tard ----- */
+var VA=6,VB=-4,LL=100,T0B=5,TS=12;
+function xA(t){return VA*t}
+function xB(t){return t<T0B?LL:LL+VB*(t-T0B)}
+function road(t){var W=340,H=100,X=function(x){return 20+300*x/LL},xa=xA(t),xb=xB(t);
+  var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="la route"><text x="170" y="16" text-anchor="middle" font-weight="700">horloge : t = '+t+' s</text><rect x="10" y="36" width="320" height="30" rx="4" fill="#E2E8F0"/>';
+  s+='<line x1="20" y1="80" x2="326" y2="80" stroke="#1F2A44" stroke-width="1.4"/><path d="M326 80 l-7 -4 v8 z" fill="#1F2A44"/><text x="20" y="94" text-anchor="middle">0</text><text x="320" y="94" text-anchor="middle">'+LL+' m</text>';
+  s+='<rect x="'+(X(xa)-12)+'" y="40" width="24" height="9" rx="3" fill="#2563EB"/><text x="'+X(xa)+'" y="32" text-anchor="middle" font-weight="700" style="fill:#2563EB">A</text>';
+  s+='<rect x="'+(X(xb)-12)+'" y="53" width="24" height="9" rx="3" fill="#DB2777"/><text x="'+(X(xb)-16)+'" y="61" text-anchor="end" font-weight="700" style="fill:#DB2777">B'+(t<T0B?' (attend)':'')+'</text>';
+  return s+'</svg>'}
+function mGraph(t,show){var c=[{f:xA,a:0,b:Math.max(t,.01),c:CB,lab:[Math.max(t,1)*.55,xA(Math.max(t,1)*.55)+9,'A',CB,'end']},{f:xB,a:0,b:Math.max(t,.01),c:CP,lab:[.3,LL-8,'B',CP]}];
+  var ann=[];if(t>=T0B)ann.push(pDot(T0B,LL,'t₀B = 5 s',0,-10,CP,'middle'));if(show)ann.push(pDot(TS,xA(TS),'rencontre',0,-12,CO,'middle'));
+  return pGR('x',14,c,0,LL,20,{ann:ann})}
+function meetSteps(){return [
+  {eq:'A : 0 m, +6 m/s, départ à 0 s &nbsp; B : 100 m, −4 m/s, départ à 5 s',vis:road(0)+mGraph(0),txt:'On déclenche <b>une seule horloge</b> quand A démarre : c’est t. À t = 0 s, A part de x = 0. B, lui, attend en x = 100 m.'},
+  {eq:'t = 5 s',vis:road(5)+mGraph(5),txt:'À t = 5 s, B démarre : <b>t<sub>0B</sub> = 5 s</b>. A roule déjà depuis 5 s et a parcouru 6 × 5 = 30 m. Sur x(t), la courbe de B était horizontale (il était à l’arrêt).'},
+  {eq:'t = 8 s : A roule depuis 8 s, B depuis 3 s',vis:road(8)+mGraph(8),txt:'À t = 8 s, A roule depuis <b>8 − 0 = 8 s</b> : x<sub>A</sub> = 6 × 8 = 48 m. B roule depuis seulement <b>8 − 5 = 3 s</b> : x<sub>B</sub> = 100 − 4 × 3 = 88 m. Chaque mobile a sa propre durée Δt = t − t<sub>0</sub>.'},
+  {eq:'t = 12 s : x<sub>A</sub> = x<sub>B</sub> = 72 m',vis:road(12)+mGraph(12,true),txt:'À t = 12 s, ils sont au <b>même endroit</b> : x = 72 m. Sur le graphique, les deux courbes se croisent.'},
+  {eq:'6 (t − 0) = 100 − 4 (t − 5)',vis:mGraph(12,true),txt:'<b>Par le calcul.</b> x<sub>A</sub> = 0 + 6 (t − 0) et x<sub>B</sub> = 100 − 4 (t − 5). Rencontre : 6t = 100 − 4t + 20, donc 10t = 120 et <b>t = 12 s</b>. Position : x = 6 × 12 = <b>72 m</b>.'}]}
+stepper($('meet'),meetSteps,{});
+
+GENS[0].lab="Rencontre : calculer t ou x";GENS[1].lab="Rencontre : un mobile part plus tard";GENS[2].lab="Rencontre : lire le graphique";GENS[3].lab="Droites parallèles : pas de rencontre";GENS[4].lab="Rencontre : mettre en équation";
+
+
+document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'b6',"Rencontre de deux mobiles en MRU",'./')};
+</script></body></html>
