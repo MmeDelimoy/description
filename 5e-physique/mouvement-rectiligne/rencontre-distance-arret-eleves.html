@@ -82,9 +82,17 @@ sub{font-size:.75em}
 </style></head><body><div class="wrap">
 <div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 6 / 6</span></div>
 <h1>Rencontre de deux mobiles et distance d’arrêt</h1>
-<div class="card goal"><span class="badge">Objectif</span><div>Calculer le <b>lieu et l’instant</b> de la rencontre de deux mobiles en MRU, et la <b>distance d’arrêt</b> d’un véhicule.</div></div>
-<div class="card"><span class="badge">Comprendre</span><h2>Deux voitures face à face</h2><p>Clique sur « Suivant ».</p><div id="meet"></div></div>
-<div class="card key"><span class="badge">Méthode : la rencontre</span><ol class="steps"><li>Choisir <b>un seul repère</b> pour les deux mobiles (origine, sens, t<sub>0</sub>).</li><li>Écrire la loi de chacun avec <b>(t − t<sub>0</sub>)</b> : x<sub>A</sub> = x<sub>0A</sub> + v<sub>A</sub> (t − t<sub>0A</sub>) et x<sub>B</sub> = x<sub>0B</sub> + v<sub>B</sub> (t − t<sub>0B</sub>), avec les <b>signes</b> des vitesses. t est le même pour les deux : c’est l’heure lue sur une seule horloge. Si un mobile part plus tard, son t<sub>0</sub> n’est pas 0.</li><li>Rencontre : <b>x<sub>A</sub> = x<sub>B</sub></b>. On résout pour trouver t.</li><li>On remplace t dans une des lois pour trouver x.</li></ol><p>Sur un graphique x(t), la rencontre est le point où les deux droites se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
+<div class="card goal"><span class="badge">Objectif</span><div>Calculer le <b>lieu et l’instant</b> de la rencontre de deux mobiles en MRU, même s’ils ne partent pas en même temps, et la <b>distance d’arrêt</b> d’un véhicule.</div></div>
+<div class="card ex"><span class="badge">L’énoncé</span><p>Une voiture A part de x = 0 m à 6 m/s. <b>5 secondes plus tard</b>, une voiture B part de x = 100 m et roule vers A à 4 m/s. Où et quand se croisent-elles ?</p></div>
+<div class="card key"><span class="badge">Le problème</span><p>Pour un MRU, on sait que l’espace parcouru vaut <b>v · Δt</b>, où Δt est la <b>durée pendant laquelle le mobile a roulé</b>.</p>
+<p>Mais ici, A et B n’ont pas roulé pendant la même durée : quand A roule depuis 8 s, B ne roule que depuis 3 s. On ne peut donc pas écrire « Δt » tout court pour les deux.</p>
+<p><b>La solution :</b> une seule horloge pour tout le monde.</p>
+<ul class="pts"><li><b>t</b> : l’heure lue sur l’horloge, la même pour A et pour B ;</li><li><b>t<sub>0</sub></b> : l’heure à laquelle <b>ce</b> mobile démarre (t<sub>0A</sub> = 0 s, t<sub>0B</sub> = 5 s) ;</li><li><b>Δt = t − t<sub>0</sub></b> : la durée pendant laquelle ce mobile a roulé.</li></ul>
+<table class="sg"><tr><th>horloge t</th><th>A a roulé</th><th>B a roulé</th></tr><tr><td>5 s</td><td>5 − 0 = 5 s</td><td>5 − 5 = 0 s</td></tr><tr><td>8 s</td><td>8 − 0 = 8 s</td><td>8 − 5 = 3 s</td></tr><tr><td>12 s</td><td>12 − 0 = 12 s</td><td>12 − 5 = 7 s</td></tr></table>
+<p class="f">x<sub>A</sub> = 0 + 6 (t − 0) &nbsp;&nbsp; x<sub>B</sub> = 100 − 4 (t − 5)</p>
+<p>Ces deux lois utilisent <b>le même t</b> : on peut donc écrire qu’à la rencontre, x<sub>A</sub> = x<sub>B</sub>.</p></div>
+<div class="card"><span class="badge">Comprendre</span><h2>L’énoncé en images</h2><p>Clique sur « Suivant ».</p><div id="meet"></div></div>
+<div class="card"><span class="badge">Méthode</span><ol class="steps"><li>Choisir <b>un seul repère</b> : une origine et un sens pour les positions, une seule horloge pour le temps.</li><li>Pour chaque mobile, noter x<sub>0</sub>, v (avec son <b>signe</b>) et t<sub>0</sub>, l’heure de son départ.</li><li>Écrire sa loi : x = x<sub>0</sub> + v (t − t<sub>0</sub>).</li><li>Rencontre : <b>x<sub>A</sub> = x<sub>B</sub></b>. On résout pour trouver t.</li><li>On remplace t dans une des deux lois pour trouver x. On vérifie que t est après les deux départs.</li></ol><p>Sur un graphique x(t), la rencontre est le point où les deux courbes se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
 <div class="card"><h2>La distance d’arrêt</h2><p>Distance d’arrêt = distance de <b>réaction</b> + distance de <b>freinage</b>.</p>
 <ul class="pts"><li><b>Réaction</b> (le conducteur n’a pas encore freiné) : MRU, d<sub>r</sub> = v · t<sub>r</sub>.</li><li><b>Freinage</b> : MRUA jusqu’à v = 0. Durée : Δt = <span class="fr"><span>v</span><span>|a|</span></span> ; distance : d<sub>f</sub> = <span class="fr"><span>v²</span><span>2 |a|</span></span>.</li></ul>
 <p>Toujours convertir la vitesse en m/s d’abord (÷ 3,6).</p></div>
@@ -357,19 +365,25 @@ GENS.push(function(){var v=pick([10,15,20,25,30]),a=pick([2,4,5,8,10]),t=v/a;
   var o=numC(t,[a/v,v*a,v/(2*a),t+1],'s');
   return mk({q:'Un mobile roule à <b>'+v+' m/s</b> et freine avec une décélération constante de <b>'+a+' m/s²</b>. Combien de temps lui faut-il pour s’arrêter ?',ok:o.ok,wr:o.wr,num:t,key:'tf'+v+a,
    why:'v = v<sub>0</sub> + a Δt avec v = 0 et a = '+M+a+' m/s² : 0 = '+v+' '+M+' '+a+' Δt, donc Δt = '+frs(v,a)+' = <b>'+pf(t)+' s</b>.'})});
-/* ----- animation : la rencontre ----- */
-function road(t,vA,vB,L){var W=340,H=90,X=function(x){return 20+300*x/L},xa=vA*t,xb=L+vB*t;
-  var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="la route"><rect x="10" y="38" width="320" height="24" rx="4" fill="#E2E8F0"/><line x1="20" y1="72" x2="326" y2="72" stroke="#1F2A44" stroke-width="1.4"/><path d="M326 72 l-7 -4 v8 z" fill="#1F2A44"/><text x="20" y="86" text-anchor="middle">0</text><text x="320" y="86" text-anchor="middle">'+L+' m</text><text x="330" y="86" text-anchor="end" font-weight="700"> </text>';
-  s+='<rect x="'+(X(xa)-12)+'" y="40" width="24" height="9" rx="3" fill="#2563EB"/><text x="'+X(xa)+'" y="34" text-anchor="middle" font-weight="700" style="fill:#2563EB">A</text>';
-  s+='<rect x="'+(X(xb)-12)+'" y="51" width="24" height="9" rx="3" fill="#DB2777"/><text x="'+(X(xb)+16)+'" y="59" text-anchor="start" font-weight="700" style="fill:#DB2777">B</text>';
-  return s+'<text x="170" y="16" text-anchor="middle" font-weight="700">t = '+t+' s</text></svg>'}
-function mGraph(t,vA,vB,L,T,show){return pGR('x',T,[{f:function(s){return vA*s},a:0,b:t,c:CB,lab:[Math.max(t,.1)*.6,vA*t*.6+L*.06,'A',CB]},{f:function(s){return L+vB*s},a:0,b:t,c:CP,lab:[.2,L*.92,'B',CP]}],0,L,undefined,show?{ann:[pDot(show[0],show[1],'rencontre',0,-12,CO,'middle')]}:{})}
-function meetSteps(){var vA=6,vB=-4,L=100,ts=10,T=14;
-  return [
-  {eq:'A : x<sub>0</sub> = 0, v = +6 m/s &nbsp; B : x<sub>0</sub> = 100 m, v = '+M+'4 m/s',vis:road(0,vA,vB,L)+mGraph(0,vA,vB,L,T),txt:'Deux voitures roulent l’une vers l’autre, en MRU. On choisit un seul axe pour les deux : origine au départ de A, sens de A vers B. B a donc une vitesse <b>négative</b>.'},
-  {eq:'t = 4 s',vis:road(4,vA,vB,L)+mGraph(4,vA,vB,L,T),txt:'Après 4 s : A est en x = 24 m, B en x = 100 '+M+' 16 = 84 m. On trace leurs positions en fonction du temps : deux droites.'},
-  {eq:'t = 10 s',vis:road(10,vA,vB,L)+mGraph(10,vA,vB,L,T,[10,60]),txt:'Après 10 s, ils sont au <b>même endroit</b> : x = 60 m. Sur le graphique, les deux droites <b>se croisent</b>.'},
-  {eq:'x<sub>A</sub> = x<sub>B</sub>',vis:mGraph(10,vA,vB,L,T,[10,60]),txt:'<b>Par le calcul.</b> Les deux partent à t<sub>0</sub> = 0 s : x<sub>A</sub> = 0 + 6 (t '+M+' 0) = 6 t et x<sub>B</sub> = 100 '+M+' 4 (t '+M+' 0) = 100 '+M+' 4 t. Rencontre : 6 t = 100 '+M+' 4 t, donc 10 t = 100 et <b>t = 10 s</b>. Position : x = 6 × 10 = <b>60 m</b>.'}]}
+/* ----- animation : la rencontre, B part plus tard ----- */
+var VA=6,VB=-4,LL=100,T0B=5,TS=12;
+function xA(t){return VA*t}
+function xB(t){return t<T0B?LL:LL+VB*(t-T0B)}
+function road(t){var W=340,H=100,X=function(x){return 20+300*x/LL},xa=xA(t),xb=xB(t);
+  var s='<svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="la route"><text x="170" y="16" text-anchor="middle" font-weight="700">horloge : t = '+t+' s</text><rect x="10" y="36" width="320" height="30" rx="4" fill="#E2E8F0"/>';
+  s+='<line x1="20" y1="80" x2="326" y2="80" stroke="#1F2A44" stroke-width="1.4"/><path d="M326 80 l-7 -4 v8 z" fill="#1F2A44"/><text x="20" y="94" text-anchor="middle">0</text><text x="320" y="94" text-anchor="middle">'+LL+' m</text>';
+  s+='<rect x="'+(X(xa)-12)+'" y="40" width="24" height="9" rx="3" fill="#2563EB"/><text x="'+X(xa)+'" y="32" text-anchor="middle" font-weight="700" style="fill:#2563EB">A</text>';
+  s+='<rect x="'+(X(xb)-12)+'" y="53" width="24" height="9" rx="3" fill="#DB2777"/><text x="'+(X(xb)-16)+'" y="61" text-anchor="end" font-weight="700" style="fill:#DB2777">B'+(t<T0B?' (attend)':'')+'</text>';
+  return s+'</svg>'}
+function mGraph(t,show){var c=[{f:xA,a:0,b:Math.max(t,.01),c:CB,lab:[Math.max(t,1)*.55,xA(Math.max(t,1)*.55)+9,'A',CB,'end']},{f:xB,a:0,b:Math.max(t,.01),c:CP,lab:[.3,LL-8,'B',CP]}];
+  var ann=[];if(t>=T0B)ann.push(pDot(T0B,LL,'t₀B = 5 s',0,-10,CP,'middle'));if(show)ann.push(pDot(TS,xA(TS),'rencontre',0,-12,CO,'middle'));
+  return pGR('x',14,c,0,LL,20,{ann:ann})}
+function meetSteps(){return [
+  {eq:'A : 0 m, +6 m/s, départ à 0 s &nbsp; B : 100 m, −4 m/s, départ à 5 s',vis:road(0)+mGraph(0),txt:'On déclenche <b>une seule horloge</b> quand A démarre : c’est t. À t = 0 s, A part de x = 0. B, lui, attend en x = 100 m.'},
+  {eq:'t = 5 s',vis:road(5)+mGraph(5),txt:'À t = 5 s, B démarre : <b>t<sub>0B</sub> = 5 s</b>. A roule déjà depuis 5 s et a parcouru 6 × 5 = 30 m. Sur x(t), la courbe de B était horizontale (il était à l’arrêt).'},
+  {eq:'t = 8 s : A roule depuis 8 s, B depuis 3 s',vis:road(8)+mGraph(8),txt:'À t = 8 s, A roule depuis <b>8 − 0 = 8 s</b> : x<sub>A</sub> = 6 × 8 = 48 m. B roule depuis seulement <b>8 − 5 = 3 s</b> : x<sub>B</sub> = 100 − 4 × 3 = 88 m. Chaque mobile a sa propre durée Δt = t − t<sub>0</sub>.'},
+  {eq:'t = 12 s : x<sub>A</sub> = x<sub>B</sub> = 72 m',vis:road(12)+mGraph(12,true),txt:'À t = 12 s, ils sont au <b>même endroit</b> : x = 72 m. Sur le graphique, les deux courbes se croisent.'},
+  {eq:'6 (t − 0) = 100 − 4 (t − 5)',vis:mGraph(12,true),txt:'<b>Par le calcul.</b> x<sub>A</sub> = 0 + 6 (t − 0) et x<sub>B</sub> = 100 − 4 (t − 5). Rencontre : 6t = 100 − 4t + 20, donc 10t = 120 et <b>t = 12 s</b>. Position : x = 6 × 12 = <b>72 m</b>.'}]}
 stepper($('meet'),meetSteps,{});
 
 
