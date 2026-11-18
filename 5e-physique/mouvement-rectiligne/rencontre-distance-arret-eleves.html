@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rencontre de deux mobiles et distance d’arrêt</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+<title>Rencontre de deux mobiles, distance et temps d’arrêt</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
@@ -78,31 +78,63 @@ svg.pg text{font:11px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;f
 svg.pg .gr{stroke:#E2E8F0;stroke-width:1}svg.pg .ax{stroke:#1F2A44;stroke-width:1.6}svg.pg .z{stroke:#1F2A44;stroke-width:1.3}
 .trio{display:flex;flex-wrap:wrap;gap:6px}.trio>div{flex:1;min-width:30%}.trio p{text-align:center;margin:2px 0;font-weight:700}
 .ch svg.pg{max-width:220px;margin:2px auto}
+h2.part{margin:28px 0 10px;padding-top:6px;border-top:2px solid var(--line);color:var(--navy)}
+.qbox:empty{display:none}.qbox{margin-top:10px}
 sub{font-size:.75em}
 </style></head><body><div class="wrap">
 <div class="top"><a href="./">← Mouvement rectiligne</a><span>Point 6 / 6</span></div>
-<h1>Rencontre de deux mobiles et distance d’arrêt</h1>
-<div class="card goal"><span class="badge">Objectif</span><div>Calculer le <b>lieu et l’instant</b> de la rencontre de deux mobiles en MRU, même s’ils ne partent pas en même temps, et la <b>distance d’arrêt</b> d’un véhicule.</div></div>
+<h1>Rencontre de deux mobiles, distance et temps d’arrêt</h1>
+<div class="card goal"><span class="badge">Objectifs</span><ul class="pts" style="margin:6px 0 0">
+<li><a href="#p1"><b>Rencontre de deux mobiles en MRU</b></a> : trouver où et quand ils se croisent, même s’ils ne partent pas en même temps.</li>
+<li><a href="#p2"><b>Distance d’arrêt</b></a>, avec le temps de réaction.</li>
+<li><a href="#p3"><b>Temps d’arrêt</b></a>, quand la décélération est connue ou quand c’est la distance d’arrêt qui est connue.</li></ul>
+<p style="margin:8px 0 0">Chaque partie se termine par son propre quiz.</p></div>
+
+<h2 class="part" id="p1">1. Rencontre de deux mobiles en MRU</h2>
 <div class="card ex"><span class="badge">L’énoncé</span><p>Une voiture A part de x = 0 m à 6 m/s. <b>5 secondes plus tard</b>, une voiture B part de x = 100 m et roule vers A à 4 m/s. Où et quand se croisent-elles ?</p></div>
-<div class="card key"><span class="badge">Le problème</span><p>Pour un MRU, on sait que l’espace parcouru vaut <b>v · Δt</b>, où Δt est la <b>durée pendant laquelle le mobile a roulé</b>.</p>
+<div class="card key"><span class="badge">Le problème</span><p>Pour un MRU, l’espace parcouru vaut <b>v · Δt</b>, où Δt est la <b>durée pendant laquelle le mobile a roulé</b>.</p>
 <p>Mais ici, A et B n’ont pas roulé pendant la même durée : quand A roule depuis 8 s, B ne roule que depuis 3 s. On ne peut donc pas écrire « Δt » tout court pour les deux.</p>
 <p><b>La solution :</b> une seule horloge pour tout le monde.</p>
 <ul class="pts"><li><b>t</b> : l’heure lue sur l’horloge, la même pour A et pour B ;</li><li><b>t<sub>0</sub></b> : l’heure à laquelle <b>ce</b> mobile démarre (t<sub>0A</sub> = 0 s, t<sub>0B</sub> = 5 s) ;</li><li><b>Δt = t − t<sub>0</sub></b> : la durée pendant laquelle ce mobile a roulé.</li></ul>
-<table class="sg"><tr><th>horloge t</th><th>A a roulé</th><th>B a roulé</th></tr><tr><td>5 s</td><td>5 − 0 = 5 s</td><td>5 − 5 = 0 s</td></tr><tr><td>8 s</td><td>8 − 0 = 8 s</td><td>8 − 5 = 3 s</td></tr><tr><td>12 s</td><td>12 − 0 = 12 s</td><td>12 − 5 = 7 s</td></tr></table>
-<p class="f">x<sub>A</sub> = 0 + 6 (t − 0) &nbsp;&nbsp; x<sub>B</sub> = 100 − 4 (t − 5)</p>
-<p>Ces deux lois utilisent <b>le même t</b> : on peut donc écrire qu’à la rencontre, x<sub>A</sub> = x<sub>B</sub>.</p></div>
+<table class="sg"><tr><th>horloge t</th><th>A a roulé</th><th>B a roulé</th></tr><tr><td>5 s</td><td>5 − 0 = 5 s</td><td>5 − 5 = 0 s</td></tr><tr><td>8 s</td><td>8 − 0 = 8 s</td><td>8 − 5 = 3 s</td></tr><tr><td>12 s</td><td>12 − 0 = 12 s</td><td>12 − 5 = 7 s</td></tr></table></div>
 <div class="card"><span class="badge">Comprendre</span><h2>L’énoncé en images</h2><p>Clique sur « Suivant ».</p><div id="meet"></div></div>
-<div class="card"><span class="badge">Méthode</span><ol class="steps"><li>Choisir <b>un seul repère</b> : une origine et un sens pour les positions, une seule horloge pour le temps.</li><li>Pour chaque mobile, noter x<sub>0</sub>, v (avec son <b>signe</b>) et t<sub>0</sub>, l’heure de son départ.</li><li>Écrire sa loi : x = x<sub>0</sub> + v (t − t<sub>0</sub>).</li><li>Rencontre : <b>x<sub>A</sub> = x<sub>B</sub></b>. On résout pour trouver t.</li><li>On remplace t dans une des deux lois pour trouver x. On vérifie que t est après les deux départs.</li></ol><p>Sur un graphique x(t), la rencontre est le point où les deux courbes se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
-<div class="card"><h2>La distance d’arrêt</h2><p>Distance d’arrêt = distance de <b>réaction</b> + distance de <b>freinage</b>.</p>
-<ul class="pts"><li><b>Réaction</b> (le conducteur n’a pas encore freiné) : MRU, d<sub>r</sub> = v · t<sub>r</sub>.</li><li><b>Freinage</b> : MRUA jusqu’à v = 0. Durée : Δt = <span class="fr"><span>v</span><span>|a|</span></span> ; distance : d<sub>f</sub> = <span class="fr"><span>v²</span><span>2 |a|</span></span>.</li></ul>
-<p>Toujours convertir la vitesse en m/s d’abord (÷ 3,6).</p></div>
-<div class="card ex"><span class="badge">Exemple</span><p>72 km/h, réaction 1 s, décélération 5 m/s².</p><p class="f">v = 72 ÷ 3,6 = 20 m/s<br>réaction : 20 × 1 = 20 m<br>freinage : <span class="fr"><span>20²</span><span>2 × 5</span></span> = 40 m<br>distance d’arrêt : 60 m</p></div>
+<div class="card ex"><span class="badge">Exemple détaillé</span><ol class="steps">
+<li><b>Repère.</b> Origine au départ de A, sens de A vers B, horloge déclenchée au départ de A.</li>
+<li><b>Données.</b> A : x<sub>0A</sub> = 0 m, v<sub>A</sub> = +6 m/s, t<sub>0A</sub> = 0 s. &nbsp;B : x<sub>0B</sub> = 100 m, v<sub>B</sub> = −4 m/s (il va vers A), t<sub>0B</sub> = 5 s.</li>
+<li><b>Lois.</b> x<sub>A</sub> = 0 + 6 (t − 0) = 6t &nbsp;et&nbsp; x<sub>B</sub> = 100 − 4 (t − 5) = 120 − 4t.</li>
+<li><b>Rencontre.</b> x<sub>A</sub> = x<sub>B</sub> : 6t = 120 − 4t, donc 10t = 120 et <b>t = 12 s</b>.</li>
+<li><b>Position.</b> x = 6 × 12 = <b>72 m</b>. Vérification avec B : 100 − 4 × (12 − 5) = 72 m. Et 12 s est bien après les deux départs.</li></ol>
+<p>Sur un graphique x(t), la rencontre est le point où les deux courbes se croisent. Deux droites parallèles (même vitesse) ne se croisent jamais.</p></div>
+<div class="card qz"><span class="badge">Teste-toi</span><h2>Quiz : la rencontre</h2><p>10 questions, +3 par faute.</p><div class="row"><button class="btn qbtn" data-q="r">Je lance le quiz</button></div><div class="qbox" id="qr"></div></div>
+
+<h2 class="part" id="p2">2. La distance d’arrêt</h2>
+<div class="card key"><span class="badge">À connaître</span><p>Entre le moment où le danger apparaît et l’arrêt, il y a deux phases :</p>
+<ul class="pts"><li><b>la réaction</b> : le conducteur n’a pas encore freiné. C’est un <b>MRU</b> : d<sub>r</sub> = v · t<sub>r</sub> ;</li><li><b>le freinage</b> : c’est un <b>MRUA</b> jusqu’à v = 0. On trouve d’abord sa durée avec v = v<sub>0</sub> + aΔt, puis la distance avec Δx = v<sub>0</sub>Δt + ½aΔt².</li></ul>
+<p class="f"><b>distance d’arrêt = distance de réaction + distance de freinage</b></p>
+<p>On convertit toujours la vitesse en m/s d’abord (÷ 3,6). Raccourci pour le freinage : d<sub>f</sub> = <span class="fr"><span>v<sub>0</sub>²</span><span>2 |a|</span></span>. La vitesse est au carré : si elle double, la distance de freinage est multipliée par 4.</p></div>
+<div class="card ex"><span class="badge">Exemple détaillé</span><p>Une voiture roule à 90 km/h. Temps de réaction : 1 s. Décélération : 5 m/s². Quelle est sa distance d’arrêt ?</p><ol class="steps">
+<li><b>Vitesse en m/s.</b> v<sub>0</sub> = 90 ÷ 3,6 = 25 m/s.</li>
+<li><b>Réaction (MRU).</b> d<sub>r</sub> = 25 × 1 = 25 m.</li>
+<li><b>Durée du freinage.</b> v = v<sub>0</sub> + aΔt avec v = 0 et a = −5 m/s² : 0 = 25 − 5Δt, donc Δt = 5 s.</li>
+<li><b>Distance de freinage.</b> Δx = 25 × 5 + ½ × (−5) × 5² = 125 − 62,5 = 62,5 m. (Raccourci : <span class="fr"><span>25²</span><span>2 × 5</span></span> = 62,5 m.)</li>
+<li><b>Distance d’arrêt.</b> 25 + 62,5 = <b>87,5 m</b>.</li></ol></div>
+<div class="card qz"><span class="badge">Teste-toi</span><h2>Quiz : la distance d’arrêt</h2><p>10 questions, +3 par faute.</p><div class="row"><button class="btn qbtn" data-q="d">Je lance le quiz</button></div><div class="qbox" id="qd"></div></div>
+
+<h2 class="part" id="p3">3. Le temps d’arrêt</h2>
+<div class="card key"><span class="badge">À connaître</span><p class="f"><b>temps d’arrêt = temps de réaction + durée du freinage</b></p>
+<ul class="pts"><li><b>Si la décélération a est connue</b> : 0 = v<sub>0</sub> + aΔt, donc Δt = <span class="fr"><span>v<sub>0</sub></span><span>|a|</span></span>.</li>
+<li><b>Si a n’est pas connue, mais la distance d’arrêt oui</b> : on retire la distance de réaction pour obtenir d<sub>f</sub>. Pendant un freinage régulier, la vitesse passe de v<sub>0</sub> à 0 : sa <b>moyenne</b> vaut <span class="fr"><span>v<sub>0</sub></span><span>2</span></span>. Donc d<sub>f</sub> = <span class="fr"><span>v<sub>0</sub></span><span>2</span></span> · Δt, et <b>Δt = <span class="fr"><span>2 d<sub>f</sub></span><span>v<sub>0</sub></span></span></b>. On peut ensuite retrouver a = <span class="fr"><span>0 − v<sub>0</sub></span><span>Δt</span></span>.</li></ul></div>
+<div class="card ex"><span class="badge">Exemple détaillé : a connue</span><p>La voiture de l’exemple précédent : 25 m/s, réaction 1 s, décélération 5 m/s².</p><ol class="steps">
+<li><b>Freinage.</b> 0 = 25 − 5Δt, donc Δt = 5 s.</li><li><b>Temps d’arrêt.</b> 1 + 5 = <b>6 s</b>.</li></ol></div>
+<div class="card ex"><span class="badge">Exemple détaillé : a inconnue</span><p>Une voiture roule à 72 km/h. Le conducteur réagit en 1 s, puis freine. Elle s’arrête 60 m après l’apparition du danger. Combien de temps a duré l’arrêt ? Quelle était la décélération ?</p><ol class="steps">
+<li><b>Vitesse en m/s.</b> v<sub>0</sub> = 72 ÷ 3,6 = 20 m/s.</li>
+<li><b>Réaction (MRU).</b> d<sub>r</sub> = 20 × 1 = 20 m.</li>
+<li><b>Distance de freinage.</b> d<sub>f</sub> = 60 − 20 = 40 m.</li>
+<li><b>Durée du freinage.</b> Vitesse moyenne : <span class="fr"><span>20</span><span>2</span></span> = 10 m/s, donc Δt = <span class="fr"><span>40</span><span>10</span></span> = 4 s.</li>
+<li><b>Temps d’arrêt.</b> 1 + 4 = <b>5 s</b>.</li>
+<li><b>Décélération.</b> a = <span class="fr"><span>0 − 20</span><span>4</span></span> = −5 m/s², soit une décélération de 5 m/s².</li></ol></div>
+<div class="card qz"><span class="badge">Teste-toi</span><h2>Quiz : le temps d’arrêt</h2><p>10 questions, +3 par faute.</p><div class="row"><button class="btn qbtn" data-q="t">Je lance le quiz</button></div><div class="qbox" id="qt"></div></div>
 <div class="card"><p>Besoin de revoir les équations ? <a href="../../fourre-tout/rappels/equations-inequations/">Rappels : équations et inéquations</a></p></div>
-<div class="card" id="testcard"><span class="badge">Teste-toi</span>
-<h2>Quiz : 10 questions</h2>
-<p>Chaque faute ajoute <b>3 questions</b> pour consolider. Garde un brouillon et une calculatrice à côté de toi.</p>
-<div class="row"><button class="btn" id="startq">Je lance le quiz</button></div></div>
-<div class="card" id="quizcard" style="display:none"><div id="quiz"></div></div>
 <div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
 <script>/* ===== Outils mathématiques et générateur de questions (sans DOM) ===== */
 var M='−', EPS=1e-9;
@@ -365,6 +397,52 @@ GENS.push(function(){var v=pick([10,15,20,25,30]),a=pick([2,4,5,8,10]),t=v/a;
   var o=numC(t,[a/v,v*a,v/(2*a),t+1],'s');
   return mk({q:'Un mobile roule à <b>'+v+' m/s</b> et freine avec une décélération constante de <b>'+a+' m/s²</b>. Combien de temps lui faut-il pour s’arrêter ?',ok:o.ok,wr:o.wr,num:t,key:'tf'+v+a,
    why:'v = v<sub>0</sub> + a Δt avec v = 0 et a = '+M+a+' m/s² : 0 = '+v+' '+M+' '+a+' Δt, donc Δt = '+frs(v,a)+' = <b>'+pf(t)+' s</b>.'})});
+/* ===== distance d'arrêt : questions supplémentaires ===== */
+var GEN_D=[];
+/* d1 : distance de réaction */
+GEN_D.push(function(){var kmh=pick([36,54,72,90,108,126]),v=kmh/3.6,tr=pick([0.5,1,1.5,2]),d=v*tr;
+  var o=numC(d,[kmh*tr,v/tr,tr/v,d*2],'m');
+  return mk({q:'Une voiture roule à <b>'+kmh+' km/h</b>. Le temps de réaction du conducteur est de <b>'+pf(tr)+' s</b>. Quelle distance parcourt-elle <b>avant de commencer à freiner</b> ?',ok:o.ok,wr:o.wr,num:d,key:'dr'+kmh+tr,
+   why:'Pendant la réaction, on ne freine pas encore : c’est un <b>MRU</b>. v = '+kmh+' ÷ 3,6 = '+pf(v)+' m/s, donc d<sub>r</sub> = v · Δt = '+pf(v)+' × '+pf(tr)+' = <b>'+pf(d)+' m</b>.'})});
+/* d2 : distance de freinage par les lois */
+GEN_D.push(function(){var v=pick([10,15,20,25,30]),a=pick([2,4,5,10]),t=v/a,d=v*t-a*t*t/2;
+  var o=numC(d,[v*t,v*t+a*t*t/2,a*t*t/2+0.001>0?v*v/a:0,v*t/4],'m');
+  return mk({q:'Un mobile roule à <b>'+v+' m/s</b> et freine avec une décélération de <b>'+a+' m/s²</b> (a = '+M+a+' m/s²). Quelle est sa <b>distance de freinage</b> ?',ok:o.ok,wr:o.wr,num:d,key:'df'+v+a,
+   why:'1) Durée : 0 = '+v+' '+M+' '+a+' Δt, donc Δt = '+pf(t)+' s. 2) Distance : Δx = v<sub>0</sub> Δt + ½ a Δt² = '+v+' × '+pf(t)+' '+M+' ½ × '+a+' × '+pf(t)+'² = '+pf(v*t)+' '+M+' '+pf(a*t*t/2)+' = <b>'+pf(d)+' m</b>. (Raccourci : '+frs('v<sub>0</sub>²','2|a|')+' = '+pf(d)+' m.)'})});
+/* d3 : la vitesse double */
+GEN_D.push(function(){var t=pick([
+  ['la <b>distance de freinage</b>','4',['2','8','elle ne change pas'],'d<sub>f</sub> = '+frs('v²','2|a|')+' : la vitesse est au <b>carré</b>. Si v est multipliée par 2, d<sub>f</sub> est multipliée par 2² = 4.'],
+  ['la <b>distance de réaction</b>','2',['4','1 (elle ne change pas)','8'],'d<sub>r</sub> = v · t<sub>r</sub> : si v double, d<sub>r</sub> double.'],
+  ['la <b>durée de freinage</b>','2',['4','1 (elle ne change pas)',frs(1,2)],'Δt = '+frs('v','|a|')+' : si v double, la durée double.']]);
+  return qcm('Une voiture roule deux fois plus vite (même conducteur, mêmes freins). Par combien est multipliée '+t[0]+' ?',t[1],t[2],t[3])});
+/* d4 : réaction = MRU, freinage = MRUA */
+GEN_D.push(function(){var r=Math.random()<.5;
+  return qcm('Pendant le '+(r?'<b>temps de réaction</b>':'<b>freinage</b>')+', quel est le mouvement de la voiture ?',r?'Un MRU : elle garde sa vitesse':'Un MRUA : sa vitesse diminue régulièrement jusqu’à 0',
+   r?['Un MRUA : elle commence à ralentir','Elle est à l’arrêt','Un mouvement sans loi précise']:['Un MRU : elle garde sa vitesse','Elle s’arrête immédiatement','Un MRUA : sa vitesse augmente'],
+   'Pendant la réaction, le conducteur n’a pas encore appuyé sur le frein : MRU, d<sub>r</sub> = v · t<sub>r</sub>. Ensuite, freinage avec une décélération constante : MRUA jusqu’à v = 0.')});
+/* ===== temps d'arrêt ===== */
+var GEN_T=[];
+/* t1 : a connue */
+GEN_T.push(function(){var kmh=pick([36,54,72,90,108]),v=kmh/3.6,tr=pick([1,1.5,2]),a=pick([5,6,8,10]),tf=v/a,T=tr+tf;
+  var o=numC(Math.round(T*100)/100,[tf,tr+a/v,tr+kmh/a,T+tr].map(function(x){return Math.round(x*100)/100}),'s');
+  return mk({q:'Une voiture roule à <b>'+kmh+' km/h</b>. Temps de réaction : <b>'+pf(tr)+' s</b>. Décélération au freinage : <b>'+a+' m/s²</b>. Combien de temps s’écoule-t-il entre le danger et l’arrêt (au centième) ?',ok:o.ok,wr:o.wr,num:Math.round(T*100)/100,key:'ta'+kmh+tr+a,
+   why:'v = '+pf(v)+' m/s. Freinage : 0 = '+pf(v)+' '+M+' '+a+' Δt, donc Δt = '+frs(pf(v),a)+' = '+pf(tf)+' s. Temps d’arrêt = réaction + freinage = '+pf(tr)+' + '+pf(tf)+' = <b>'+pf(T)+' s</b>.'})});
+/* t2 : a inconnue, distance d'arrêt connue */
+GEN_T.push(function(){var v=pick([10,15,20,25,30]),tr=pick([1,1,1.5,2]),tf=pick([2,3,4,5,6]),dr=v*tr,df=v*tf/2,D=dr+df,T=tr+tf;
+  var o=numC(T,[tf,D/v,tr+D/v*2,tr+df/v,2*D/v],'s');
+  return mk({q:'Une voiture roule à <b>'+v+' m/s</b>. Le conducteur réagit en <b>'+pf(tr)+' s</b>, puis freine. Elle s’arrête <b>'+pf(D)+' m</b> après le moment où le danger est apparu (distance d’arrêt). On ne connaît pas la décélération. Quel est le <b>temps d’arrêt</b> ?',ok:o.ok,wr:o.wr,num:T,key:'tn'+v+tr+tf,
+   why:'1) Réaction (MRU) : d<sub>r</sub> = '+v+' × '+pf(tr)+' = '+pf(dr)+' m. 2) Freinage : d<sub>f</sub> = '+pf(D)+' '+M+' '+pf(dr)+' = '+pf(df)+' m. 3) Pendant un freinage régulier, la vitesse moyenne vaut '+frs('v<sub>0</sub>',2)+' = '+pf(v/2)+' m/s, donc Δt = '+frs(pf(df),pf(v/2))+' = '+tf+' s. 4) Temps d’arrêt = '+pf(tr)+' + '+tf+' = <b>'+pf(T)+' s</b>.'})});
+/* t3 : a inconnue → retrouver a */
+GEN_T.push(function(){var v=pick([10,15,20,25,30]),tf=pick([2,3,4,5]),df=v*tf/2,a=v/tf;
+  var o=numC(a,[v/df,2*df/v,v*v/df,a*2,a/2,a+1],'m/s²');
+  return mk({q:'Une voiture roulant à <b>'+v+' m/s</b> freine régulièrement et s’arrête sur une <b>distance de freinage de '+pf(df)+' m</b>. Quelle est la valeur de sa décélération ?',ok:o.ok,wr:o.wr,num:a,key:'tr'+v+tf,
+   why:'Vitesse moyenne pendant le freinage : '+frs(v,2)+' = '+pf(v/2)+' m/s, donc durée Δt = '+frs(pf(df),pf(v/2))+' = '+tf+' s. Puis a = '+frs('Δv','Δt')+' = '+frs('0 '+M+' '+v,tf)+' = '+M+pf(a)+' m/s² : la décélération vaut <b>'+pf(a)+' m/s²</b>.'})});
+/* t4 : pourquoi v0/2 */
+GEN_T.push(function(){return qcm('Pendant un freinage régulier (MRUA) de v<sub>0</sub> jusqu’à 0, quelle est la vitesse moyenne ?',frs('v<sub>0</sub>',2),['v<sub>0</sub>','0',frs('v<sub>0</sub>',4)],
+  'La vitesse diminue régulièrement de v<sub>0</sub> à 0 : sa moyenne est le milieu, '+frs('v<sub>0</sub> + 0',2)+'. Donc d<sub>f</sub> = '+frs('v<sub>0</sub>',2)+' · Δt. (On le retrouve avec les lois : a = '+M+frs('v<sub>0</sub>','Δt')+' dans x = v<sub>0</sub>Δt + ½aΔt².)')});
+var GEN_R=[GENS[0],GENS[1],GENS[2],GENS[3],GENS[4]];
+GEN_D=[GENS[5],GENS[5]].concat(GEN_D);
+GEN_T=[GENS[6]].concat(GEN_T);
 /* ----- animation : la rencontre, B part plus tard ----- */
 var VA=6,VB=-4,LL=100,T0B=5,TS=12;
 function xA(t){return VA*t}
@@ -387,5 +465,9 @@ function meetSteps(){return [
 stepper($('meet'),meetSteps,{});
 
 
-document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'b6',"Rencontre de deux mobiles et distance d’arrêt",'./')};
+var QZ={r:[GEN_R,'b6r','La rencontre de deux mobiles'],d:[GEN_D,'b6d','La distance d’arrêt'],t:[GEN_T,'b6t','Le temps d’arrêt']};
+Array.prototype.forEach.call(document.querySelectorAll('.qbtn'),function(btn){btn.onclick=function(){var k=btn.getAttribute('data-q');
+  Array.prototype.forEach.call(document.querySelectorAll('.qbox'),function(b){b.innerHTML=''});
+  Array.prototype.forEach.call(document.querySelectorAll('.qbtn'),function(b){b.parentNode.style.display=''});
+  btn.parentNode.style.display='none';var box=document.getElementById('q'+k);runQuiz(box,QZ[k][0],QZ[k][1],QZ[k][2],'./');try{box.scrollIntoView({behavior:'smooth'})}catch(e){}}});
 </script></body></html>
