@@ -74,6 +74,7 @@ ol.lines{list-style:none;padding:0;margin:8px 0 12px}
 ol.lines li{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0;font-size:19px}
 ol.lines li .ln{flex:none;width:26px;height:26px;border-radius:50%;background:#EEF3F9;color:var(--navy);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
 ol.lines li.err{border-color:var(--coral);background:#FDECE7}
+.qhead span:first-child{white-space:nowrap;margin-right:8px}.qhead span:last-child{text-align:right}
 ol.todo{padding-left:22px}ol.todo li{margin:8px 0}ol.todo a{color:var(--navy)}
 .small{font-size:15px;color:#4a5a6c}
 </style></head><body><div class="wrap">
@@ -87,108 +88,173 @@ ol.todo{padding-left:22px}ol.todo li{margin:8px 0}ol.todo a{color:var(--navy)}
 </div>
 <div class="card" id="quiz" style="display:none"></div>
 <div class="foot">Aide de l’IA (AIA) · Ressource de Mme Delimoy</div></div>
-<script>/* ===== test diagnostique : trouver l'erreur ===== */
+<script>/* ===== test diagnostique : trouver l'erreur (niveau 5e) ===== */
 var M='−';
 function R(a,b){return a+Math.floor(Math.random()*(b-a+1))}
 function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function nz(a,b){var v;do{v=R(a,b)}while(v===0);return v}
 function N(x){return x<0?M+Math.abs(x):''+x}
+function P_(x){return x<0?'('+N(x)+')':''+x}
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a||1}
 function frs(a,b){return '<span class="fr"><span>'+a+'</span><span>'+b+'</span></span>'}
-/* fraction p/q simplifiée, écrite proprement */
 function Q(p,q){if(q<0){p=-p;q=-q}var g=gcd(p,q);p/=g;q/=g;if(q===1)return N(p);return (p<0?M:'')+frs(Math.abs(p),q)}
-/* ax (coefficient 1 et −1 sans chiffre) */
-function ax(a,v){v=v||'x';return a===1?v:a===-1?M+v:N(a)+v}
-/* ax + b */
-function lin(a,b,v){var s=ax(a,v);if(b>0)s+=' + '+b;else if(b<0)s+=' '+M+' '+(-b);return s}
-/* x − p écrit proprement */
-function xm(p){return p===0?'x':p>0?'(x '+M+' '+p+')':'(x + '+(-p)+')'}
-function xmb(p){return p===0?'x':p>0?'x '+M+' '+p:'x + '+(-p)}
+/* somme de termes [coef, 'x' | 'x²' | ''] écrite proprement */
+function T(ts){var s='';ts.forEach(function(t){var c=t[0],v=t[1]||'';if(c===0)return;var a=Math.abs(c),body=(v&&a===1)?v:a+v;
+  if(s==='')s=(c<0?M:'')+body;else s+=(c<0?' '+M+' ':' + ')+body});return s===''?'0':s}
+function lin(a,b){return T([[a,'x'],[b,'']])}
+function xmb(p){return lin(1,-p)}
+function xm(p){return p===0?'x':'('+xmb(p)+')'}
 var REL={'<':'&lt;','>':'&gt;','<=':'≤','>=':'≥'},FLIP={'<':'>','>':'<','<=':'>=','>=':'<='};
-function interval(rel,v){var w=typeof v==='number'?N(v):v;
-  if(rel==='<')return ']'+M+'∞ ; '+w+'[';if(rel==='<=')return ']'+M+'∞ ; '+w+']';if(rel==='>')return ']'+w+' ; +∞[';return '['+w+' ; +∞['}
+function incl(rel){return rel==='<='||rel==='>='}
+function interval(rel,v){if(rel==='<')return ']'+M+'∞ ; '+v+'[';if(rel==='<=')return ']'+M+'∞ ; '+v+']';if(rel==='>')return ']'+v+' ; +∞[';return '['+v+' ; +∞['}
+function kind(list){var r=Math.random(),acc=0;for(var i=0;i<list.length;i++){acc+=list[i][1];if(r<acc)return list[i][0]}return list[list.length-1][0]}
+/* ensemble solution d'un quotient à deux points critiques lo < hi ; f : fonction de signe ; inc(v) : v inclus ? */
+function setOf(lo,hi,f,want,inc){var keep=[f(lo-1),f((lo+hi)/2),f(hi+1)].map(function(y){return want?y>0:y<0});
+  function L(v){return inc(v)?'[':']'}function Rr(v){return inc(v)?']':'['}
+  var parts=[];if(keep[0])parts.push(']'+M+'∞ ; '+N(lo)+Rr(lo));if(keep[1])parts.push(L(lo)+N(lo)+' ; '+N(hi)+Rr(hi));if(keep[2])parts.push(L(hi)+N(hi)+' ; +∞[');
+  return parts.join(' ∪ ')||'∅'}
 
-/* chaque générateur renvoie {page, lab, intro, lines:[...], bad: numéro de la ligne fausse (1 = première) ou 0, why} */
 var P={p1:[],p2:[],p3:[],p4:[],p5:[]};
 var NAMES={p1:'1. La balance : équation du 1er degré',p2:'2. Inéquation du 1er degré : le sens',p3:'3. Équations et inéquations du 2e degré',p4:'4. Fraction : le tableau de signes',p5:'5. Inéquation avec une somme de fractions'};
 var LINKS={p1:'balance.html',p2:'inequation-signe.html',p3:'second-degre.html',p4:'tableau-de-signes.html',p5:'somme-de-fractions.html'};
 
-/* ---------- 1. balance ---------- */
-P.p1.push(function(){var a=R(2,6),b=pick([-9,-7,-5,-4,-3,3,4,5,7,9]),x0=R(-4,5),c=a*x0+b,err=Math.random()<.75;
-  var op=b>0?(' '+M+' '+b):(' + '+(-b)),wop=b>0?(' + '+b):(' '+M+' '+(-b)),d=err?c+b:c-b;
-  return {page:'p1',lab:'Faire passer un terme de l’autre côté (on retire des deux côtés)',lines:[lin(a,b)+' = '+N(c),ax(a)+' = '+N(c)+(err?wop:op),ax(a)+' = '+N(d),'x = '+Q(d,a)],bad:err?2:0,
-   why:'Pour faire disparaître '+(b>0?'+ '+b:M+' '+(-b))+', on fait l’opération contraire <b>des deux côtés</b> : '+(b>0?'on retire '+b:'on ajoute '+(-b))+'. Ligne 2 correcte : '+ax(a)+' = '+N(c)+op+' = '+N(c-b)+', donc x = '+Q(c-b,a)+'.'}});
-P.p1.push(function(){var a=pick([-5,-4,-3,-2,2,3,4,5,6]),x0=R(-5,5),b=R(1,8),c=a*x0+b,d=c-b,k=R(0,2);
-  var wrong=k===0?'x = '+N(d)+' '+M+' '+(a<0?'('+N(a)+')':a)+' = '+N(d-a):k===1?'x = '+Q(a,d===0?1:d):'x = '+Q(d,a);
-  if(k===1&&d===0)k=2,wrong='x = '+Q(d,a);
-  return {page:'p1',lab:'Diviser par le coefficient de x',lines:[lin(a,b)+' = '+N(c),ax(a)+' = '+N(d),wrong],bad:k===2?0:3,
-   why:'<b>'+ax(a)+'</b> veut dire '+N(a)+' × x. Pour isoler x, on <b>divise</b> les deux côtés par '+N(a)+' : x = '+Q(d,a)+'.'+(k===0?' On ne retire pas '+N(a)+' : il n’est pas ajouté à x, il <b>multiplie</b> x.':k===1?' Attention à l’ordre : c’est '+N(d)+' qu’on divise par '+N(a)+'.':'')}});
-P.p1.push(function(){var k=R(2,5),m=pick([-6,-5,-4,-3,-2,2,3,4,5,6]),x0=R(-4,4),c=k*(x0+m),err=Math.random()<.75;
-  var l2=err?ax(k)+(m>0?' + '+m:' '+M+' '+(-m))+' = '+N(c):ax(k)+(k*m>0?' + '+k*m:' '+M+' '+(-k*m))+' = '+N(c);
-  var dd=err?c-m:c-k*m;
-  return {page:'p1',lab:'Distribuer : enlever les parenthèses',lines:[k+(m>0?'(x + '+m+')':'(x '+M+' '+(-m)+')')+' = '+N(c),l2,ax(k)+' = '+N(dd),'x = '+Q(dd,k)],bad:err?2:0,
-   why:'Le facteur '+k+' multiplie <b>tout</b> ce qui est dans la parenthèse : '+k+' × x et '+k+' × '+N(m)+' = '+N(k*m)+'. Donc '+ax(k)+(k*m>0?' + '+k*m:' '+M+' '+(-k*m))+' = '+N(c)+', puis x = '+N(x0)+'.'}});
+/* ================= 1. ÉQUATIONS DU 1er DEGRÉ ================= */
+/* a(bx + c) − d(x + e) = fx + g */
+P.p1.push(function(){var a,b,c,d,e,f,x0,k,g;do{a=R(2,3);b=R(1,3);c=nz(-4,4);d=R(2,4);e=nz(-4,4);f=R(1,5);x0=R(-5,5);k=a*b-d}while(k===f||k===0||a*c-d*e===0||a*c+d*e===0);
+  g=k*x0+a*c-d*e-f*x0;var E=kind([['dist',.4],['transf',.35],['ok',.25]]);
+  var de=E==='dist'?d*e:-d*e,cst=a*c+de,co=k-f,rhs=E==='transf'?g+cst:g-cst;
+  return {page:'p1',lab:'Distribuer un facteur négatif ; faire passer un terme de l’autre côté',
+   lines:[a+'('+lin(b,c)+') '+M+' '+d+'('+lin(1,e)+') = '+lin(f,g),
+    T([[a*b,'x'],[a*c,''],[-d,'x'],[de,'']])+' = '+lin(f,g),
+    lin(k,cst)+' = '+lin(f,g),
+    T([[co,'x']])+' = '+N(g)+' '+(E==='transf'?(cst<0?M+' '+(-cst):'+ '+cst):(cst<0?'+ '+(-cst):M+' '+cst))+' = '+N(rhs),
+    'x = '+Q(rhs,co)],bad:E==='dist'?2:E==='transf'?4:0,
+   why:'Le '+M+d+' multiplie <b>les deux</b> termes de la parenthèse : '+M+d+' × '+P_(e)+' = '+N(-d*e)+'. Puis '+lin(k,a*c-d*e)+' = '+lin(f,g)+' donne '+T([[co,'x']])+' = '+N(g-(a*c-d*e))+', donc x = '+N(x0)+'.'}});
+/* (x + p)/m − (x + q)/n = r */
+P.p1.push(function(){var mn=pick([[2,3],[3,4],[2,5],[3,5],[4,6]]),m=mn[0],n=mn[1],L=m*n/gcd(m,n),A=L/m,B=L/n,p=nz(-5,5),q=nz(-5,5),r=nz(-3,3);
+  var E=kind([['rhs',.35],['sign',.4],['ok',.25]]),RH=E==='rhs'?r:r*L,Bq=E==='sign'?B*q:-B*q,co=A-B,rhs=RH-A*p-Bq;
+  return {page:'p1',lab:'Chasser les dénominateurs : multiplier tous les termes',
+   lines:[frs(lin(1,p),m)+' '+M+' '+frs(lin(1,q),n)+' = '+N(r),
+    A+'('+lin(1,p)+') '+M+' '+B+'('+lin(1,q)+') = '+N(RH),
+    T([[A,'x'],[A*p,''],[-B,'x'],[Bq,'']])+' = '+N(RH),
+    T([[co,'x']])+' = '+N(rhs)].concat(co===1?[]:['x = '+Q(rhs,co)]),bad:E==='rhs'?2:E==='sign'?3:0,
+   why:'On multiplie <b>chaque terme</b> par '+L+', le membre de droite aussi : '+N(r)+' × '+L+' = '+N(r*L)+'. Et le '+M+' devant '+B+'('+lin(1,q)+') change le signe des deux termes : '+T([[-B,'x'],[-B*q,'']])+'. On trouve x = '+Q(r*L-A*p+B*q,co)+'.'}});
+/* ax + b = cx + d, avec parfois a − c = −1 */
+P.p1.push(function(){var a,c,b,d,x0,k;do{a=pick([-4,-3,-2,2,3,4,5,6]);c=pick([-4,-3,-2,2,3,4,5,6]);k=a-c}while(k===0);if(Math.random()<.45){c=a+1;if(c===0){a=2;c=3}k=-1}x0=nz(-6,6);b=nz(-9,9);d=k*x0+b;
+  var E=kind([['transf',.4],['moins',.35],['ok',.25]]);if(E==='moins'&&k>0)E='transf';
+  var rhs=E==='transf'?d+b:d-b,res=E==='moins'?Q(rhs,Math.abs(k)):Q(rhs,k);
+  return {page:'p1',lab:'Regrouper les x d’un côté ; diviser par un coefficient négatif',
+   lines:[lin(a,b)+' = '+lin(c,d),T([[a,'x'],[-c,'x']])+' = '+N(d)+' '+(E==='transf'?(b<0?M+' '+(-b):'+ '+b):(b<0?'+ '+(-b):M+' '+b)),T([[k,'x']])+' = '+N(rhs),'x = '+res],bad:E==='transf'?2:E==='moins'?4:0,
+   why:'On retire '+P_(b)+' des deux côtés : '+N(d)+' '+(b<0?'+ '+(-b):M+' '+b)+' = '+N(d-b)+'. Puis on divise par '+N(k)+(k<0?', <b>avec son signe</b>':'')+' : x = '+N(x0)+'.'}});
 
-/* ---------- 2. sens de l'inéquation ---------- */
-P.p2.push(function(){var a=pick([-5,-4,-3,-2]),b=pick([-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]),r=R(-4,4),rel=pick(['<','>','<=','>=']),c=a*r+b,err=Math.random()<.75,d=c-b,rr=err?rel:FLIP[rel];
-  return {page:'p2',lab:'Changer le sens quand on divise par un nombre négatif',lines:[lin(a,b)+' '+REL[rel]+' '+N(c),ax(a)+' '+REL[rel]+' '+N(d),'x '+REL[rr]+' '+N(r),'S = '+interval(rr,r)],bad:err?3:0,
-   why:'On divise par '+N(a)+', un nombre <b>négatif</b> : le sens de l’inéquation <b>change</b>. On obtient x '+REL[FLIP[rel]]+' '+N(r)+', donc S = '+interval(FLIP[rel],r)+'.'}});
-P.p2.push(function(){var a=R(2,5),r=pick([-5,-4,-3,-2,-1]),b=R(1,7),rel=pick(['<','>','<=','>=']),c=a*r+b,d=c-b,err=Math.random()<.75,rr=err?FLIP[rel]:rel;
-  return {page:'p2',lab:'Ne pas changer le sens quand on divise par un nombre positif',lines:[lin(a,b)+' '+REL[rel]+' '+N(c),ax(a)+' '+REL[rel]+' '+N(d),'x '+REL[rr]+' '+N(r),'S = '+interval(rr,r)],bad:err?3:0,
-   why:'On divise par '+a+', qui est <b>positif</b> : le sens ne change pas, même si le résultat '+N(r)+' est négatif. C’est le signe du nombre par lequel on divise qui compte. x '+REL[rel]+' '+N(r)+'.'}});
-P.p2.push(function(){var a=R(2,4),v=R(-5,6),b=R(-6,6),rel=pick(['<','>','<=','>=']),c=a*v+b,err=Math.random()<.75;
-  var wrong={'<':']'+M+'∞ ; '+N(v)+']','<=':']'+M+'∞ ; '+N(v)+'[','>':'['+N(v)+' ; +∞[','>=':']'+N(v)+' ; +∞['}[rel];
-  return {page:'p2',lab:'Écrire l’ensemble solution avec les bons crochets',lines:[lin(a,b)+' '+REL[rel]+' '+N(c),ax(a)+' '+REL[rel]+' '+N(c-b),'x '+REL[rel]+' '+N(v),'S = '+(err?wrong:interval(rel,v))],bad:err?4:0,
-   why:'Avec '+REL[rel]+', '+N(v)+' est '+((rel==='<='||rel==='>=')?'<b>inclus</b> : crochet tourné vers '+N(v):'<b>exclu</b> : crochet tourné vers l’extérieur')+'. S = '+interval(rel,v)+'.'}});
-P.p2.push(function(){var a=R(1,6),b=a+R(1,5),k=-R(2,4);
-  var ok=Math.random()<.3;
-  return {page:'p2',lab:'Multiplier une inégalité par un négatif',intro:'Léa veut vérifier une règle avec des nombres.',lines:[a+' &lt; '+b,a+' × ('+N(k)+') &lt; '+b+' × ('+N(k)+')',N(a*k)+(ok?' &gt; ':' &lt; ')+N(b*k)],bad:ok?0:2,
-   why:'Ligne 2 : '+N(a*k)+' n’est pas plus petit que '+N(b*k)+'. En multipliant par un <b>négatif</b>, l’ordre s’inverse : '+N(a*k)+' &gt; '+N(b*k)+'. C’est pour ça que le sens d’une inéquation change.'}});
+/* ================= 2. INÉQUATIONS DU 1er DEGRÉ ================= */
+/* k − m(x − n) REL px + q */
+P.p2.push(function(){var k=nz(-6,6),m=R(2,4),n=nz(-4,4),p=nz(-3,3),q=nz(-8,8),rel=pick(['<','>','<=','>=']);while(m+p===0)p=nz(-3,3);
+  var co=-(m+p),rhs=q-k-m*n,E=kind([['dist',.3],['flip',.45],['ok',.25]]);if(co>0&&E==='flip')E='dist';
+  var rhsE=E==='dist'?q-k+m*n:rhs,v=Q(rhsE,co),rr=(co<0&&E!=='flip')?FLIP[rel]:rel;
+  return {page:'p2',lab:'Développer avec un facteur négatif ; changer le sens en divisant par un négatif',
+   lines:[N(k)+' '+M+' '+m+xm(n)+' '+REL[rel]+' '+lin(p,q),T([[k,''],[-m,'x'],[E==='dist'?-m*n:m*n,'']])+' '+REL[rel]+' '+lin(p,q),T([[co,'x']])+' '+REL[rel]+' '+N(rhsE),'x '+REL[rr]+' '+v,'S = '+interval(rr,v)],bad:E==='dist'?2:E==='flip'?4:0,
+   why:M+m+' × '+P_(-n)+' = '+N(m*n)+', donc '+T([[k,''],[-m,'x'],[m*n,'']])+'. On obtient '+T([[co,'x']])+' '+REL[rel]+' '+N(rhs)+(co<0?' ; on divise par '+N(co)+', <b>négatif</b> : le sens change':'')+'. S = '+interval(co<0?FLIP[rel]:rel,Q(rhs,co))+'.'}});
+/* (ax + b)/m REL (cx + d)/n */
+P.p2.push(function(){var mn=pick([[2,3],[3,2],[2,5],[3,4],[4,3]]),m=mn[0],n=mn[1],L=m*n,A=n,B=m,a,b,c,d,co;
+  do{a=nz(-3,3);c=nz(-3,3);b=nz(-5,5);d=nz(-5,5);co=A*a-B*c}while(co===0);var rel=pick(['<','>','<=','>=']),rhs=B*d-A*b;
+  var E=kind([['flip',.45],['dist',.25],['ok',.3]]),good=co<0?FLIP[rel]:rel,rr=E==='flip'?FLIP[good]:good;
+  var rhsE=E==='dist'?B*d-b:rhs,v=Q(rhsE,co);
+  return {page:'p2',lab:'Chasser les dénominateurs ; le sens ne change qu’en divisant par un négatif',
+   lines:[frs(lin(a,b),m)+' '+REL[rel]+' '+frs(lin(c,d),n),A+'('+lin(a,b)+') '+REL[rel]+' '+B+'('+lin(c,d)+')',T([[A*a,'x'],[E==='dist'?b:A*b,'']])+' '+REL[rel]+' '+lin(B*c,B*d),T([[co,'x']])+' '+REL[rel]+' '+N(rhsE),'x '+REL[rr]+' '+v],bad:E==='dist'?3:E==='flip'?5:0,
+   why:'On multiplie les deux membres par '+L+' (positif : le sens ne change pas). '+A+'('+lin(a,b)+') = '+lin(A*a,A*b)+'. Puis '+T([[co,'x']])+' '+REL[rel]+' '+N(rhs)+' : on divise par '+N(co)+(co<0?', négatif : <b>le sens change</b>':', positif : le sens ne change pas')+'. x '+REL[good]+' '+Q(rhs,co)+'.'}});
+/* double inégalité lo R1 ax + b R2 hi */
+P.p2.push(function(){var a=pick([-3,-2,2,3]),b=nz(-4,4),u=R(-4,0),w=R(1,5),r1=pick(['<','<=']),r2=pick(['<','<=']),lo,hi,li,ri;
+  if(a>0){lo=a*u+b;hi=a*w+b;li=r1==='<=';ri=r2==='<='}else{lo=a*w+b;hi=a*u+b;li=r2==='<=';ri=r1==='<='}
+  var E=kind([['div',a<0?.4:0],['brk',a<0?.35:.7],['ok',.25]]);if(E==='div'&&a>0)E='brk';
+  var l3=a>0?N(u)+' '+REL[r1]+' x '+REL[r2]+' '+N(w):(E==='div'?N(w)+' '+REL[r1]+' x '+REL[r2]+' '+N(u):N(w)+' '+REL[FLIP[r1]]+' x '+REL[FLIP[r2]]+' '+N(u));
+  var good=(li?'[':']')+N(u)+' ; '+N(w)+(ri?']':'['),S=E==='div'?'∅':E==='brk'?((li?']':'[')+N(u)+' ; '+N(w)+(ri?'[':']')).replace(/^\[/,'[').replace(/^\]/,']'):good;
+  if(E==='brk')S=(!li?'[':']')+N(u)+' ; '+N(w)+(!ri?']':'[');
+  return {page:'p2',lab:'Double inégalité : diviser par un négatif, puis bien lire les crochets',
+   lines:[N(lo)+' '+REL[r1]+' '+lin(a,b)+' '+REL[r2]+' '+N(hi),N(lo-b)+' '+REL[r1]+' '+T([[a,'x']])+' '+REL[r2]+' '+N(hi-b),l3,'S = '+S],bad:E==='div'?3:E==='brk'?4:0,
+   why:'On retire '+P_(b)+' aux trois membres, puis on divise par '+N(a)+(a<0?' : <b>négatif</b>, les deux symboles changent de sens. On relit ensuite dans l’ordre croissant':'')+'. S = '+good+'.'}});
+/* −(x − p)/m REL k */
+P.p2.push(function(){var m=R(2,5),p=nz(-5,5),k=nz(-4,4),rel=pick(['<','>','<=','>=']),E=kind([['flip',.45],['dist',.25],['ok',.3]]);
+  var c=m*k,rhs=c-p,rhsE=E==='dist'?c+p:rhs;
+  return {page:'p2',lab:'Le signe − devant une fraction ; diviser par −1 change le sens',
+   lines:[M+frs(lin(1,-p),m)+' '+REL[rel]+' '+N(k),M+xm(p)+' '+REL[rel]+' '+N(c),T([[-1,'x'],[E==='dist'?-p:p,'']])+' '+REL[rel]+' '+N(c),M+'x '+REL[rel]+' '+N(rhsE),'x '+REL[E==='flip'?rel:FLIP[rel]]+' '+N(-rhsE)],bad:E==='dist'?3:E==='flip'?5:0,
+   why:M+xm(p)+' = '+T([[-1,'x'],[p,'']])+'. Puis '+M+'x '+REL[rel]+' '+N(rhs)+' : diviser par '+M+'1 <b>change le sens</b> : x '+REL[FLIP[rel]]+' '+N(-rhs)+'.'}});
 
-/* ---------- 3. second degré ---------- */
-P.p3.push(function(){var r=R(2,9),err=Math.random()<.75;
-  return {page:'p3',lab:'x² = k a deux solutions (k > 0)',lines:['x² '+M+' '+(r*r)+' = 0','x² = '+(r*r),err?'x = √'+(r*r)+' = '+r:'x = '+M+r+' ou x = '+r,err?'S = {'+r+'}':'S = {'+M+r+' ; '+r+'}'],bad:err?3:0,
-   why:'('+M+r+')² = '+(r*r)+' aussi ! x² = '+(r*r)+' a <b>deux</b> solutions : '+M+r+' et '+r+'.'}});
-P.p3.push(function(){var a=pick([-6,-5,-4,-3,-2,2,3,4,5,6]),err=Math.random()<.75;
-  var L=err?['x² = '+ax(a),'x = '+N(a),'S = {'+N(a)+'}']:['x² = '+ax(a),'x² '+(a>0?M+' '+ax(a):'+ '+ax(-a))+' = 0','x'+xm(a)+' = 0','S = {0 ; '+N(a)+'}'];
+/* ================= 3. SECOND DEGRÉ ================= */
+/* (x − p)² = k² */
+P.p3.push(function(){var p=nz(-4,4),k=R(2,6),err=Math.random()<.72;
+  var L=err?['('+xmb(p)+')² = '+(k*k),xmb(p)+' = '+k,'x = '+N(p+k),'S = {'+N(p+k)+'}']:['('+xmb(p)+')² = '+(k*k),xmb(p)+' = '+M+k+' ou '+xmb(p)+' = '+k,'x = '+N(p-k)+' ou x = '+N(p+k),'S = {'+N(p-k)+' ; '+N(p+k)+'}'];
+  return {page:'p3',lab:'A² = k² a deux solutions : A = −k ou A = k',lines:L,bad:err?2:0,
+   why:'Un carré vaut '+(k*k)+' si le nombre vaut '+k+' <b>ou</b> '+M+k+'. Donc '+xmb(p)+' = '+k+' ou '+xmb(p)+' = '+M+k+', et S = {'+N(p-k)+' ; '+N(p+k)+'}.'}});
+/* (x − p)(x − q) = c avec c ≠ 0 */
+P.p3.push(function(){var r1,r2,p,q,c,s;do{r1=R(-5,5);r2=R(-5,5);s=r1+r2;p=R(-5,5);q=s-p;c=p*q-r1*r2}while(r1===r2||c===0||Math.abs(c)>12||p===q||p===0||q===0||Math.abs(q)>6);
+  var err=Math.random()<.72,lo=Math.min(r1,r2),hi=Math.max(r1,r2);
+  var L=err?[xm(p)+xm(q)+' = '+N(c),xmb(p)+' = '+N(c)+' ou '+xmb(q)+' = '+N(c),'S = {'+N(Math.min(p,q)+c)+' ; '+N(Math.max(p,q)+c)+'}']:
+   [xm(p)+xm(q)+' = '+N(c),T([[1,'x²'],[-s,'x'],[p*q,'']])+' = '+N(c),T([[1,'x²'],[-s,'x'],[p*q-c,'']])+' = 0',xm(lo)+xm(hi)+' = 0','S = {'+N(lo)+' ; '+N(hi)+'}'];
+  return {page:'p3',lab:'Un produit égal à un nombre non nul : développer, tout du même côté',lines:L,bad:err?2:0,
+   why:'« Un produit est nul si un facteur est nul » ne marche que pour <b>= 0</b>. Ici le membre de droite vaut '+N(c)+' : on développe, on met tout du même côté, puis on factorise : '+xm(lo)+xm(hi)+' = 0, S = {'+N(lo)+' ; '+N(hi)+'}.'}});
+/* x(x − a) = bx */
+P.p3.push(function(){var a=nz(-5,5),b=nz(-5,5);while(a+b===0)b=nz(-5,5);var err=Math.random()<.72,s=a+b;
+  var L=err?['x'+xm(a)+' = '+T([[b,'x']]),xmb(a)+' = '+N(b),'x = '+N(s),'S = {'+N(s)+'}']:['x'+xm(a)+' = '+T([[b,'x']]),T([[1,'x²'],[-a,'x']])+' = '+T([[b,'x']]),T([[1,'x²'],[-s,'x']])+' = 0','x'+xm(s)+' = 0','S = {'+(s<0?N(s)+' ; 0':'0 ; '+N(s))+'}'];
   return {page:'p3',lab:'Ne pas diviser par x : tout du même côté et mettre en évidence',lines:L,bad:err?2:0,
-   why:'On ne divise <b>jamais par x</b> : x pourrait valoir 0, et on perd la solution x = 0. On met tout du même côté, puis x en évidence : x'+xm(a)+' = 0, donc S = {0 ; '+N(a)+'}.'}});
-P.p3.push(function(){var r=R(1,5),rel=pick(['<','>','<=','>=']),inside=(rel==='<'||rel==='<='),err=Math.random()<.75,cl=(rel==='<='||rel==='>='),o=cl?'[':']',c=cl?']':'[';
-  var In=o+M+r+' ; '+r+c,Out=']'+M+'∞ ; '+M+r+c+' ∪ '+o+r+' ; +∞[';
-  return {page:'p3',lab:'Signe d’un trinôme : entre ou à l’extérieur des racines',lines:['x² '+M+' '+(r*r)+' '+REL[rel]+' 0','(x '+M+' '+r+')(x + '+r+') '+REL[rel]+' 0','racines : '+M+r+' et '+r+' ; a = 1 &gt; 0','S = '+((inside!==err)?In:Out)],bad:err?4:0,
-   why:'a &gt; 0 : le trinôme a le signe de a (+) <b>à l’extérieur</b> des racines, et le signe contraire (−) <b>entre</b> les racines. On veut '+(inside?'négatif':'positif')+' : S = '+(inside?In:Out)+'.'}});
-P.p3.push(function(){var x1=R(1,6),x2=-R(1,6),b=-(x1+x2),c=x1*x2,err=Math.random()<.75,D=b*b-4*c,W=b*b+4*c;
-  return {page:'p3',lab:'Calculer Δ = b² − 4ac (attention aux signes)',lines:['x²'+(b>0?' + '+ax(b):b<0?' '+M+' '+ax(-b):'')+' '+M+' '+(-c)+' = 0','a = 1 ; b = '+N(b)+' ; c = '+N(c),'Δ = '+(b<0?'('+N(b)+')':b)+'² '+M+' 4 · 1 · ('+N(c)+') = '+(b*b)+' '+(err?M+' '+(-4*c):'+ '+(-4*c))+' = '+N(err?W:D),(err?W:D)<0?'Δ &lt; 0 : pas de solution':(err?W:D)===0?'Δ = 0 : une seule racine':N(err?W:D)+' &gt; 0 : deux racines'],bad:err?3:0,
-   why:'c = '+N(c)+' est négatif : '+M+' 4 · 1 · ('+N(c)+') = + '+(-4*c)+'. Donc Δ = '+(b*b)+' + '+(-4*c)+' = '+D+', et les racines sont '+N(x2)+' et '+x1+'.'}});
+   why:'Pour passer de la ligne 1 à la ligne 2, on a divisé par x. Mais x peut valoir 0 : on perd la solution x = 0. On met tout du même côté : x'+xm(s)+' = 0, S = {'+(s<0?N(s)+' ; 0':'0 ; '+N(s))+'}.'}});
+/* −x² + sx − P REL 0 (a < 0) */
+P.p3.push(function(){var r1,r2;do{r1=R(-4,5);r2=R(-4,5)}while(r1>=r2);var s=r1+r2,pr=r1*r2,rel=pick(['<','>','<=','>=']),err=Math.random()<.72;
+  var pos=(rel==='>'||rel==='>='),cl=incl(rel),o=cl?'[':']',c=cl?']':'[',In=o+N(r1)+' ; '+N(r2)+c,Out=']'+M+'∞ ; '+N(r1)+c+' ∪ '+o+N(r2)+' ; +∞[';
+  var good=pos?In:Out,shown=err?(pos?Out:In):good;
+  return {page:'p3',lab:'Signe d’un trinôme quand a < 0',lines:[T([[-1,'x²'],[s,'x'],[-pr,'']])+' '+REL[rel]+' 0','Δ = '+((r2-r1)*(r2-r1))+' ; racines : '+N(r1)+' et '+N(r2),'a = '+M+'1 &lt; 0 : le trinôme est positif '+(err?'à l’extérieur des':'entre les')+' racines','S = '+shown],bad:err?3:0,
+   why:'Le trinôme a le <b>signe de a</b> à l’extérieur des racines, et le signe contraire entre les racines. Ici a = '+M+'1 &lt; 0 : positif <b>entre</b> les racines, négatif à l’extérieur. S = '+good+'.'}});
+/* 2x² + bx + c = 0 : x = (−b ± √Δ)/(2a) */
+P.p3.push(function(){var r1,m;do{r1=nz(-4,4);m=pick([-5,-3,-1,1,3,5])}while(2*r1===m);var b=-(2*r1+m),c=r1*m,D=b*b-8*c,sq=Math.abs(2*r1-m),E=kind([['mb',.35],['den',.35],['ok',.3]]);
+  var top=E==='mb'?b:-b,den=E==='den'?2:4,xa=Q(top-sq,den),xb=Q(top+sq,den);
+  return {page:'p3',lab:'Formule des racines x = (−b ± √Δ) / (2a)',lines:[T([[2,'x²'],[b,'x'],[c,'']])+' = 0','Δ = '+P_(b)+'² '+M+' 4 · 2 · '+P_(c)+' = '+D,'√Δ = '+sq,'x = '+frs(N(top)+' ± '+sq,den),'x = '+xa+' ou x = '+xb],bad:E==='ok'?0:4,
+   why:'x = '+frs(M+'b ± √Δ','2a')+' avec a = 2 et b = '+N(b)+' : '+M+'b = '+N(-b)+' et 2a = 4. Donc x = '+frs(N(-b)+' ± '+sq,4)+' : x = '+Q(-b-sq,4)+' ou x = '+Q(-b+sq,4)+'.'}});
 
-/* ---------- 4. tableau de signes ---------- */
-P.p4.push(function(){var p,q;do{p=R(-5,5);q=R(-5,5)}while(p===q);var rel=pick(['>=','<=']),err=Math.random()<.75,lo=Math.min(p,q),hi=Math.max(p,q);
-  function br(v,side){/* side: 'r' crochet à droite d'un intervalle (borne sup), 'l' à gauche */var incl=(v===p);if(err&&v===q)incl=true;return side==='r'?(incl?']':'['):(incl?'[':']')}
-  var S=rel==='>='?']'+M+'∞ ; '+N(lo)+br(lo,'r')+' ∪ '+br(hi,'l')+N(hi)+' ; +∞[':br(lo,'l')+N(lo)+' ; '+N(hi)+br(hi,'r');
-  return {page:'p4',lab:'Exclure les valeurs interdites (crochet ouvert)',lines:[frs(xmb(p),xmb(q))+' '+REL[rel]+' 0','racine du numérateur : '+N(p)+' ; valeur interdite : '+N(q),'positif à l’extérieur de '+N(lo)+' et '+N(hi)+', négatif entre les deux','S = '+S],bad:err?4:0,
-   why:N(q)+' annule le dénominateur : la fraction n’existe pas en '+N(q)+'. Il est <b>toujours exclu</b>, même avec '+REL[rel]+'. '+N(p)+', lui, est inclus.'}});
-P.p4.push(function(){var p,q;do{p=R(-5,5);q=R(-5,5)}while(p===q);
-  return {page:'p4',lab:'Ne pas multiplier par un dénominateur dont on ne connaît pas le signe',lines:[frs(xmb(p),xmb(q))+' &gt; 0',xmb(p)+' &gt; 0','x &gt; '+N(p),'S = ]'+N(p)+' ; +∞['],bad:2,
-   why:'Pour passer à la ligne 2, on a multiplié par '+xmb(q)+'. Mais son signe dépend de x : s’il est négatif, le sens change. On ne peut donc pas « chasser » le dénominateur : on fait un <b>tableau de signes</b> avec le numérateur <b>et</b> le dénominateur.'}});
-P.p4.push(function(){var a=pick([-4,-3,-2,2,3,4]),r=R(-4,4),b=-a*r,err=Math.random()<.75,pos=a>0;
-  var s=(pos!==err)?'positif':'négatif';
-  return {page:'p4',lab:'Signe de ax + b : le signe de a à droite de la racine',lines:['On étudie le signe de '+lin(a,b),'racine : '+lin(a,b)+' = 0 donne x = '+N(r),'a = '+N(a)+(a>0?' &gt; 0':' &lt; 0'),'donc '+lin(a,b)+' est '+s+' à droite de '+N(r)],bad:err?4:0,
-   why:'ax + b a le <b>signe de a à droite</b> de sa racine, et le signe contraire à gauche. Ici a = '+N(a)+' : '+lin(a,b)+' est '+(pos?'positif':'négatif')+' à droite de '+N(r)+'. (Vérifie avec x = '+N(r+1)+' : '+N(a*(r+1)+b)+'.)'}});
+/* ================= 4. TABLEAU DE SIGNES ================= */
+/* (p − x)/(x − q) REL 0 */
+P.p4.push(function(){var p,q;do{p=R(-5,5);q=R(-5,5)}while(p===q);var rel=pick(['>=','<=','>','<']),E=kind([['sgn',.4],['brk',.3],['ok',.3]]);
+  var lo=Math.min(p,q),hi=Math.max(p,q),want=(rel==='>'||rel==='>='),cl=incl(rel);
+  var fT=function(x){return (p-x)/(x-q)},fW=function(x){return (x-p)/(x-q)};
+  var good=setOf(lo,hi,fT,want,function(v){return cl&&v===p});
+  var shown=E==='sgn'?setOf(lo,hi,fW,want,function(v){return cl&&v===p}):E==='brk'?setOf(lo,hi,fT,want,function(v){return (cl&&v===p)||v===q}):good;
+  if(E==='brk'&&shown===good)E='ok';
+  return {page:'p4',lab:'Signe de p − x (a = −1) ; valeur interdite toujours exclue',
+   lines:[frs(lin(-1,p),xmb(q))+' '+REL[rel]+' 0',lin(-1,p)+' = 0 pour x = '+N(p)+' ; '+xmb(q)+' = 0 pour x = '+N(q)+' (interdit)',lin(-1,p)+' est '+(E==='sgn'?'positif':'négatif')+' à droite de '+N(p)+' ; '+xmb(q)+' est positif à droite de '+N(q),'S = '+shown],bad:E==='sgn'?3:E==='brk'?4:0,
+   why:lin(-1,p)+' a pour coefficient de x : '+M+'1. Il est donc <b>négatif à droite</b> de '+N(p)+'. Et '+N(q)+' annule le dénominateur : il est toujours exclu. S = '+good+'.'}});
+/* (x + a)/(x + b) REL 1 : multiplier par le dénominateur */
+P.p4.push(function(){var a,b;do{a=nz(-5,5);b=nz(-5,5)}while(a===b);var rel=pick(['<=','<','>=','>']),err=Math.random()<.72,d=a-b;
+  var wantPos=(rel==='>'||rel==='>='),right=(d>0)===wantPos,Sg=right?']'+N(-b)+' ; +∞[':']'+M+'∞ ; '+N(-b)+'[';
+  var triv=(rel==='<=')?a<=b:(rel==='<')?a<b:(rel==='>=')?a>=b:a>b;
+  var L=err?[frs(lin(1,a),lin(1,b))+' '+REL[rel]+' 1',lin(1,a)+' '+REL[rel]+' '+lin(1,b),N(a)+' '+REL[rel]+' '+N(b)+(triv?' : toujours vrai':' : jamais vrai'),'S = '+(triv?'ℝ \\ {'+N(-b)+'}':'∅')]:
+   [frs(lin(1,a),lin(1,b))+' '+REL[rel]+' 1',frs(lin(1,a),lin(1,b))+' '+M+' 1 '+REL[rel]+' 0',frs(N(d),lin(1,b))+' '+REL[rel]+' 0','S = '+Sg];
+  return {page:'p4',lab:'Ne pas multiplier par un dénominateur dont on ne connaît pas le signe',lines:L,bad:err?2:0,
+   why:'On ne peut pas multiplier par '+lin(1,b)+' : son signe dépend de x. On fait tout passer du même côté : '+frs(lin(1,a),lin(1,b))+' '+M+' 1 = '+frs(N(d),lin(1,b))+', puis on étudie le signe. S = '+Sg+'.'}});
+/* x²(x − p) REL 0 */
+P.p4.push(function(){var p=nz(-5,5),rel=pick(['>=','>','<=','<']),pos=(rel==='>'||rel==='>='),cl=incl(rel);
+  var naive=pos?(cl?'['+N(p)+' ; +∞[':']'+N(p)+' ; +∞['):(cl?']'+M+'∞ ; '+N(p)+']':']'+M+'∞ ; '+N(p)+'[');
+  var good;if(cl){good=pos?(p>0?'{0} ∪ ['+N(p)+' ; +∞[':'['+N(p)+' ; +∞['):(p<0?']'+M+'∞ ; '+N(p)+'] ∪ {0}':']'+M+'∞ ; '+N(p)+']')}
+  else{good=pos?(p<0?']'+N(p)+' ; 0[ ∪ ]0 ; +∞[':']'+N(p)+' ; +∞['):(p>0?']'+M+'∞ ; 0[ ∪ ]0 ; '+N(p)+'[':']'+M+'∞ ; '+N(p)+'[')}
+  var same=good===naive;
+  return {page:'p4',lab:'Un facteur x² : attention à x = 0',lines:['x²'+xm(p)+' '+REL[rel]+' 0','x² ≥ 0 pour tout x','le signe de x²'+xm(p)+' est donc celui de '+xmb(p)+', sauf en x = 0','S = '+naive],bad:same?0:4,
+   why:'En x = 0, x²'+xm(p)+' vaut 0. '+(same?'Ici, cet ensemble traite déjà bien x = 0 : il n’y a pas d’erreur.':(cl?'0 vérifie '+REL[rel]+' 0 : il faut l’<b>ajouter</b>':'0 ne vérifie pas '+REL[rel]+' 0 : il faut l’<b>enlever</b>')+'. S = '+good+'.')}});
 
-/* ---------- 5. somme de fractions ---------- */
-P.p5.push(function(){var p=R(-4,5),k=pick([-3,-2,2,3]),n,err=Math.random()<.75;do{n=pick([1,2,3])}while(n+k===0);var kk=(k<0?' '+M+' '+(-k):' + '+k);
-  var num=lin(k,n-k*p);
-  return {page:'p5',lab:'Mettre au même dénominateur (multiplier aussi le nombre entier)',lines:[frs(n,xmb(p))+(k<0?' '+M+' '+(-k):' + '+k)+' ≥ 0','CE : x ≠ '+N(p),err?frs(n+kk,xmb(p))+' ≥ 0':frs(n+kk+xm(p),xmb(p))+' ≥ 0',err?frs(N(n+k),xmb(p))+' ≥ 0':frs(num,xmb(p))+' ≥ 0'],bad:err?3:0,
-   why:N(k)+' = '+frs(N(k)+xm(p),xmb(p))+' : pour l’écrire avec le dénominateur '+xmb(p)+', il faut aussi <b>multiplier le numérateur</b> par '+xmb(p)+'. On obtient '+frs(num,xmb(p))+' ≥ 0.'}});
-P.p5.push(function(){var p=R(-4,4),a=R(2,7),m=pick([-5,-3,-2,-1,1,2,3,4]),err=Math.random()<.75;
-  var t=function(minus){return minus?' '+M+' '+Math.abs(m):' + '+Math.abs(m)};
-  var goodMinus=m>0,l2=a+' '+M+' x'+t(err?!goodMinus:goodMinus);
-  var good=lin(-1,a-m),bad=lin(-1,a+m);
-  return {page:'p5',lab:'Le signe − devant une fraction porte sur tout le numérateur',lines:[frs(a,xmb(p))+' '+M+' '+frs(lin(1,m),xmb(p))+' &lt; 0',frs(l2,xmb(p))+' &lt; 0',frs(err?bad:good,xmb(p))+' &lt; 0'],bad:err?2:0,
-   why:'On soustrait <b>toute</b> la fraction : '+a+' '+M+' ('+lin(1,m)+') = '+a+' '+M+' x'+t(goodMinus)+' = '+good+'. Les parenthèses évitent l’erreur de signe.'}});
-P.p5.push(function(){var p=R(2,5),n=pick([1,2,3]),err=Math.random()<.75;
-  return {page:'p5',lab:'Conditions d’existence : factoriser le dénominateur',lines:[frs(n,'x² '+M+' '+(p*p))+' + '+frs(1,'x + '+p)+' &gt; 0','x² '+M+' '+(p*p)+' = (x '+M+' '+p+')(x + '+p+')',err?'CE : x ≠ '+p:'CE : x ≠ '+p+' et x ≠ '+M+p],bad:err?3:0,
-   why:'x² '+M+' '+(p*p)+' s’annule pour x = '+p+' <b>et</b> pour x = '+M+p+' (car ('+M+p+')² = '+(p*p)+'). Il y a deux valeurs interdites : '+p+' et '+M+p+'.'}});
+/* ================= 5. SOMME DE FRACTIONS ================= */
+/* a/(x − p) − b/(x − q) REL 0 */
+P.p5.push(function(){var p,q,a,b;do{p=nz(-4,4);q=R(-4,4);a=R(1,4);b=R(1,4)}while(p===q||a===b);var rel=pick(['<','>','<=','>=']),err=Math.random()<.72;
+  var bp=err?-b*p:b*p,num=lin(a-b,-a*q+bp),den=xm(p)+xm(q);
+  return {page:'p5',lab:'Même dénominateur : le − porte sur tout le second numérateur',lines:[frs(a,xmb(p))+' '+M+' '+frs(b,xmb(q))+' '+REL[rel]+' 0',frs((a===1?'':a)+xm(q)+' '+M+' '+(b===1?'':b)+xm(p),den)+' '+REL[rel]+' 0',frs(T([[a,'x'],[-a*q,''],[-b,'x'],[bp,'']]),den)+' '+REL[rel]+' 0',frs(num,den)+' '+REL[rel]+' 0'],bad:err?3:0,
+   why:M+b+xm(p)+' = '+T([[-b,'x'],[b*p,'']])+' : le '+M+' change le signe des <b>deux</b> termes. Numérateur : '+lin(a-b,-a*q+b*p)+'.'}});
+/* c/(x² − p²) REL 1/(x − p) */
+P.p5.push(function(){var p=R(2,5),c=nz(-6,7),rel=pick(['<','>','<=','>=']),E=kind([['sign',.35],['ce',.35],['ok',.3]]);while(c===2*p)c=nz(-6,7);
+  var den='(x '+M+' '+p+')(x + '+p+')',num=E==='sign'?T([[-1,'x'],[c+p,'']]):T([[-1,'x'],[c-p,'']]);
+  return {page:'p5',lab:'Factoriser le dénominateur : conditions d’existence et dénominateur commun',lines:[frs(N(c),'x² '+M+' '+(p*p))+' '+REL[rel]+' '+frs(1,'x '+M+' '+p),E==='ce'?'CE : x ≠ '+p:'CE : x ≠ '+p+' et x ≠ '+M+p,frs(N(c),den)+' '+M+' '+frs('x + '+p,den)+' '+REL[rel]+' 0',frs(num,den)+' '+REL[rel]+' 0'],bad:E==='sign'?4:E==='ce'?2:0,
+   why:'x² '+M+' '+(p*p)+' = '+den+' s’annule en '+p+' <b>et</b> en '+M+p+'. Dénominateur commun '+den+' : '+N(c)+' '+M+' (x + '+p+') = '+T([[-1,'x'],[c-p,'']])+'.'}});
+/* x/(x − p) + 1 REL k/(x − p) */
+P.p5.push(function(){var p=nz(-4,4),k=nz(-5,6),rel=pick(['<','>','<=','>=']),err=Math.random()<.72;
+  var good=lin(2,-p-k),bd=lin(1,1-k);
+  return {page:'p5',lab:'Écrire un nombre entier avec le dénominateur commun',lines:[frs('x',xmb(p))+' + 1 '+REL[rel]+' '+frs(N(k),xmb(p)),err?frs('x + 1 '+M+' '+P_(k),xmb(p))+' '+REL[rel]+' 0':frs('x + '+xm(p)+' '+M+' '+P_(k),xmb(p))+' '+REL[rel]+' 0',frs(err?bd:good,xmb(p))+' '+REL[rel]+' 0'],bad:err?2:0,
+   why:'1 = '+frs(xmb(p),xmb(p))+' : pour l’ajouter, on écrit '+xmb(p)+' au numérateur, pas 1. Numérateur : x + '+xm(p)+' '+M+' '+P_(k)+' = '+good+'.'}});
 /* ===== déroulement du test ===== */
 var Qs=[],idx=0,res={},cur=null,done=false;
 function $(i){return document.getElementById(i)}
