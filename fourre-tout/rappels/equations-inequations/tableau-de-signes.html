@@ -79,6 +79,9 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 <li>Elle n’existe pas quand le <b>dessous</b> est nul : double barre ‖, valeur toujours exclue.</li>
 <li>Un facteur ax + b a le signe de <b>a à droite</b> de sa racine, et le signe contraire à gauche.</li>
 <li>Signes identiques : +. Signes différents : −.</li></ul></div>
+<div class="card"><span class="badge">Plusieurs facteurs</span><h2>Un tableau à plusieurs lignes</h2>
+<p>Quand il y a plus de deux facteurs, la méthode est la même : <b>une ligne par facteur</b>. Mais il faut d’abord une <b>forme factorisée</b>.</p>
+<div id="multi"></div></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
 <h2>Quiz : 10 questions</h2>
 <p>Chaque faute ajoute <b>3 questions</b> pour consolider. À la fin, tu sais si tu maîtrises ce savoir-faire.</p>
@@ -321,6 +324,28 @@ function frSteps(again){
   ];
 }
 
+
+function multiSteps(again){
+  var p=again?pick([1,2,3,4]):1,q=again?pick([-3,-2,-1,0,2,3,4,5].filter(function(v){return Math.abs(v)!==p})):2,rel=again?pick(['>','>=','<','<=']):'>=';
+  var an=analyse([{a:1,b:-p,p:1},{a:1,b:p,p:1},{a:1,b:-q,p:-1}],1,rel),den=lin(1,-q),eq0=frs('x² '+M+' '+(p*p),den)+' '+RS(rel)+' 0',eq1=frs('(x '+M+' '+p+')(x + '+p+')',den)+' '+RS(rel)+' 0';
+  return [
+   {eq:eq0,vis:'',txt:'<b>1. Il faut une forme factorisée.</b> Le tableau de signes ne marche qu’avec un <b>produit ou un quotient de facteurs du 1<sup>er</sup> degré</b>. Ici, le numérateur x² '+M+' '+(p*p)+' n’est pas encore factorisé.'},
+   {eq:eq1,vis:'',txt:'<b>Factoriser</b> : x² '+M+' '+(p*p)+' = (x '+M+' '+p+')(x + '+p+') (produit remarquable a² '+M+' b²). Si ce n’est pas un produit remarquable : mise en évidence, ou Δ.'},
+   {eq:eq1,vis:tableHtml(an,0),txt:'<b>2. On cherche la racine de chaque facteur</b> : x '+M+' '+p+' = 0 donne '+p+' ; x + '+p+' = 0 donne '+M+p+' ; '+den+' = 0 donne '+N(q)+' (valeur interdite). On les range dans l’ordre croissant.'},
+   {eq:eq1,vis:tableHtml(an,3),txt:'<b>3. Une ligne par facteur.</b> Chaque facteur ax + b a le signe de a à droite de sa racine, le signe contraire à gauche.'},
+   {eq:eq1,vis:tableHtml(an,4,false,'Quotient'),txt:'<b>4. La dernière ligne</b>, colonne par colonne : un nombre <b>pair</b> de signes '+M+' donne +, un nombre <b>impair</b> donne '+M+'. 0 sous les racines du numérateur, ‖ sous la valeur interdite.'},
+   {eq:setHtml(an.parts),vis:tableHtml(an,4,true,'Quotient')+nline(an,an.parts),txt:'<b>5. Lecture.</b> On garde les colonnes du signe voulu. Les racines du numérateur sont '+((rel==='>='||rel==='<=')?'incluses':'exclues')+', la valeur interdite est toujours exclue.'}
+  ];
+}
+GENS.push(function(){var p=pick([2,3,4,5]),q=pick([-4,-1,1,6]),rel=pick(['>','>=','<','<=']);
+  return qcm('Avant de faire le tableau de signes de <b>'+frs('x² '+M+' '+(p*p),lin(1,-q))+' '+RS(rel)+' 0</b>, que faut-il faire ?','Factoriser le numérateur : (x '+M+' '+p+')(x + '+p+')',['Rien, on peut faire le tableau directement','Multiplier les deux membres par '+lin(1,-q),'Prendre la racine carrée du numérateur'],
+   'Le tableau de signes demande une <b>forme factorisée</b> : une ligne par facteur du 1<sup>er</sup> degré. x² '+M+' '+(p*p)+' = (x '+M+' '+p+')(x + '+p+').')});
+GENS.push(function(){var p=pick([1,2,3,4]),q=pick([-3,-2,0,5,6].filter(function(v){return Math.abs(v)!==p})),rel=pick(['>','>=','<','<=']);
+  var an=analyse([{a:1,b:-p,p:1},{a:1,b:p,p:1},{a:1,b:-q,p:-1}],1,rel);
+  return mk({q:'Résous : <b>'+frs('x² '+M+' '+(p*p),lin(1,-q))+' '+RS(rel)+' 0</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[]),
+   truth:function(x){if(Math.abs(x-q)<EPS)return false;return relOK(rel,(x*x-p*p)/(x-q))},
+   why:'x² '+M+' '+(p*p)+' = (x '+M+' '+p+')(x + '+p+'). Trois facteurs, trois lignes : racines '+M+p+', '+p+' et '+N(q)+' (interdite).'})});
+stepper($('multi'),multiSteps,{again:true});
 stepper($('fr'),frSteps,{again:true});
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p4',"Fraction du 1er degré : le principe du tableau de signes",'index.html')};
 </script></body></html>

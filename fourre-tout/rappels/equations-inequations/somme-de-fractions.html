@@ -74,10 +74,13 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 <div class="card goal"><span class="badge">Objectif</span><div>Résoudre une inéquation où il y a <b>des fractions</b> à additionner ou à comparer, avec les conditions d’existence.</div></div>
 <div class="card"><span class="badge">Comprendre</span><h2>Un exercice résolu, pas à pas</h2>
 <div id="sum"></div></div>
+<div class="card warn"><span class="badge">Attention</span><h2>Factoriser les dénominateurs d’abord</h2>
+<p>Avant de chercher le dénominateur commun, on <b>factorise</b> chaque dénominateur. Sinon on prend un dénominateur trop grand, et on ne voit pas les valeurs interdites.</p>
+<div id="facto"></div></div>
 <div class="card key"><b>Les 4 réflexes</b>
 <ul class="pts"><li><b>Conditions d’existence</b> : repérer ce qui annule un dénominateur.</li>
 <li><b>Tout du même côté</b>, 0 à droite. Jamais de multiplication par un dénominateur.</li>
-<li><b>Même dénominateur</b>, puis simplifier le numérateur.</li>
+<li><b>Factoriser</b> les dénominateurs, puis <b>même dénominateur</b>, puis simplifier le numérateur.</li>
 <li><b>Tableau de signes</b>, lecture de la solution, contrôle avec une valeur.</li></ul></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
 <h2>Quiz : 10 questions</h2>
@@ -348,6 +351,31 @@ function sumSteps(again){
   ];
 }
 
+
+function factoSteps(){
+  var an=analyse([{a:-1,b:2,p:1},{a:1,b:-1,p:-1},{a:1,b:1,p:-1}],1,'<='),st=frs('3','x² '+M+' 1')+' '+M+' '+frs('1','x '+M+' 1')+' ≤ 0';
+  return [
+   {eq:st,vis:'',txt:'On veut résoudre cette inéquation. Les deux dénominateurs sont différents.'},
+   {eq:frs('3','(x '+M+' 1)(x + 1)')+' '+M+' '+frs('1','x '+M+' 1')+' ≤ 0',vis:'',txt:'<b>1. Factoriser</b> : x² '+M+' 1 = (x '+M+' 1)(x + 1). On voit tout de suite les <b>conditions d’existence</b> : x ≠ 1 et x ≠ '+M+'1.'},
+   {eq:frs('3','(x '+M+' 1)(x + 1)')+' '+M+' '+frs('x + 1','(x '+M+' 1)(x + 1)')+' ≤ 0',vis:'',txt:'<b>2. Dénominateur commun</b> : (x '+M+' 1)(x + 1). Il contient <b>déjà</b> x '+M+' 1 : il suffit de multiplier la 2<sup>e</sup> fraction par (x + 1) en haut et en bas.<br><span style="color:var(--coral)">Sans factoriser, on aurait pris (x² '+M+' 1)(x '+M+' 1) : un facteur x '+M+' 1 en trop.</span>'},
+   {eq:frs('2 '+M+' x','(x '+M+' 1)(x + 1)')+' ≤ 0',vis:'',txt:'<b>3. Simplifier le numérateur</b> : 3 '+M+' (x + 1) = 2 '+M+' x. Attention aux parenthèses : le signe '+M+' porte sur tout le numérateur.'},
+   {eq:setHtml(an.parts),vis:tableHtml(an,4,true,'Quotient')+nline(an,an.parts),txt:'<b>4. Tableau de signes</b> : une ligne par facteur. On garde là où le quotient est négatif ou nul. 2 est inclus, '+M+'1 et 1 sont interdits.'}
+  ];
+}
+GENS.push(function(){var p=pick([1,2,3,4,5]),n1=pick([1,2,3]),n2=pick([1,2]);
+  return qcm('Quel est le dénominateur commun <b>le plus simple</b> pour '+frs(n1,'x² '+M+' '+(p*p))+' + '+frs(n2,'x + '+p)+' ?','(x '+M+' '+p+')(x + '+p+')',['(x² '+M+' '+(p*p)+')(x + '+p+')','(x + '+p+')²','x² + x '+M+' '+(p*p-p)],
+   'On factorise d’abord : x² '+M+' '+(p*p)+' = (x '+M+' '+p+')(x + '+p+'). Ce produit contient déjà x + '+p+' : c’est le dénominateur commun.')});
+GENS.push(function(){var p,q;do{p=R(-5,5);q=R(-5,5)}while(p===q||p===-q||p===0||q===0);
+  var tri=poly2(1,-(p+q),p*q),f=function(u,v){return '(x '+(u<0?'+':M)+' '+Math.abs(u)+')(x '+(v<0?'+':M)+' '+Math.abs(v)+')'};
+  return qcm('Factorise le dénominateur <b>'+tri+'</b>, pour trouver les valeurs interdites :',f(p,q),[f(-p,-q),f(p,-q),f(-p,q)],
+   'On cherche deux nombres de somme '+N(p+q)+' et de produit '+N(p*q)+' : '+N(p)+' et '+N(q)+' (ou on calcule Δ). Valeurs interdites : '+N(p)+' et '+N(q)+'.')});
+GENS.push(function(){var p,q,n1,n2;do{p=R(-4,4);q=R(-4,4);n1=pick([-3,-2,-1,1,2,3]);n2=pick([-2,-1,1,2])}while(p===q||(n2*p-n1)===n2*q||(n2*p-n1)%n2!==0&&false);
+  var rel=pick(['>','>=','<','<=']),an=analyse([{a:n2,b:n1-n2*p,p:1},{a:1,b:-p,p:-1},{a:1,b:-q,p:-1}],1,rel);
+  var e=(n1<0?M:'')+frs(Math.abs(n1),poly2(1,-(p+q),p*q))+term(n2,q,false);
+  return mk({q:'Résous : <b>'+e+' '+RS(rel)+' 0</b>',ok:{h:setHtml(an.parts),f:function(x){return inParts(an.parts,x)}},wr:distract(an,[]),
+   truth:function(x){if(Math.abs(x-p)<EPS||Math.abs(x-q)<EPS)return false;return relOK(rel,n1/((x-p)*(x-q))+n2/(x-q))},
+   why:'On factorise : '+poly2(1,-(p+q),p*q)+' = '+par(p)+par(q)+'. Dénominateur commun '+par(p)+par(q)+', numérateur '+lin(n2,n1-n2*p)+'. Puis tableau de signes avec les valeurs interdites '+N(p)+' et '+N(q)+'.'})});
+stepper($('facto'),factoSteps);
 stepper($('sum'),sumSteps,{again:true});
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p5',"Inéquation avec une somme de fractions",'index.html')};
 </script></body></html>

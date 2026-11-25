@@ -88,9 +88,16 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 <div style="flex:1 1 200px;text-align:center"><b style="color:#2A9D8F">f(x) = 0,5x + 1,5 : croissante</b><div id="g1"></div><small>x₁ &lt; x₂ donne f(x₁) &lt; f(x₂)</small></div>
 <div style="flex:1 1 200px;text-align:center"><b style="color:#E76F51">g(x) = −0,5x + 2 : décroissante</b><div id="g2"></div><small>x₁ &lt; x₂ donne g(x₁) &gt; g(x₂)</small></div></div>
 <p style="margin-top:12px">Multiplier par un nombre k, c’est appliquer la fonction <b>x ↦ kx</b>. Si k &gt; 0 elle est croissante (ordre conservé). Si k &lt; 0 elle est <b>décroissante</b> : l’ordre est inversé, donc le sens de l’inéquation aussi.</p></div>
-<div class="card key"><h2>4. Méthode</h2>
+<div class="card key"><h2>4. Deux méthodes pour résoudre</h2>
 <p><b>−2x + 1 &gt; 7</b></p>
+<h3 style="margin:10px 0 4px;color:var(--navy)">Méthode 1 : isoler x</h3>
 <p>−2x &gt; 6 &nbsp;(on soustrait 1 des deux côtés)<br>x <b>&lt;</b> −3 &nbsp;(on divise par <b>−2</b> : <b>le sens change</b>)<br>S = ]−∞ ; −3[</p>
+<h3 style="margin:14px 0 4px;color:var(--navy)">Méthode 2 : tout du même côté et tableau de signes</h3>
+<p>−2x + 1 − 7 &gt; 0, donc <b>−2x − 6 &gt; 0</b>. On cherche quand −2x − 6 est <b>positif</b>.</p>
+<p>Racine : −2x − 6 = 0 donne x = −3. Comme a = −2 est <b>négatif</b>, −2x − 6 a le signe de a (−) <b>à droite</b> de la racine, et le signe contraire (+) à gauche.</p>
+<div id="m2tab"></div>
+<p>On garde là où c’est <b>+</b> : S = ]−∞ ; −3[. Même résultat, sans se demander si le sens change.</p>
+<p style="font-size:15px;color:#4a5a6c">Cette méthode est celle qu’on utilisera pour le 2<sup>e</sup> degré et pour les fractions.</p>
 <p>Contrôle : x = −4 donne −2·(−4) + 1 = 9 &gt; 7 ✓</p>
 <p><b>Rappel :</b> un crochet est <b>fermé</b> si le nombre est inclus (≤, ≥), <b>ouvert</b> sinon (&lt;, &gt;). L’infini est toujours ouvert.</p></div>
 <div class="card" id="testcard"><span class="badge">Teste-toi</span>
@@ -350,11 +357,15 @@ GENS.push(function(){var rel=pick(['>','>=','<','<=']),v=R(-6,6),H=function(part
   return mk({q:'Quelle écriture en intervalle correspond à <b>x '+RS(rel)+' '+N(v)+'</b> ?',ok:{h:ok},wr:[{h:H(fb2)},{h:H(inv.parts)},{h:H(fb.parts)}],
    why:'x '+RS(rel)+' '+N(v)+' : les nombres '+((rel==='>'||rel==='>=')?'plus grands que '+N(v)+', donc jusqu’à +∞':'plus petits que '+N(v)+', donc depuis '+M+'∞')+'. Crochet <b>fermé</b> si le nombre est inclus (≤, ≥), <b>ouvert</b> sinon ('+LT+', '+GT+'). L’infini est toujours ouvert.'})});
 
+GENS.push(function(){var a=pick([-5,-4,-3,-2,2,3,4,5]),r=R(-6,6),b=-a*r,pos=a>0;
+  return qcm('On a mis tout du même côté : <b>'+lin(a,b)+' '+GT+' 0</b>. La racine de '+lin(a,b)+' est x = '+N(r)+'. À <b>droite</b> de cette racine, '+lin(a,b)+' est :',pos?'positif':'négatif',[pos?'négatif':'positif','nul','on ne peut pas savoir'],
+   'ax + b a le <b>signe de a à droite</b> de sa racine. Ici a = '+N(a)+', donc '+(pos?'positif':'négatif')+' à droite. S = '+(pos?']'+N(r)+' ; +∞[':']'+M+'∞ ; '+N(r)+'[')+'.')});
 function mirror(){var s='<svg class="nl" viewBox="0 0 320 90"><line x1="10" y1="45" x2="310" y2="45" stroke="#1F2A44" stroke-width="2"/>';
 for(var i=-6;i<=6;i++){var x=160+i*22;s+='<line x1="'+x+'" y1="40" x2="'+x+'" y2="50" stroke="#1F2A44"/><text x="'+x+'" y="68" font-size="10" text-anchor="middle" fill="#5b6b7b">'+N(i)+'</text>'}
 [[2,'#1F4E79'],[5,'#1F4E79'],[-2,'#E76F51'],[-5,'#E76F51']].forEach(function(p){s+='<circle cx="'+(160+p[0]*22)+'" cy="45" r="7" fill="'+p[1]+'"/>'});
 s+='<path d="M '+(160+2*22)+' 30 Q 160 0 '+(160-2*22)+' 30" fill="none" stroke="#E76F51" stroke-width="2"/><path d="M '+(160+5*22)+' 30 Q 160 -25 '+(160-5*22)+' 30" fill="none" stroke="#E76F51" stroke-width="2" stroke-dasharray="4 3"/>';
 return s+'<text x="160" y="14" font-size="11" text-anchor="middle" fill="#E76F51">× (−1)</text></svg>'}
+(function(){var an=analyse([{a:-2,b:-6,p:1}],1,'>');$('m2tab').innerHTML=tableHtml(an,1,false)+nline(an,an.parts)})();
 $('mir').innerHTML=mirror();$('g1').innerHTML=lineGraph(0.5,1.5,-2,2,'f');$('g2').innerHTML=lineGraph(-0.5,2,-2,2,'g');
 document.getElementById('startq').onclick=function(){document.getElementById('testcard').style.display='none';var q=document.getElementById('quizcard');q.style.display='block';q.scrollIntoView({behavior:'smooth'});runQuiz(document.getElementById('quiz'),GENS,'p2',"Inéquation du 1er degré : savoir quand le sens de l’inéquation change",'index.html')};
 </script></body></html>

@@ -67,6 +67,7 @@ ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
 .def{font-size:18px}
 .foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
 @media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+.hist{display:inline-block;text-align:left}.hist .hl{font-size:19px;color:#8895a5;line-height:1.5}.hist .hl.cur{font-size:26px;color:var(--ink);font-weight:600}.hist .hop{font-size:14px;color:var(--coral);font-weight:700;margin-left:12px;white-space:nowrap}
 @media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
 </style></head><body><div class="wrap">
 <div class="top"><a href="index.html">← Liste des savoir-faire</a><span>Savoir-faire 1 / 5</span></div>
@@ -350,7 +351,11 @@ function balSteps(again){
   if(again)sceneIdx=(sceneIdx+1)%SC.length;
   var sc=SC[sceneIdx];
   return sc.steps.map(function(s,i){
-    var o={eq:s.eq,txt:s.txt,vis:bal(s.L,s.R,0,s.op,s.op)};
+    var hist='',last=null;
+    for(var j=0;j<=i;j++){var st=sc.steps[j];if(st.eq===last)continue;var nx=sc.steps[j+1];
+      var op=(j<i&&nx&&nx.op&&nx.eq!==st.eq)?'<span class="hop">'+nx.op+' des deux côtés</span>':'';
+      hist+='<div class="hl'+(j===i||(j<i&&sc.steps[i].eq===st.eq)?' cur':'')+'">'+st.eq+op+'</div>';last=st.eq}
+    var o={eq:'<div class="hist">'+hist+'</div>',txt:s.txt,vis:bal(s.L,s.R,0,s.op,s.op)};
     if(s.tilt){
       var prev=sc.steps[i-1];
       o.vis+='<div class="row" style="justify-content:center"><button class="btn coral" id="tiltb">\u26a0 Et si je n\u2019enl\u00e8ve 2 que d\u2019un c\u00f4t\u00e9 ?</button></div>';
