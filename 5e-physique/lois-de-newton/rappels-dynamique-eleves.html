@@ -118,7 +118,7 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 <li><b>Comprendre</b> (10 min) : lis seulement les parties à revoir.</li>
 <li><b>S'entraîner</b> (10 min) : 10 questions, +3 à chaque faute.</li>
 <li><b>Trouve l'erreur</b> (8 min) : 6 schémas faits par un élève, à toi de repérer les flèches fausses.</li>
-<li><b>Dessiner</b> (12 min) : 6 situations, chacune en 2 étapes (sur l'objet, puis au point M).</li>
+<li><b>Dessiner</b> (12 min) : 6 situations, chacune en 2 étapes (sur l'objet, puis au point M) ; on vérifie le point d'application, la direction et le sens.</li>
 </ol>
 <p style="margin:6px 0 0;font-size:15px">Tu as fini avant ? Fais les schémas et situations « Pour aller plus loin ». Tu n'as pas fini ? Termine chez toi.</p></div>
 <div class="tabs" id="tabs">
@@ -211,6 +211,7 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 <div class="card"><span class="badge">Trouve l’erreur</span><h2>Des schémas à vérifier</h2>
 <p>Un élève a dessiné ces schémas. Les intensités et l'échelle sont données. <b>Touche les flèches fausses</b> (elles deviennent pointillées), puis vérifie.</p>
 <p style="font-size:15px">Une flèche est fausse si : la force n'existe pas ou ne s'exerce pas sur le système, sa direction ou son sens est faux, sa longueur ne correspond pas à l'intensité, ou elle ne part pas du bon point (sur le schéma sur l'objet). Il ne manque aucune force. Il y a au moins une erreur par schéma.</p>
+<p style="font-size:15px"><b>Attention :</b> quand deux flèches tomberaient l'une sur l'autre, l'élève a fait partir l'une d'elles <b>un peu à côté</b> pour qu'on voie les deux (par exemple R, un peu à gauche du milieu de la surface de contact). Ce n'est <b>pas</b> une erreur, tant que la flèche part de la bonne surface. Le poids, lui, part toujours exactement du centre de gravité, marqué par un point.</p>
 <div id="cor"></div></div>
 </section>
 
@@ -219,7 +220,7 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 <p>Chaque situation se fait en <b>deux étapes</b>, comme en interrogation :</p><ol class="pts">
 <li><b>Sur l'objet</b> : choisis une force, pose ton doigt sur son <b>point d'application</b> et glisse pour dessiner la flèche.</li>
 <li><b>Au point M</b> : redessine les mêmes forces à partir de M.</li></ol>
-<p>Les intensités sont données ; regarde l'échelle. Au point M, deux forces de même direction et de même sens se superposent : c'est normal. N'utilise que les forces qui s'exercent vraiment <b>sur le système</b>. La liste contient aussi des forces pièges.</p>
+<p>Ici, on vérifie seulement le <b>point d'application</b>, la <b>direction</b> et le <b>sens</b> de chaque flèche : sa longueur n'est pas corrigée. Au point M, deux forces de même direction et de même sens se superposent : c'est normal. N'utilise que les forces qui s'exercent vraiment <b>sur le système</b>. La liste contient aussi des forces pièges.</p>
 <div id="des"></div></div>
 </section>
 <div class="foot">Site réalisé avec l'aide de l'IA (AIA) · Mme Delimoy</div>
@@ -572,7 +573,7 @@ var DS=[
  {t:'Un livre de poids <b>20 N</b> est posé sur une table. La table le pousse vers le haut avec <b>R = 20 N</b>.',scale:10,
   pic:'<rect x="40" y="220" width="260" height="14" fill="#8a5a2b"/><rect x="60" y="234" width="12" height="70" fill="#8a5a2b"/><rect x="268" y="234" width="12" height="70" fill="#8a5a2b"/><rect x="130" y="190" width="80" height="30" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/>'+gdot(170,205),
   req:{P:[270,20,{c:[170,205],r:14}],R:[90,20,{s:[130,220,210,220],r:10}]},pal:['P','R','T','f','F livre/table'],
-  why:{'F livre/table':'F<sub>livre/table</sub> s’exerce sur la table, pas sur le livre.',R:'R part de la surface de contact avec la table, vers le haut, 2 carreaux.',P:'P part du centre de gravité G, vers le bas, 2 carreaux.',T:'Il n’y a pas de fil.',f:'Rien ne fait glisser le livre : pas de frottement.'}},
+  why:{'F livre/table':'F<sub>livre/table</sub> s’exerce sur la table, pas sur le livre.',R:'R part de la surface de contact avec la table, vers le haut.',P:'P part du centre de gravité G, vers le bas.',T:'Il n’y a pas de fil.',f:'Rien ne fait glisser le livre : pas de frottement.'}},
  {t:'Une lampe de poids <b>30 N</b> est suspendue à un fil. Le fil la retient avec <b>T = 30 N</b>.',scale:10,
   pic:'<rect x="110" y="0" width="120" height="10" fill="#BFC7D1"/><line x1="170" y1="10" x2="170" y2="120" stroke="#444" stroke-width="2"/><path d="M135,165 L170,120 L205,165 Z" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/>'+gdot(170,150),
   req:{P:[270,30,{c:[170,150],r:12}],T:[90,30,{c:[170,120],r:12}]},pal:['P','T','R','f'],
@@ -588,11 +589,11 @@ var DS=[
  {t:'Une boule de pétanque de poids <b>7 N</b> est au sommet de sa trajectoire : elle se déplace horizontalement vers la droite. On néglige l’air.',scale:1,v:[0,182,170],
   pic:'<path d="M10,330 Q170,10 330,330" fill="none" stroke="#bbb" stroke-dasharray="5 5"/><circle cx="170" cy="170" r="11" fill="#9aa5b1" stroke="#555" stroke-width="2"/>'+VEL(0,184,170,55),
   req:{P:[270,7,{c:[170,170],r:12}]},pal:['P','F lancer','F mouvement','R'],
-  why:{P:'Le poids part du centre de la boule, vers le bas, 7 carreaux.','F lancer':'La main ne touche plus la boule : pas de force du lancer.','F mouvement':'La boule avance sur sa lancée, aucune force ne la pousse vers l’avant.',R:'Rien ne la touche.'}},
+  why:{P:'Le poids part du centre de la boule, vers le bas.','F lancer':'La main ne touche plus la boule : pas de force du lancer.','F mouvement':'La boule avance sur sa lancée, aucune force ne la pousse vers l’avant.',R:'Rien ne la touche.'}},
  {t:'Deux caisses sont posées l’une sur l’autre, sur le sol. Forces qui s’exercent <b>sur la caisse B</b> (dessous) : son poids <b>P = 30 N</b>, la force de A qui appuie sur B <b>F<sub>A/B</sub> = 20 N</b>, et la force du sol <b>F<sub>sol/B</sub> = 50 N</b>.',scale:10,
   pic:'<rect x="0" y="280" width="340" height="60" fill="#C9B79C"/><rect x="110" y="220" width="120" height="60" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="118" y="238" font-size="14" font-weight="700" fill="#8a5a2b">B</text><rect x="135" y="180" width="70" height="40" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="143" y="198" font-size="14" font-weight="700" fill="#5a3a1b">A</text>'+gdot(170,250),
   req:{P:[270,30,{c:[170,250],r:14}],'F A/B':[270,20,{s:[135,220,205,220],r:10}],'F sol/B':[90,50,{s:[110,280,230,280],r:10}]},pal:['P','P de A','F A/B','F B/A','F sol/B'],
-  why:{'P de A':'Le poids de A s’exerce sur A, pas sur B. Ce qui agit sur B, c’est F<sub>A/B</sub>.','F B/A':'F<sub>B/A</sub> s’exerce sur A, pas sur B.','F A/B':'A appuie sur B : 20 N vers le bas, à partir de la surface de contact entre A et B.','F sol/B':'50 N vers le haut, à partir de la surface de contact entre B et le sol.',P:'Le poids de B part de son centre de gravité, 3 carreaux vers le bas.'}},
+  why:{'P de A':'Le poids de A s’exerce sur A, pas sur B. Ce qui agit sur B, c’est F<sub>A/B</sub>.','F B/A':'F<sub>B/A</sub> s’exerce sur A, pas sur B.','F A/B':'A appuie sur B : 20 N vers le bas, à partir de la surface de contact entre A et B.','F sol/B':'50 N vers le haut, à partir de la surface de contact entre B et le sol.',P:'Le poids de B part de son centre de gravité, vers le bas.'}},
  {x:1,t:'Un palet de hockey de poids <b>2 N</b> glisse vers la droite sur la glace. On néglige les frottements. La glace le porte avec <b>R = 2 N</b>.',scale:1,v:[0,190,140],
   pic:'<rect x="0" y="230" width="340" height="14" fill="#BFE3F2"/><rect x="140" y="200" width="60" height="30" rx="6" fill="#1F2A44"/><circle cx="170" cy="215" r="3" fill="#FFD966"/><text x="178" y="212" font-size="11" fill="#FFD966">G</text>'+VEL(0,210,185,55),
   req:{P:[270,2,{c:[170,215],r:10}],R:[90,2,{s:[140,230,200,230],r:8}]},pal:['P','R','F mouvement','f'],
@@ -612,7 +613,7 @@ var DS=[
  {x:1,t:'Un enfant est debout dans un ascenseur à l’arrêt et tient un sac à la main. Forces sur l’enfant : son poids <b>P = 400 N</b>, la force du sac qui tire sa main <b>F<sub>sac/enfant</sub> = 50 N</b> et la force du plancher <b>F<sub>plancher/enfant</sub> = 450 N</b>.',scale:100,
   pic:'<line x1="40" y1="60" x2="40" y2="300" stroke="#8895a5" stroke-width="3"/><line x1="300" y1="60" x2="300" y2="300" stroke="#8895a5" stroke-width="3"/><rect x="40" y="300" width="260" height="8" fill="#8895a5"/><circle cx="170" cy="120" r="14" fill="#F2C9A0" stroke="#b07a4a"/><rect x="156" y="134" width="28" height="80" rx="6" fill="#7C9CD6"/><line x1="162" y1="214" x2="160" y2="300" stroke="#1F4E79" stroke-width="7"/><line x1="178" y1="214" x2="180" y2="300" stroke="#1F4E79" stroke-width="7"/><line x1="184" y1="150" x2="210" y2="203" stroke="#F2C9A0" stroke-width="6"/><rect x="198" y="205" width="26" height="30" rx="3" fill="#D9A066" stroke="#8a5a2b"/>'+gdot(170,180),
   req:{P:[270,400,{c:[170,180],r:16}],'F sac/enfant':[270,50,{c:[210,205],r:12}],'F plancher/enfant':[90,450,{s:[150,300,190,300],r:10}]},pal:['P','P du sac','F sac/enfant','F plancher/enfant','F enfant/sac'],
-  why:{'P du sac':'Le poids du sac s’exerce sur le sac. Sur l’enfant, c’est le sac qui tire sa main : F<sub>sac/enfant</sub>.','F enfant/sac':'Elle s’exerce sur le sac.','F plancher/enfant':'Elle part des pieds (contact avec le plancher), vers le haut, 4,5 carreaux.','F sac/enfant':'Elle part de la main, vers le bas, un demi-carreau.',P:'Le poids part du centre de gravité, 4 carreaux vers le bas.'}},
+  why:{'P du sac':'Le poids du sac s’exerce sur le sac. Sur l’enfant, c’est le sac qui tire sa main : F<sub>sac/enfant</sub>.','F enfant/sac':'Elle s’exerce sur le sac.','F plancher/enfant':'Elle part des pieds (contact avec le plancher), vers le haut.','F sac/enfant':'Elle part de la main, vers le bas.',P:'Le poids part du centre de gravité, vers le bas.'}},
  {x:1,t:'Une voiture accélère en tirant une caravane (modèle réduit). <b>Système : la caravane.</b> <b>P = 50 N, R = 50 N, F<sub>voiture/caravane</sub> = 20 N</b>, frottements négligés.',scale:10,v:[0,190,140],
   pic:'<rect x="0" y="270" width="340" height="70" fill="#C9B79C"/><rect x="120" y="190" width="110" height="60" rx="6" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><circle cx="175" cy="260" r="10" fill="#1F2A44"/><line x1="230" y1="235" x2="270" y2="235" stroke="#444" stroke-width="3"/><rect x="270" y="215" width="70" height="35" rx="6" fill="#5B8DEF"/><circle cx="300" cy="260" r="10" fill="#1F2A44"/>'+gdot(175,220),
   req:{P:[270,50,{c:[175,220],r:14}],R:[90,50,{c:[175,270],r:12}],'F voiture/caravane':[0,20,{c:[230,235],r:12}]},pal:['P','R','F voiture/caravane','F caravane/voiture'],
@@ -634,13 +635,13 @@ function drawDes(){
     s+=arrow(v.x,v.y,x2,y2,colOf(l),4,'')+'<text x="'+(x2+Math.cos(r)*18)+'" y="'+(y2-Math.sin(r)*18+5)+'" text-anchor="middle" font-size="14" font-weight="700" fill="'+colOf(l)+'">'+lab2(l)+'</text>'});
   if(dSol)Object.keys(sc.req).forEach(function(l){var v=sc.req[l],r=v[0]*Math.PI/180,L=v[1]/k*DSQ,o=obj?zc(v[2]):DM;s+='<line x1="'+o[0]+'" y1="'+o[1]+'" x2="'+(o[0]+Math.cos(r)*L)+'" y2="'+(o[1]-Math.sin(r)*L)+'" stroke="#1F2A44" stroke-width="2" stroke-dasharray="5 4" opacity=".75"/><circle cx="'+o[0]+'" cy="'+o[1]+'" r="4" fill="none" stroke="#1F2A44"/><text x="'+(o[0]+Math.cos(r)*(L+14)+8)+'" y="'+(o[1]-Math.sin(r)*(L+14)+4)+'" font-size="12" fill="#1F2A44">'+lab2(l)+'</text>'});
   if(!obj)s+='<circle cx="'+DM[0]+'" cy="'+DM[1]+'" r="6" fill="#1F2A44"/><text x="'+(DM[0]-22)+'" y="'+(DM[1]-10)+'" font-size="15" font-weight="700">M</text>';
-  s+='<rect x="0" y="0" width="122" height="20" fill="#fff" opacity=".85"/><text x="6" y="15" font-size="12" fill="#4a5a6c">1 carreau = '+k+' N</text><g id="live"></g></svg>';
+  s+='<g id="live"></g></svg>';
   var main=DS.filter(function(d){return !d.x}).length;
-  var h='<div class="qhead"><span>'+(sc.x?'Pour aller plus loin : situation '+(dIdx+1-main)+' sur '+(DS.length-main):'Situation '+(dIdx+1)+' sur '+main)+'</span><span>Réussies : '+dScore+'</span></div><div class="qtext">'+sc.t+' Échelle : <b>1 carreau = '+k+' N</b>.</div>';
+  var h='<div class="qhead"><span>'+(sc.x?'Pour aller plus loin : situation '+(dIdx+1-main)+' sur '+(DS.length-main):'Situation '+(dIdx+1)+' sur '+main)+'</span><span>Réussies : '+dScore+'</span></div><div class="qtext">'+sc.t+'</div>';
   h+='<div class="dots" style="justify-content:flex-start;gap:10px;font-size:15px"><span style="font-weight:'+(obj?800:400)+';color:'+(obj?'var(--navy)':'#8895a5')+'">Étape 1 : sur l’objet</span><span style="font-weight:'+(obj?400:800)+';color:'+(obj?'#8895a5':'var(--navy)')+'">Étape 2 : au point M</span></div>';
   if(sc.v)h+='<div class="hint">La flèche grise en pointillé <i>v</i> montre le sens du mouvement : ce n’est <b>pas</b> une force.</div>';
   h+='<div class="pal">'+sc.pal.map(function(l){return '<button class="fbtn'+(dSel===l?' on':'')+(dState[l]?' drawn':'')+'" data-l="'+l+'" style="--c:'+colOf(l)+'">'+labH(l)+(dState[l]?' ✓':'')+'</button>'}).join('')+'</div>';
-  h+='<div class="hint" id="dhint" style="min-height:3.2em">'+(dDone?'':(dSel?(obj?'Pose ton doigt au <b>point d’application</b> de <b>'+labH(dSel)+'</b> et glisse.':'Glisse à partir de M pour dessiner <b>'+labH(dSel)+'</b>.'):(obj?'Choisis une force, puis dessine-la à partir de son point d’application.':'Reporte les mêmes flèches au point M : même direction, même sens, même longueur.')))+'</div>'+s;
+  h+='<div class="hint" id="dhint" style="min-height:3.2em">'+(dDone?'':(dSel?(obj?'Pose ton doigt au <b>point d’application</b> de <b>'+labH(dSel)+'</b> et glisse.':'Glisse à partir de M pour dessiner <b>'+labH(dSel)+'</b>.'):(obj?'Choisis une force, puis dessine-la à partir de son point d’application.':'Reporte les mêmes forces au point M : même direction, même sens.')))+'</div>'+s;
   if(!dDone)h+='<div class="row"><button class="btn alt" id="dclr">Effacer</button><button class="btn" id="dck">Vérifier</button></div>';
   else{var nx;if(obj)nx='<button class="btn" id="dst2">Étape 2 : au point M ▶</button>';else if(dIdx<DS.length-1)nx=(DS[dIdx+1].x&&!sc.x?'<button class="btn" id="dn">Pour aller plus loin ▶</button>':'<button class="btn" id="dn">Situation suivante ▶</button>');else nx='<button class="btn" id="dr">Recommencer</button>';
     h+=dFeedback()+'<div class="row">'+(dSol?'':'<button class="btn alt" id="dsol">Voir la solution</button>')+nx+'</div>'}
@@ -657,7 +658,7 @@ function bindDraw(){
   function pt(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
   function vec(e){var q=pt(e),dx=q.x-o[0],dy=o[1]-q.y,a=Math.atan2(dy,dx)*180/Math.PI;if(a<0)a+=360;a=Math.round(a/15)*15%360;var L=Math.sqrt(dx*dx+dy*dy)/DSQ;L=Math.round(L*2)/2;return {a:a,n:L*k,x:o[0],y:o[1]}}
   function live(v){var r=v.a*Math.PI/180,L=v.n/k*DSQ;$('live').innerHTML=(L>0?arrow(v.x,v.y,v.x+Math.cos(r)*L,v.y-Math.sin(r)*L,colOf(dSel),4,''):'')+'<circle cx="'+v.x+'" cy="'+v.y+'" r="4" fill="'+colOf(dSel)+'"/>';
-    $('dhint').innerHTML='<b>'+labH(dSel)+'</b> : '+fmt(v.n/k,1)+' carreau(x), soit '+fmt(v.n,0)+' N ; angle '+v.a+'° avec l’horizontale'}
+    $('dhint').innerHTML='<b>'+labH(dSel)+'</b> : angle '+v.a+'° avec l’horizontale'}
   svg.addEventListener('pointerdown',function(e){if(!dSel)return;drawing=true;try{svg.setPointerCapture(e.pointerId)}catch(x){}
     if(obj){var q=pt(e);o=[Math.round(q.x/5)*5,Math.round(q.y/5)*5]}else o=DM;live(vec(e));e.preventDefault()});
   svg.addEventListener('pointermove',function(e){if(!drawing)return;live(vec(e));e.preventDefault()});
@@ -669,7 +670,6 @@ function dCheck(){var sc=DS[dIdx],k=sc.scale,obj=dStage===1,out=[];
     if(!v)out.push([false,'<b>'+labH(l)+'</b> manque.'+w]);
     else if(obj&&zd(r[2],v.x,v.y)>r[2].r)out.push([false,'<b>'+labH(l)+'</b> : mauvais point d’application.'+w]);
     else if(angDiff(v.a,r[0])>8)out.push([false,'<b>'+labH(l)+'</b> : mauvaise direction ou mauvais sens.'+w]);
-    else if(Math.abs(v.n-r[1])>0.3*k)out.push([false,'<b>'+labH(l)+'</b> : la longueur ne correspond pas à '+r[1]+' N ('+fmt(r[1]/k,1)+' carreau'+(r[1]/k>1?'x':'')+').'])
     else out.push([true,'<b>'+labH(l)+'</b> : correct.'])});
   Object.keys(dState).forEach(function(l){if(!sc.req[l])out.push([false,'<b>'+labH(l)+'</b> ne s’exerce pas sur le système. '+(sc.why[l]||'')])});
   return out}
