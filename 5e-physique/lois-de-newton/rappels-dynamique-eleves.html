@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rappels de dynamique : les forces</title><style>:root{--navy:#1F4E79;--ink:#1F2A44;--sun:#FFD966;--coral:#E76F51;--teal:#2A9D8F;--blue:#2563EB;--bg:#F5F8FC;--card:#fff;--line:#D5DEE9}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;margin:4px 0 10px}
+.top a{color:var(--navy);text-decoration:none;font-weight:600}
+h1{font-size:25px;line-height:1.2;margin:6px 0 4px;color:var(--navy)}
+h2{font-size:20px;margin:0 0 8px;color:var(--navy)}
+.lead{color:#4a5a6c;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.goal{border-left:6px solid var(--teal);background:#EAF6F4}
+.warn{border-left:6px solid var(--coral);background:#FDF0EC}
+.key{border-left:6px solid var(--sun);background:#FFF8DC}
+.badge{display:inline-block;background:var(--navy);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-bottom:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15;margin:0 2px;font-size:.92em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;min-height:46px}
+.btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.coral{background:var(--coral)}
+.btn[disabled]{opacity:.35}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.eqline{font-size:26px;text-align:center;margin:8px 0;min-height:44px;color:var(--ink)}
+.stepbox{min-height:72px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.chip{animation:pop .45s ease both;transform-box:fill-box;transform-origin:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--navy)}
+.stw{overflow-x:auto}
+table.st{border-collapse:collapse;margin:8px auto;font-size:17px}
+table.st th.lab{text-align:left;padding:6px 6px;font-size:15px;font-weight:700;white-space:nowrap;border-right:2px solid var(--ink)}
+table.st td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line);min-width:30px}
+table.st tr:first-child td,table.st tr:first-child th{border-bottom:2px solid var(--ink)}
+table.st td.pt{border-left:1.5px solid #8895a5;border-right:1.5px solid #8895a5;font-weight:700;min-width:34px}
+table.st td.pt.forb{border-left:3px double var(--ink);border-right:3px double var(--ink);color:var(--coral)}
+table.st .sp{color:var(--teal);font-weight:700;font-size:20px}
+table.st .sn{color:var(--coral);font-weight:700;font-size:20px}
+table.st td.on{background:#CFEFEA}
+table.st tr.res th{color:var(--navy)}
+.inf{display:block;font-size:14px}.inf.l{text-align:left}.inf.r{text-align:right}
+svg.nl{width:100%;max-width:420px;display:block;margin:6px auto}
+svg.gr,svg.bal{width:100%;max-width:420px;display:block;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;font-size:15px;color:#4a5a6c;margin-bottom:6px}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.bar>div{height:100%;background:var(--teal);width:0;transition:width .4s}
+.qtext{font-size:19px;margin:6px 0 12px}
+.ch{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:18px;min-height:50px;color:var(--ink)}
+.ch.good{border-color:var(--teal);background:#E3F5F1}
+.ch.bad{border-color:var(--coral);background:#FDECE7}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;background:#F0F4F9}
+.fb.ok{background:#E3F5F1}.fb.ko{background:#FDECE7}
+.big{font-size:42px;text-align:center}
+.cards{display:grid;gap:12px}
+.item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.item .n{flex:none;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:20px}
+.item.done .n{background:var(--teal)}
+.item b{display:block;color:var(--navy);font-size:18px}
+.item small{color:#4a5a6c;display:block}
+.tag{display:inline-block;background:#EEF3F9;border-radius:8px;padding:1px 8px;font-size:13px;margin:4px 6px 0 0;color:#3b4b5d}
+ul.pts{padding-left:22px}ul.pts li{margin:4px 0}
+.def{font-size:18px}
+.foot{font-size:13px;color:#6b7b8c;text-align:center;margin-top:26px}
+@media (max-width:400px){table.st{font-size:13px}table.st th.lab{font-size:13px;padding:5px 3px}table.st td{padding:5px 1px;min-width:22px}table.st td.pt{min-width:26px}table.st .sp,table.st .sn{font-size:16px}.inf{font-size:11px}}
+@media (max-width:480px){body{font-size:16px}.eqline{font-size:22px}table.st{font-size:15px}table.st .sp,table.st .sn{font-size:18px}.wrap{padding:10px 12px 50px}.card{padding:14px 12px}}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--bg);padding:8px 0}
+.tabs button{border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px;min-height:44px}
+.tabs button.on{background:var(--navy);color:#fff}
+.btn.alt.on{background:var(--navy);color:#fff}
+.ctl label{display:block;margin:10px 0;font-size:16px}
+.ctl input[type=range]{display:block;width:100%;height:32px}
+.ctl .chk{display:flex;align-items:center;gap:8px}
+.ctl .chk input{width:22px;height:22px}
+table.res{border-collapse:collapse;width:100%;margin:8px 0}
+table.res td{padding:8px 6px;border-bottom:1px solid var(--line)}
+.numrow{display:flex;align-items:center;gap:8px;margin:10px 0}
+.numrow input{flex:1;min-width:0;font-size:20px;padding:10px 12px;border:2px solid var(--line);border-radius:12px}
+.pm{width:52px;height:50px;border-radius:12px;border:2px solid var(--navy);background:#fff;color:var(--navy);font-size:24px;font-weight:700}
+.unit{font-weight:700;min-width:30px}
+label.opt{display:flex;gap:10px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;font-size:17px}
+label.opt input{width:22px;height:22px;flex:none}
+label.opt.good{border-color:var(--teal);background:#E3F5F1}
+label.opt.bad{border-color:var(--coral);background:#FDECE7}
+label.opt.miss{border-color:var(--coral);border-style:dashed}
+section[hidden]{display:none}
+.tabs button.wide{grid-column:1 / -1}
+.toc{font-size:15px;line-height:1.9}.toc a{color:var(--navy);font-weight:600}
+details.force{border:2px solid var(--line);border-radius:12px;margin:8px 0;background:#fff}
+details.force summary{padding:12px;cursor:pointer;font-size:17px;list-style:none}
+details.force summary::-webkit-details-marker{display:none}
+details.force summary::before{content:'▸ ';color:var(--navy)}
+details.force[open] summary::before{content:'▾ '}
+details.force .nota{display:inline-block;font-size:14px;color:#4a5a6c;margin-left:4px}
+details.force table.car{border-collapse:collapse;width:100%;font-size:15px}
+details.force table.car td{border-top:1px solid var(--line);padding:6px 10px;vertical-align:top}
+details.force table.car td:first-child{color:#4a5a6c;width:38%}
+details.force .plus{margin:6px 10px 10px;font-size:15px}
+.piege{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.pal{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.fbtn{border:2px solid var(--c);color:var(--c);background:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:16px;min-height:44px}
+.fbtn.on{background:var(--c);color:#fff}
+.fbtn.drawn{box-shadow:inset 0 -3px 0 var(--c)}
+.hint{font-size:15px;color:#4a5a6c;min-height:24px;margin:4px 0}
+.v{position:relative;display:inline-block}.v::before{content:'\2192';position:absolute;left:50%;transform:translateX(-50%);top:-0.62em;font-size:.72em;line-height:1}
+.sit{width:100%;max-width:340px;display:block;margin:4px auto 10px}
+</style></head><body><div class="wrap">
+<div class="top"><a href="./">← Les lois de Newton</a><span>Rappels de dynamique</span></div>
+<h1>Rappels de dynamique : les forces</h1>
+<p class="lead">Représenter une force, le modèle du mobile ponctuel, les forces à connaître, les actions réciproques, le bilan des forces.</p>
+<div class="card goal"><span class="badge">Plan de travail (50 min)</span>
+<ol class="pts">
+<li><b>Test</b> (12 questions, 10 min) : il te dit ce que tu dois revoir. Les dernières questions sont difficiles : lis bien chaque situation.</li>
+<li><b>Comprendre</b> (15 min) : les parties à revoir.</li>
+<li><b>S'entraîner</b> : 10 questions, +3 à chaque faute.</li>
+<li><b>Corriger</b> : trouve les erreurs dans des schémas.</li>
+<li><b>Dessiner</b> : dessine toi-même les forces.</li>
+</ol></div>
+<div class="tabs" id="tabs">
+<button data-t="diag" class="on">1. Test</button><button data-t="comp">2. Comprendre</button><button data-t="ex">3. S'entraîner</button><button data-t="cor">4. Corriger</button><button data-t="des" class="wide">5. Dessiner les forces</button>
+</div>
+
+<section id="t-diag">
+<div class="card" id="diagcard"><span class="badge">Test diagnostique</span>
+<p>12 questions, une seule tentative chacune, sans cours. À la fin, tu sauras quelles parties revoir.</p>
+<div class="row"><button class="btn" id="startdiag">Je commence le test</button></div></div>
+</section>
+
+<section id="t-comp" hidden>
+<div class="card toc"><b>Aller à :</b> <a href="#sA">A. Caractéristiques</a> · <a href="#sB">B. Mobile ponctuel</a> · <a href="#sC">C. Les forces à connaître</a> · <a href="#sD">D. Le poids</a> · <a href="#sE">E. Actions réciproques</a> · <a href="#sF">F. Bilan des forces</a></div>
+
+<div class="card" id="sA"><span class="badge">A</span><h2>Les caractéristiques d'une force</h2>
+<p>Une force se représente par une <b>flèche</b> (un vecteur). Elle a quatre caractéristiques : son <b>point d'application</b>, sa <b>direction</b>, son <b>sens</b> et son <b>intensité</b> (en newton, N). Bouge les curseurs et observe.</p>
+<div id="f1"></div>
+<div class="ctl"><label>Intensité : <b id="f1v">30</b> N<input type="range" id="f1i" min="10" max="60" step="5" value="30"></label>
+<label>Angle avec l'horizontale : <b id="f1av">30</b>°<input type="range" id="f1a" min="0" max="180" step="15" value="30"></label>
+<label class="chk"><input type="checkbox" id="f1p"> Accrocher la corde en haut de la caisse</label></div>
+<div class="fb" id="f1t"></div>
+<div class="card key" style="margin:10px 0 0"><b>À retenir</b><ul class="pts">
+<li><b>Point d'application</b> : l'endroit où la force agit (l'origine de la flèche).</li>
+<li><b>Direction</b> : la droite qui porte la flèche (horizontale, verticale, inclinée de …°).</li>
+<li><b>Sens</b> : vers où pointe la flèche, sur cette droite.</li>
+<li><b>Intensité</b> : la valeur en newton. Elle donne la <b>longueur</b> de la flèche grâce à une échelle (ici 1 carreau = 10 N).</li></ul></div>
+</div>
+
+<div class="card" id="sB"><span class="badge">B</span><h2>Le modèle du mobile ponctuel</h2>
+<p>Pour étudier le mouvement d'un objet <b>sans qu'il tourne</b>, on fait une <b>hypothèse</b> : on remplace l'objet par un <b>point</b> qui a la même masse. C'est le <b>mobile ponctuel</b>. Toutes les forces partent alors de ce point.</p>
+<div id="mp"></div>
+<div class="card key" style="margin:10px 0 0"><b>Un bon schéma de forces</b><ol class="pts">
+<li>Le système est représenté par un <b>point</b> (hypothèse du mobile ponctuel).</li>
+<li><b>Une flèche par force</b>, qui part de ce point.</li>
+<li>Seulement les forces exercées <b>sur</b> le système, jamais celles qu'il exerce sur les autres.</li>
+<li>Des longueurs <b>à l'échelle</b> : si l'objet est immobile ou à vitesse constante, les forces se compensent.</li>
+<li>Chaque flèche porte le <b>nom</b> de la force.</li></ol></div>
+</div>
+
+<div class="card" id="sC"><span class="badge">C</span><h2>Les forces à connaître</h2>
+<p>Pour chaque force : qui l'exerce, contact ou à distance, et ses caractéristiques. Touche une carte pour l'ouvrir.</p>
+<div id="cat"></div>
+</div>
+
+<div class="card" id="sD"><span class="badge">D</span><h2>Le poids</h2>
+<p>Le poids <b><span class="v">P</span></b> (= <span class="v">F</span><sub>Terre/objet</sub>) est la force d'attraction exercée par la Terre sur un objet. Point d'application : le <b>centre de gravité</b>. Direction : <b>verticale</b>. Sens : <b>vers le bas</b> (vers le centre de la Terre).</p>
+<p class="def" style="text-align:center"><b>P = m · g</b>, avec m en kg, g = 9,81 N/kg sur Terre, P en N.</p>
+<div id="p1"></div>
+<div class="ctl"><label>Masse : <b id="p1v">2</b> kg<input type="range" id="p1m" min="0.5" max="5" step="0.5" value="2"></label>
+<label class="chk"><input type="checkbox" id="p1l"> Sur la Lune (g = 1,62 N/kg)</label></div>
+<div class="fb" id="p1t"></div>
+</div>
+
+<div class="card" id="sE"><span class="badge">E</span><h2>Les actions réciproques</h2>
+<p>Si un objet A exerce une force <span class="v">F</span><sub>A/B</sub> sur un objet B, alors B exerce <b>en même temps</b> une force <span class="v">F</span><sub>B/A</sub> sur A. Ces deux forces ont la <b>même direction</b>, la <b>même intensité</b> et des <b>sens opposés</b> : <span class="v">F</span><sub>B/A</sub> = −<span class="v">F</span><sub>A/B</sub>.</p>
+<p>Elles s'appliquent à des <b>objets différents</b> : elles ne s'annulent donc jamais. Et c'est vrai <b>toujours</b> : que les objets soient immobiles, accélèrent ou freinent.</p>
+<div class="row" id="c1s"><button class="btn alt on" data-s="0">Deux aimants</button><button class="btn alt" data-s="1">Main et mur</button><button class="btn alt" data-s="2">Terre et pomme</button></div>
+<div id="c1"></div>
+<div class="ctl"><label>Intensité : <b id="c1v">20</b> N<input type="range" id="c1i" min="5" max="40" step="5" value="20"></label></div>
+<div class="fb" id="c1t"></div>
+<h3 style="color:var(--navy);margin:16px 0 6px">Les pièges : à toi de répondre</h3>
+<div id="pieges"></div>
+</div>
+
+<div class="card" id="sF"><span class="badge">F</span><h2>Faire un bilan des forces</h2>
+<div id="bil"></div>
+<div class="card key" style="margin:10px 0 0"><b>La méthode en 5 étapes</b><ol class="pts">
+<li>Choisir le <b>système</b> (l'objet étudié).</li>
+<li>Chercher tout ce qui <b>touche</b> le système (forces de contact) et ce qui agit <b>à distance</b> (la Terre, un aimant, une charge).</li>
+<li>Faire la <b>liste</b> des forces : qui agit sur qui.</li>
+<li>Les dessiner sur l'objet.</li>
+<li>Faire le <b>schéma du mobile ponctuel</b> : un point, une flèche par force, à l'échelle.</li></ol></div>
+</div>
+</section>
+
+<section id="t-ex" hidden>
+<div class="card" id="excard"><span class="badge">S'entraîner</span><h2>10 questions</h2>
+<p>Chaque faute ajoute <b>3 questions</b> pour consolider. Pour les réponses numériques, utilise la virgule ; le bouton <b>±</b> change le signe.</p>
+<div class="row"><button class="btn" id="startex">Je commence</button></div></div>
+<div class="card" id="exq" style="display:none"><div id="quiz"></div></div>
+</section>
+
+<section id="t-cor" hidden>
+<div class="card"><span class="badge">Corriger</span><h2>Trouve les erreurs</h2>
+<p>Un élève a dessiné ces schémas. <b>Touche les flèches fausses</b> (elles deviennent pointillées), puis vérifie. Il peut y avoir une ou plusieurs erreurs.</p>
+<div id="cor"></div></div>
+</section>
+
+<section id="t-des" hidden>
+<div class="card"><span class="badge">Dessiner</span><h2>Dessine les forces</h2>
+<p>Choisis une force dans la liste, puis <b>glisse ton doigt</b> pour dessiner sa flèche : à partir du point M (mobile ponctuel), ou à partir du point d'application quand l'objet est dessiné. N'utilise que les forces qui s'exercent vraiment <b>sur le système</b>. Regarde l'échelle de chaque situation.</p>
+<div id="des"></div></div>
+</section>
+<div class="foot">Site réalisé avec l'aide de l'IA (AIA) · Mme Delimoy</div>
+</div>
+<script>/* ===== outils ===== */
+var M='−';
+function R(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[R(0,a.length-1)]}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=R(0,i),t=a[i];a[i]=a[j];a[j]=t}return a}
+function $(id){return document.getElementById(id)}
+function fmt(x,d){d=(d===undefined)?2:d;var s=(Math.round(x*Math.pow(10,d))/Math.pow(10,d)).toString();return (s.charAt(0)==='-'?M+s.slice(1):s).replace('.',',')}
+function sub(a,b){return a+'<sub>'+b+'</sub>'}
+var G=9.81,GL=1.62,SQ=20;
+/* ===== onglets ===== */
+function showTab(t){Array.prototype.forEach.call(document.querySelectorAll('#tabs button'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===t)});
+  ['diag','comp','ex','cor','des'].forEach(function(k){$('t-'+k).hidden=(k!==t)});window.scrollTo(0,$('tabs').offsetTop-8)}
+Array.prototype.forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){showTab(b.getAttribute('data-t'))}});
+/* ===== flèches SVG ===== */
+function arrow(x1,y1,x2,y2,col,w,lab,lx,ly){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy);if(L<1)return '';var ux=dx/L,uy=dy/L,h=11,hw=6;
+  var bx=x2-ux*h,by=y2-uy*h;
+  var s='<line x1="'+x1+'" y1="'+y1+'" x2="'+bx+'" y2="'+by+'" stroke="'+col+'" stroke-width="'+(w||3.5)+'" stroke-linecap="round"/>'+
+  '<polygon points="'+x2+','+y2+' '+(bx-uy*hw)+','+(by+ux*hw)+' '+(bx+uy*hw)+','+(by-ux*hw)+'" fill="'+col+'"/>'+
+  '<circle cx="'+x1+'" cy="'+y1+'" r="3.5" fill="'+col+'"/>';
+  if(lab)s+='<text x="'+(lx!==undefined?lx:x2+ux*14)+'" y="'+(ly!==undefined?ly:y2+uy*14+5)+'" text-anchor="middle" font-size="15" font-weight="700" fill="'+col+'" font-style="italic">'+lab+'</text>';
+  return s}
+function grid(W,H){var s='';for(var x=0;x<=W;x+=SQ)s+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="'+H+'" stroke="#E6ECF3"/>';for(var y=0;y<=H;y+=SQ)s+='<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+y+'" stroke="#E6ECF3"/>';return s}
+/* ===== Thème A : caractéristiques ===== */
+function drawF1(){
+  var I=+$('f1i').value,a=+$('f1a').value,top=$('f1p').checked;$('f1v').textContent=I;$('f1av').textContent=a;
+  var W=340,H=220,s='<svg viewBox="0 0 '+W+' '+H+'" class="gr" style="max-width:460px">'+grid(W,H);
+  s+='<rect x="0" y="200" width="'+W+'" height="20" fill="#C9B79C"/><rect x="130" y="140" width="80" height="60" rx="4" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/>';
+  var ax,ay,side;if(top){ax=170;ay=140;side='au milieu du dessus de la caisse'}else if(a<=90){ax=210;ay=170;side='au milieu du côté droit de la caisse'}else{ax=130;ay=170;side='au milieu du côté gauche de la caisse'}
+  var r=a*Math.PI/180,c=Math.cos(r),sn=Math.sin(r),Lp=I/10*SQ;
+  s+='<line x1="'+ax+'" y1="'+ay+'" x2="'+(ax+c*400)+'" y2="'+(ay-sn*400)+'" stroke="#8a5a2b" stroke-width="2" stroke-dasharray="6 4" opacity=".55"/>';
+  s+=arrow(ax,ay,ax+c*Lp,ay-sn*Lp,'#2563EB',4,'F');
+  s+='<text x="6" y="16" font-size="12" fill="#4a5a6c">Échelle : 1 carreau = 10 N</text></svg>';
+  $('f1').innerHTML=s;
+  var dir=(a===0||a===180)?'horizontale':(a===90?'verticale':'oblique, inclinée de '+(a<=90?a:180-a)+'° par rapport à l’horizontale');
+  var h=(Math.abs(c)<1e-9)?'':(c>0?'vers la droite':'vers la gauche'),v=(sn<1e-9)?'':'vers le haut';var sens=[v,h].filter(Boolean).join(' et ');
+  $('f1t').innerHTML='<b>Point d’application</b> : '+side+'<br><b>Direction</b> : '+dir+'<br><b>Sens</b> : '+sens+'<br><b>Intensité</b> : '+I+' N, soit une flèche de '+fmt(I/10,1)+' carreaux';
+}
+['f1i','f1a','f1p'].forEach(function(id){$(id).oninput=drawF1;$(id).onchange=drawF1});
+/* ===== Thème B : poids ===== */
+function drawP1(){
+  var m=+$('p1m').value,lune=$('p1l').checked,g=lune?GL:G,P=m*g;$('p1v').textContent=fmt(m,1);
+  var W=340,H=220,s='<svg viewBox="0 0 '+W+' '+H+'" class="gr" style="max-width:460px">'+grid(W,H);
+  s+='<rect x="0" y="200" width="'+W+'" height="20" fill="'+(lune?'#C8C8C8':'#9BC28A')+'"/><text x="'+(W-8)+'" y="215" text-anchor="end" font-size="12" fill="#1F2A44">'+(lune?'sol de la Lune':'sol de la Terre')+'</text>';
+  s+='<rect x="140" y="20" width="60" height="50" rx="4" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="152" y="40" font-size="12" fill="#5a3a1b">G</text>';
+  s+=arrow(170,45,170,45+P/10*SQ,'#E76F51',4,'P',190,45+P/10*SQ);
+  s+='<text x="6" y="16" font-size="12" fill="#4a5a6c">Échelle : 1 carreau = 10 N</text></svg>';
+  $('p1').innerHTML=s;
+  $('p1t').innerHTML='P = m · g = '+fmt(m,1)+' × '+fmt(g,2)+' = <b>'+fmt(P,1)+' N</b>'+(lune?'<br>Sur la Lune, la <b>masse</b> ne change pas ('+fmt(m,1)+' kg) mais le <b>poids</b> est environ 6 fois plus petit.':'');
+}
+['p1m','p1l'].forEach(function(id){$(id).oninput=drawP1;$(id).onchange=drawP1});
+/* ===== Thème C : actions réciproques ===== */
+var cScene=0;
+function drawC1(){
+  var I=+$('c1i').value;$('c1v').textContent=I;var L=I/10*SQ*0.9,W=340,H=200,s='<svg viewBox="0 0 '+W+' '+H+'" class="gr" style="max-width:460px">',t;
+  if(cScene===0){
+    s+='<rect x="40" y="80" width="90" height="40" fill="#E76F51"/><rect x="40" y="80" width="45" height="40" fill="#2563EB"/><text x="62" y="106" fill="#fff" font-weight="700" text-anchor="middle">S</text><text x="107" y="106" fill="#fff" font-weight="700" text-anchor="middle">N</text><text x="85" y="140" text-anchor="middle" font-size="13">aimant A</text>';
+    s+='<rect x="210" y="80" width="90" height="40" fill="#2563EB"/><rect x="255" y="80" width="45" height="40" fill="#E76F51"/><text x="232" y="106" fill="#fff" font-weight="700" text-anchor="middle">S</text><text x="277" y="106" fill="#fff" font-weight="700" text-anchor="middle">N</text><text x="255" y="140" text-anchor="middle" font-size="13">aimant B</text>';
+    s+=arrow(130,70,130+L,70,'#2A9D8F',4,'',0,0)+'<text x="'+(130+L/2)+'" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#2A9D8F">F<tspan font-size="10" dy="3">B/A</tspan></text>';
+    s+=arrow(210,170,210-L,170,'#7C3AED',4,'',0,0)+'<text x="'+(210-L/2)+'" y="195" text-anchor="middle" font-size="14" font-weight="700" fill="#7C3AED">F<tspan font-size="10" dy="3">A/B</tspan></text>';
+    t='A attire B (F'+'<sub>A/B</sub>, appliquée sur B, vers A) et B attire A (F<sub>B/A</sub>, appliquée sur A, vers B).';
+  }else if(cScene===1){
+    s+='<rect x="230" y="20" width="30" height="170" fill="#BFC7D1"/><text x="245" y="15" text-anchor="middle" font-size="13">mur</text>';
+    s+='<ellipse cx="200" cy="105" rx="30" ry="18" fill="#F2C9A0" stroke="#b07a4a"/><rect x="60" y="95" width="120" height="20" rx="8" fill="#F2C9A0" stroke="#b07a4a"/><text x="120" y="140" text-anchor="middle" font-size="13">main</text>';
+    s+=arrow(230,70,230+L,70,'#7C3AED',4,'',0,0)+'<text x="'+Math.min(230+L/2,300)+'" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#7C3AED">F<tspan font-size="10" dy="3">main/mur</tspan></text>';
+    s+=arrow(228,160,228-L,160,'#2A9D8F',4,'',0,0)+'<text x="'+(228-L/2)+'" y="185" text-anchor="middle" font-size="14" font-weight="700" fill="#2A9D8F">F<tspan font-size="10" dy="3">mur/main</tspan></text>';
+    t='La main pousse le mur, et le mur repousse la main avec la <b>même intensité</b>. C’est pour cela que tu sens le mur contre ta main.';
+  }else{
+    s+='<path d="M0,200 Q170,120 340,200 Z" fill="#9BC28A"/><text x="170" y="190" text-anchor="middle" font-size="13">Terre</text><circle cx="170" cy="40" r="14" fill="#E63946"/><text x="196" y="36" font-size="13">pomme</text>';
+    s+=arrow(170,40,170,40+L,'#7C3AED',4,'',0,0)+'<text x="200" y="'+(40+L)+'" font-size="14" font-weight="700" fill="#7C3AED">F<tspan font-size="10" dy="3">T/pomme</tspan></text>';
+    s+=arrow(150,160,150,160-L,'#2A9D8F',4,'',0,0)+'<text x="100" y="'+(165-L)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#2A9D8F">F<tspan font-size="10" dy="3">pomme/T</tspan></text>';
+    t='La Terre attire la pomme (c’est son poids) et la pomme attire la Terre avec la <b>même intensité</b>. La Terre est tellement lourde que cela ne la fait presque pas bouger.';
+  }
+  $('c1').innerHTML=s+'</svg>';
+  $('c1t').innerHTML=t+'<br>Les deux forces valent <b>'+I+' N</b> : même direction, sens opposés, appliquées à deux objets différents.';
+}
+Array.prototype.forEach.call(document.querySelectorAll('#c1s button'),function(b){b.onclick=function(){cScene=+b.getAttribute('data-s');Array.prototype.forEach.call(document.querySelectorAll('#c1s button'),function(x){x.classList.toggle('on',x===b)});drawC1()}});
+$('c1i').oninput=drawC1;
+/* ===== B : mobile ponctuel ===== */
+var MP={step:0,t:0,raf:null};
+var MPF=[{lab:'T',col:'#2563EB',o:[220,100],v:[69.3,-40]},{lab:'f',col:'#7C3AED',o:[150,160],v:[-69.3,0]},{lab:'R',col:'#2A9D8F',o:[185,160],v:[0,-80]},{lab:'P',col:'#E76F51',o:[170,130],v:[0,120]}];
+function drawMP(){
+  var t=MP.t,W=340,H=260,M=[170,130],s='<svg viewBox="0 0 '+W+' '+H+'" class="gr" style="max-width:460px">'+grid(W,H);
+  s+='<g opacity="'+(1-0.85*t)+'"><rect x="0" y="160" width="'+W+'" height="100" fill="#C9B79C"/><rect x="120" y="100" width="100" height="60" rx="4" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><line x1="220" y1="100" x2="330" y2="36.5" stroke="#8a5a2b" stroke-width="2"/></g>';
+  MPF.forEach(function(f){var x=f.o[0]*(1-t)+M[0]*t,y=f.o[1]*(1-t)+M[1]*t;s+=arrow(x,y,x+f.v[0],y+f.v[1],f.col,4,f.lab)});
+  if(t>0)s+='<circle cx="170" cy="130" r="'+(3+3*t)+'" fill="#1F2A44"/><text x="152" y="124" font-size="14" font-weight="700" fill="#1F2A44" opacity="'+t+'">M</text>';
+  s+='<text x="6" y="16" font-size="12" fill="#4a5a6c">Échelle : 1 carreau = 10 N</text></svg>';
+  var txt=['<b>Situation</b> : une caisse tirée par une corde, à <b>vitesse constante</b>. Chaque force est dessinée là où elle agit : T au point d’attache de la corde, R et f au contact avec le sol, P au centre de gravité.',
+   '<b>Hypothèse du mobile ponctuel</b> : la caisse ne tourne pas, on la remplace par un point M de même masse. Les flèches glissent jusqu’à M sans changer de direction, de sens ni d’intensité.',
+   '<b>Le schéma final</b> : un point, quatre flèches. Vitesse constante : les forces se compensent. f compense la partie horizontale de T ; R et la partie verticale de T compensent P (c’est pour cela que R est plus courte que P).'][MP.step];
+  $('mp').innerHTML=s+'<div class="fb">'+txt+'</div><div class="row"><button class="btn alt" id="mpp"'+(MP.step===0?' disabled':'')+'>◀ Précédent</button><button class="btn" id="mpn"'+(MP.step===2?' disabled':'')+'>Suivant ▶</button>'+(MP.step>0?'<button class="btn alt" id="mpr">↻ Rejouer</button>':'')+'</div>';
+  $('mpp').onclick=function(){MP.step--;MP.t=MP.step===0?0:1;drawMP()};
+  $('mpn').onclick=function(){MP.step++;if(MP.step===1)anim();else{MP.t=1;drawMP()}};
+  if($('mpr'))$('mpr').onclick=function(){MP.step=1;anim()};
+}
+function anim(){MP.t=0;var t0=null;function f(ts){if(!t0)t0=ts;MP.t=Math.min(1,(ts-t0)/1600);drawMP();if(MP.t<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+/* ===== C : catalogue des forces ===== */
+function mini(inner){return '<svg viewBox="0 0 220 130" style="width:100%;max-width:260px;display:block;margin:4px auto">'+inner+'</svg>'}
+var GND='<rect x="0" y="100" width="220" height="30" fill="#C9B79C"/>';
+var BOX='<rect x="80" y="60" width="60" height="40" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/>';
+var CAT=[
+ {n:'Le poids',not:'<span class="v">P</span> = <span class="v">F</span><sub>Terre/objet</sub>',par:'la Terre',ty:'à distance',pt:'le centre de gravité de l’objet',dir:'verticale',sens:'vers le bas',plus:'Intensité : P = m · g (g = 9,81 N/kg sur Terre).',svg:mini(GND+BOX+arrow(110,80,110,125,'#E76F51',4,'P',124,124))},
+ {n:'La réaction du support',not:'<span class="v">R</span> = <span class="v">F</span><sub>support/objet</sub>',par:'le support (sol, table, plan incliné)',ty:'contact',pt:'au milieu de la surface de contact',dir:'perpendiculaire au support',sens:'vers l’extérieur du support : il pousse l’objet',plus:'Sur un plan incliné, elle n’est donc <b>pas verticale</b>.',svg:mini('<polygon points="10,125 210,125 210,25" fill="#C9B79C"/><g transform="rotate(-26.6 120 80)"><rect x="95" y="50" width="50" height="32" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/></g>'+arrow(127,81,107,41,'#2A9D8F',4,'R',96,40))},
+ {n:'La tension d’un fil',not:'<span class="v">T</span> = <span class="v">F</span><sub>fil/objet</sub>',par:'un fil, une corde, un câble',ty:'contact',pt:'le point d’attache du fil',dir:'celle du fil',sens:'vers le fil : un fil <b>tire</b>, il ne pousse jamais',plus:'',svg:mini('<rect x="60" y="0" width="100" height="8" fill="#BFC7D1"/><line x1="110" y1="8" x2="110" y2="70" stroke="#444" stroke-width="2"/><path d="M90,95 L110,70 L130,95 Z" fill="#FFD966" stroke="#8a5a2b"/>'+arrow(110,70,110,25,'#2563EB',4,'T',124,30))},
+ {n:'Les frottements',not:'<span class="v">f</span> = <span class="v">F</span><sub>sol/objet</sub> ou <span class="v">F</span><sub>air/objet</sub>',par:'le support (sol) ou un fluide (air, eau)',ty:'contact',pt:'la surface de contact',dir:'parallèle au support (ou au mouvement, dans un fluide)',sens:'opposé au mouvement (ou au glissement)',plus:'Dans l’air, on parle de résistance de l’air : elle augmente avec la vitesse.',svg:mini(GND+BOX+'<line x1="150" y1="50" x2="195" y2="50" stroke="#8895a5" stroke-width="2" stroke-dasharray="5 4"/><text x="200" y="54" font-size="12" fill="#8895a5">v</text>'+arrow(100,100,55,100,'#7C3AED',4,'f',48,94))},
+ {n:'La force motrice',not:'<span class="v">F</span><sub>route/voiture</sub>',par:'la route, sur les roues motrices (grâce au moteur)',ty:'contact',pt:'le contact entre les roues et la route',dir:'parallèle à la route',sens:'vers l’avant',plus:'La roue pousse la route vers l’arrière ; par action réciproque, la route pousse la voiture vers l’avant.',svg:mini(GND+'<rect x="50" y="62" width="110" height="26" rx="8" fill="#5B8DEF"/><rect x="75" y="45" width="55" height="22" rx="6" fill="#8fb0f5"/><circle cx="75" cy="92" r="9" fill="#1F2A44"/><circle cx="140" cy="92" r="9" fill="#1F2A44"/>'+arrow(140,100,190,100,'#2563EB',4,'F',196,94))},
+ {n:'La force de contact « je tiens, j’appuie »',not:'<span class="v">F</span><sub>main/objet</sub>',par:'la main (ou un autre objet qui pousse ou tient)',ty:'contact',pt:'le point de contact',dir:'celle de l’action',sens:'quand on pousse : de la main vers l’objet ; quand on porte : vers le haut',plus:'',svg:mini(GND+BOX+'<ellipse cx="62" cy="80" rx="18" ry="10" fill="#F2C9A0" stroke="#b07a4a"/><rect x="0" y="74" width="50" height="12" rx="5" fill="#F2C9A0" stroke="#b07a4a"/>'+arrow(80,70,125,70,'#2563EB',4,'F',132,64))},
+ {n:'La force élastique (ressort)',not:'<span class="v">F</span><sub>ressort/objet</sub>',par:'un ressort',ty:'contact',pt:'le point d’attache du ressort',dir:'l’axe du ressort',sens:'s’oppose à la déformation : étiré, il tire ; comprimé, il pousse',plus:'Son intensité est proportionnelle à l’allongement (F = k · Δl) : c’est le principe du dynamomètre.',svg:mini(GND+'<rect x="0" y="40" width="10" height="60" fill="#BFC7D1"/><polyline points="10,80 20,70 30,90 40,70 50,90 60,70 70,90 80,80" fill="none" stroke="#444" stroke-width="2"/><rect x="80" y="60" width="60" height="40" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/>'+arrow(80,70,40,70,'#2A9D8F',4,'F',34,60))},
+ {n:'La poussée d’Archimède',not:'<span class="v">F</span><sub>eau/objet</sub> (ou <span class="v">F</span><sub>air/objet</sub>)',par:'un fluide (eau, air)',ty:'contact',pt:'le centre de la partie immergée',dir:'verticale',sens:'vers le haut',plus:'Intensité : le poids du fluide déplacé.',svg:mini('<rect x="0" y="50" width="220" height="80" fill="#BFE3F2"/><rect x="85" y="35" width="50" height="40" rx="4" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/>'+arrow(110,63,110,18,'#2A9D8F',4,'F',124,22))},
+ {n:'La force électrique',not:'<span class="v">F</span><sub>A/B</sub>',par:'un objet chargé',ty:'à distance',pt:'l’objet chargé qui la subit',dir:'la droite qui joint les deux charges',sens:'attraction si charges de signes contraires, répulsion si même signe',plus:'',svg:mini('<circle cx="60" cy="65" r="18" fill="#E76F51"/><text x="60" y="71" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">+</text><circle cx="160" cy="65" r="18" fill="#2563EB"/><text x="160" y="71" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">−</text>'+arrow(78,65,115,65,'#1F2A44',3,'')+arrow(142,65,105,65,'#1F2A44',3,''))},
+ {n:'La force magnétique',not:'<span class="v">F</span><sub>A/B</sub>',par:'un aimant (ou un fil parcouru par un courant)',ty:'à distance',pt:'l’objet aimanté qui la subit',dir:'celle qui joint les deux pôles en face',sens:'pôles différents : attraction ; pôles identiques : répulsion. Un aimant attire le fer.',plus:'',svg:mini('<rect x="10" y="50" width="80" height="30" fill="#E76F51"/><rect x="10" y="50" width="40" height="30" fill="#2563EB"/><text x="30" y="70" fill="#fff" font-weight="700" text-anchor="middle">S</text><text x="70" y="70" fill="#fff" font-weight="700" text-anchor="middle">N</text><rect x="130" y="50" width="80" height="30" fill="#2563EB"/><rect x="170" y="50" width="40" height="30" fill="#E76F51"/><text x="150" y="70" fill="#fff" font-weight="700" text-anchor="middle">S</text><text x="190" y="70" fill="#fff" font-weight="700" text-anchor="middle">N</text>'+arrow(90,100,120,100,'#1F2A44',3,'')+arrow(130,100,100,100,'#1F2A44',3,''))}
+];
+function drawCat(){$('cat').innerHTML=CAT.map(function(c){return '<details class="force"><summary><b>'+c.n+'</b> <span class="nota">'+c.not+'</span></summary>'+c.svg+
+  '<table class="car"><tr><td>Exercée par</td><td>'+c.par+'</td></tr><tr><td>Type</td><td>'+c.ty+'</td></tr><tr><td>Point d’application</td><td>'+c.pt+'</td></tr><tr><td>Direction</td><td>'+c.dir+'</td></tr><tr><td>Sens</td><td>'+c.sens+'</td></tr></table>'+(c.plus?'<p class="plus">'+c.plus+'</p>':'')+'</details>'}).join('')}
+/* ===== E : pièges (mini-questions) ===== */
+var PIEGES=[
+ {q:'Une voiture <b>accélère</b> en montant une côte et tire une caravane. La force exercée par la voiture sur la caravane est…',ok:'la même que celle exercée par la caravane sur la voiture',wr:['plus grande que celle exercée par la caravane sur la voiture','plus petite que celle exercée par la caravane sur la voiture'],why:'Actions réciproques : <span class="v">F</span><sub>voiture/caravane</sub> et <span class="v">F</span><sub>caravane/voiture</sub> ont <b>toujours</b> la même intensité. La caravane accélère parce que, <b>sur la caravane</b>, <span class="v">F</span><sub>voiture/caravane</sub> est plus grande que les forces qui la retiennent (frottements, et le poids qui la tire vers le bas de la côte).'},
+ {q:'Un camion percute une petite voiture. Pendant le choc, …',ok:'les deux forces ont la même intensité',wr:['le camion exerce une plus grande force sur la voiture','la voiture exerce une plus grande force sur le camion'],why:'Même intensité. La voiture est plus abîmée et plus secouée parce qu’elle est plus légère et moins solide, pas parce qu’elle reçoit une plus grande force.'},
+ {q:'Un livre est posé sur une table. Le poids du livre et la réaction de la table sont…',ok:'deux forces qui se compensent, mais pas des actions réciproques',wr:['des actions réciproques','deux forces qui ne se compensent pas'],why:'Elles s’exercent toutes les deux <b>sur le livre</b> : elles se compensent (le livre est immobile). La réciproque du poids, c’est <span class="v">F</span><sub>livre/Terre</sub> ; celle de la réaction, <span class="v">F</span><sub>livre/table</sub>.'}
+];
+function drawPieges(){var h='';PIEGES.forEach(function(p,i){var ch=shuffle([{h:p.ok,ok:true}].concat(p.wr.map(function(w){return{h:w,ok:false}})));p._ch=ch;
+  h+='<div class="piege"><div class="qtext">'+p.q+'</div>'+ch.map(function(c,k){return '<button class="ch" data-p="'+i+'" data-k="'+k+'">'+c.h+'</button>'}).join('')+'<div id="pfb'+i+'"></div></div>'});
+  $('pieges').innerHTML=h;
+  Array.prototype.forEach.call($('pieges').querySelectorAll('.ch'),function(b){b.onclick=function(){var i=+b.getAttribute('data-p'),k=+b.getAttribute('data-k'),p=PIEGES[i];
+    Array.prototype.forEach.call($('pieges').querySelectorAll('[data-p="'+i+'"]'),function(x,j){x.disabled=true;if(p._ch[j].ok)x.classList.add('good');else if(j===k)x.classList.add('bad')});
+    $('pfb'+i).innerHTML='<div class="fb '+(p._ch[k].ok?'ok':'ko')+'"><b>'+(p._ch[k].ok?'Bravo !':'Non.')+'</b> '+p.why+'</div>'}})}
+/* ===== F : bilan des forces ===== */
+function bx(n,x,y,w,h){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/>'}
+var SCENES=[
+ {nom:'Un livre posé sur une table',sys:'le livre',contact:'la table',dist:'la Terre',
+  forces:[['P','le poids, <span class="v">F</span><sub>Terre/livre</sub>'],['R','la réaction de la table, <span class="v">F</span><sub>table/livre</sub>']],
+  bg:'<rect x="40" y="150" width="260" height="14" fill="#8a5a2b"/><rect x="60" y="164" width="12" height="50" fill="#8a5a2b"/><rect x="268" y="164" width="12" height="50" fill="#8a5a2b"/>',body:function(n){return bx(n,130,120,80,30)},
+  real:[['P',170,135,0,60,'#E76F51'],['R',170,150,0,-60,'#2A9D8F']],note:'Le livre est immobile : les deux flèches ont la même longueur.'},
+ {nom:'Une lampe suspendue à un fil',sys:'la lampe',contact:'le fil',dist:'la Terre',
+  forces:[['P','le poids, <span class="v">F</span><sub>Terre/lampe</sub>'],['T','la tension du fil, <span class="v">F</span><sub>fil/lampe</sub>']],
+  bg:'<rect x="120" y="0" width="100" height="10" fill="#BFC7D1"/><line x1="170" y1="10" x2="170" y2="100" stroke="#444" stroke-width="2"/>',body:function(n){return '<path d="M140,130 L170,100 L200,130 Z" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/>'},
+  real:[['P',170,118,0,60,'#E76F51'],['T',170,100,0,-60,'#2563EB']],note:'La tension s’applique au point d’attache du fil, le poids au centre de gravité.'},
+ {nom:'Une caisse tirée par une corde, à vitesse constante',sys:'la caisse',contact:'le sol et la corde',dist:'la Terre',
+  forces:[['P','le poids, <span class="v">F</span><sub>Terre/caisse</sub>'],['R','la réaction du sol, <span class="v">F</span><sub>sol/caisse</sub>'],['T','la traction de la corde, <span class="v">F</span><sub>corde/caisse</sub>'],['f','le frottement du sol, <span class="v">F</span><sub>sol/caisse</sub>']],
+  bg:'<rect x="0" y="170" width="340" height="40" fill="#C9B79C"/><line x1="200" y1="145" x2="330" y2="145" stroke="#8a5a2b" stroke-width="2"/>',body:function(n){return bx(n,120,120,80,50)},
+  real:[['P',160,145,0,55,'#E76F51'],['R',160,170,0,-55,'#2A9D8F'],['T',200,145,55,0,'#2563EB'],['f',140,168,-55,0,'#7C3AED']],note:'Vitesse constante : la traction compense le frottement, la réaction compense le poids.'},
+ {nom:'Une caisse immobile sur un plan incliné',sys:'la caisse',contact:'le plan incliné',dist:'la Terre',
+  forces:[['P','le poids, <span class="v">F</span><sub>Terre/caisse</sub>'],['R','la réaction du plan, perpendiculaire au plan'],['f','le frottement du plan, qui l’empêche de glisser']],
+  bg:'<polygon points="30,200 330,200 330,26.8" fill="#C9B79C"/>',body:function(n){return '<g transform="rotate(-30 180 113.4)"><rect x="150" y="73.4" width="60" height="40" rx="3" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/></g>'},
+  real:[['P',170,96,0,70,'#E76F51'],['R',180,113.4,-30.3,-52.5,'#2A9D8F'],['f',180,113.4,30.3,-17.5,'#7C3AED']],note:'Le poids reste vertical. La réaction est perpendiculaire au plan, le frottement parallèle au plan, vers le haut de la pente.'},
+ {nom:'Un ballon en l’air, après avoir été lancé (on néglige l’air)',sys:'le ballon',contact:'rien : plus rien ne le touche',dist:'la Terre',
+  forces:[['P','le poids, <span class="v">F</span><sub>Terre/ballon</sub>, et c’est tout']],
+  bg:'<path d="M20,190 Q170,-20 320,190" fill="none" stroke="#8895a5" stroke-dasharray="5 5"/>',body:function(n){return '<circle cx="120" cy="70" r="16" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/>'},
+  real:[['P',120,70,0,60,'#E76F51']],note:'Piège classique : il n’y a <b>pas</b> de « force du lancer ». La main ne touche plus le ballon.'}
+];
+var bScene=0,bStep=0;
+function drawBil(){
+  var sc=SCENES[bScene],arr='';
+  if(bStep>=4&&bStep<5)sc.real.forEach(function(f){arr+=arrow(f[1],f[2],f[1]+f[3],f[2]+f[4],f[5],4,f[0])});
+  var svg;
+  if(bStep===5){svg=grid(340,215)+'<circle cx="170" cy="108" r="5" fill="#1F2A44"/><text x="150" y="102" font-size="14" font-weight="700">M</text>';sc.real.forEach(function(f){svg+=arrow(170,108,170+f[3],108+f[4],f[5],4,f[0])})}
+  else svg=sc.bg+sc.body(bStep)+arr;
+  var txt=['<b>Situation</b> : '+sc.nom+'. Clique sur « Étape suivante ».','<b>1. Le système</b> : '+sc.sys+' (en jaune).','<b>2. Les interactions</b> : contact avec '+sc.contact+' ; à distance : '+sc.dist+'.','<b>3. La liste des forces</b> :<ul class="pts">'+sc.forces.map(function(f){return '<li><b>'+f[0]+'</b> : '+f[1]+'</li>'}).join('')+'</ul>','<b>4. Les forces sur l’objet</b>. '+sc.note,'<b>5. Le schéma du mobile ponctuel</b> : le système devient le point M, toutes les flèches partent de M, avec les mêmes longueurs.'];
+  var h='<div class="row" style="margin-top:0">'+SCENES.map(function(s,i){return '<button class="btn alt'+(i===bScene?' on':'')+'" data-b="'+i+'" style="padding:8px 12px;min-height:40px;font-size:15px">'+(i+1)+'</button>'}).join('')+'</div>';
+  h+='<svg viewBox="0 0 340 215" class="gr" style="max-width:460px;margin-top:8px">'+svg+'</svg><div class="fb">'+txt[bStep]+'</div><div class="row"><button class="btn alt" id="bp"'+(bStep===0?' disabled':'')+'>◀ Précédent</button><button class="btn" id="bn"'+(bStep===5?' disabled':'')+'>Étape suivante ▶</button></div>';
+  $('bil').innerHTML=h;
+  Array.prototype.forEach.call($('bil').querySelectorAll('[data-b]'),function(b){b.onclick=function(){bScene=+b.getAttribute('data-b');bStep=0;drawBil()}});
+  $('bp').onclick=function(){if(bStep>0){bStep--;drawBil()}};$('bn').onclick=function(){if(bStep<5){bStep++;drawBil()}};
+}
+/* ===== petits schémas de situation (sans les forces) ===== */
+function sit(inner){return '<svg viewBox="0 0 300 130" class="sit" role="img">'+inner+'</svg>'}
+var IMG={
+ livre:sit('<rect x="40" y="80" width="220" height="10" fill="#8a5a2b"/><rect x="55" y="90" width="10" height="40" fill="#8a5a2b"/><rect x="235" y="90" width="10" height="40" fill="#8a5a2b"/><rect x="115" y="58" width="70" height="22" rx="2" fill="#2563EB"/><rect x="118" y="62" width="64" height="3" fill="#fff" opacity=".6"/>'),
+ ballon:sit('<path d="M20,125 Q140,-35 280,125" fill="none" stroke="#8895a5" stroke-width="2" stroke-dasharray="6 5"/><circle cx="95" cy="52" r="11" fill="#E76F51" stroke="#8a3a2b"/><path d="M84,52 q11,-6 22,0" fill="none" stroke="#fff" stroke-width="1.5"/><rect x="0" y="122" width="300" height="8" fill="#9BC28A"/>'),
+ plan:sit('<polygon points="20,125 280,125 280,25" fill="#C9B79C"/><g transform="rotate(-21 160 71.2)"><rect x="135" y="43.2" width="50" height="28" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/></g>'),
+ lune:sit('<circle cx="70" cy="65" r="45" fill="#5B8DEF"/><path d="M45,55 q15,-18 30,0 t25,6" fill="none" stroke="#9BC28A" stroke-width="9"/><text x="70" y="125" text-anchor="middle" font-size="13" fill="#1F4E79">Terre</text><circle cx="245" cy="65" r="16" fill="#C8C8C8"/><circle cx="240" cy="60" r="3" fill="#aaa"/><circle cx="250" cy="72" r="2" fill="#aaa"/><text x="245" y="105" text-anchor="middle" font-size="13" fill="#555">Lune</text><line x1="118" y1="65" x2="225" y2="65" stroke="#ccc" stroke-dasharray="3 5"/>'),
+ deuxmasses:sit('<rect x="90" y="0" width="120" height="8" fill="#BFC7D1"/><line x1="150" y1="8" x2="150" y2="38" stroke="#444" stroke-width="2"/><text x="158" y="28" font-size="11" fill="#444">fil 1</text><rect x="132" y="38" width="36" height="26" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="150" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#5a3a1b">A</text><line x1="150" y1="64" x2="150" y2="92" stroke="#444" stroke-width="2"/><text x="158" y="83" font-size="11" fill="#444">fil 2</text><rect x="128" y="92" width="44" height="32" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="150" y="113" text-anchor="middle" font-size="13" font-weight="700" fill="#8a5a2b">B</text>'),
+ pomme:sit('<rect x="0" y="120" width="300" height="10" fill="#9BC28A"/><rect x="45" y="40" width="14" height="82" fill="#8a5a2b"/><circle cx="52" cy="30" r="34" fill="#6BAF5B"/><line x1="70" y1="40" x2="170" y2="40" stroke="#8a5a2b" stroke-width="5"/><circle cx="185" cy="78" r="9" fill="#E63946"/><line x1="185" y1="45" x2="185" y2="62" stroke="#8895a5" stroke-dasharray="3 3"/>'),
+ aimants:sit('<rect x="146" y="5" width="8" height="118" fill="#F2C9A0" stroke="#b07a4a"/><rect x="0" y="122" width="300" height="8" fill="#8a5a2b"/><rect x="115" y="100" width="70" height="22" rx="4" fill="#E76F51" opacity=".9"/><rect x="115" y="40" width="70" height="22" rx="4" fill="#E76F51" opacity=".9"/><text x="150" y="116" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">N</text><text x="150" y="56" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">N</text><text x="200" y="85" font-size="12" fill="#555">vide</text>'),
+ mur:sit('<rect x="250" y="0" width="30" height="130" fill="#BFC7D1"/><rect x="215" y="35" width="35" height="60" rx="2" fill="#2563EB"/><ellipse cx="200" cy="65" rx="16" ry="10" fill="#F2C9A0" stroke="#b07a4a"/><rect x="110" y="59" width="80" height="12" rx="5" fill="#F2C9A0" stroke="#b07a4a"/>'),
+ poulie:sit('<polygon points="10,125 230,125 230,40" fill="#C9B79C"/><g transform="rotate(-21.1 120 82.5)"><rect x="98" y="58.5" width="44" height="24" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/></g><line x1="141" y1="60" x2="232" y2="25" stroke="#444" stroke-width="2"/><circle cx="240" cy="30" r="10" fill="#fff" stroke="#444" stroke-width="2"/><line x1="250" y1="30" x2="250" y2="85" stroke="#444" stroke-width="2"/><rect x="238" y="85" width="24" height="24" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/>'),
+ astronaute:sit('<path d="M0,110 Q150,85 300,110 L300,130 L0,130Z" fill="#C8C8C8"/><circle cx="60" cy="112" r="6" fill="#aaa"/><circle cx="230" cy="108" r="4" fill="#aaa"/><circle cx="150" cy="45" r="12" fill="#fff" stroke="#555" stroke-width="2"/><rect x="143" y="41" width="14" height="7" rx="3" fill="#FFD966"/><rect x="138" y="57" width="24" height="30" rx="6" fill="#fff" stroke="#555" stroke-width="2"/><rect x="140" y="87" width="8" height="12" fill="#fff" stroke="#555" stroke-width="2"/><rect x="152" y="87" width="8" height="12" fill="#fff" stroke="#555" stroke-width="2"/>')
+};
+/* ===== Test diagnostique ===== */
+var DIAG=[
+ {th:'F',img:'livre',q:'Quelles forces s’exercent sur un livre posé sur une table ?',ok:'son poids et la réaction de la table',wr:['seulement son poids','son poids et la force du livre sur la table','aucune : il est immobile']},
+ {th:'R',img:'livre',q:'Le poids d’un livre posé sur une table et la réaction de la table sont…',ok:'deux forces qui se compensent, mais pas des actions réciproques',wr:['des actions réciproques','deux forces qui ne se compensent pas','la même force']},
+ {th:'R',q:'Une voiture accélère en montant une côte et tire une caravane. La force exercée par la voiture sur la caravane est…',ok:'la même que celle exercée par la caravane sur la voiture',wr:['plus grande que celle exercée par la caravane sur la voiture','plus petite que celle exercée par la caravane sur la voiture','nulle']},
+ {th:'R',img:'lune',q:'La Terre attire la Lune avec une force F. La Lune attire la Terre avec une force…',ok:'de même intensité que F, de sens opposé',wr:['beaucoup plus petite que F','nulle : seule la Terre attire','beaucoup plus grande que F']},
+ {th:'F',img:'plan',q:'Sur un plan incliné, la réaction du support est :',ok:'perpendiculaire au plan',wr:['verticale, vers le haut','parallèle au plan','horizontale']},
+ {th:'F',img:'ballon',q:'Un ballon est en l’air après un lancer (on néglige l’air). Quelles forces s’exercent sur lui ?',ok:'seulement son poids',wr:['son poids et la force du lancer','seulement la force du lancer','aucune force']},
+ {th:'F',img:'deuxmasses',q:'Une masse A est accrochée au plafond par un fil 1. Une masse B est accrochée sous A par un fil 2. Quelles forces s’exercent <b>sur A</b> ?',ok:'le poids de A, la force du fil 1 (vers le haut) et la force du fil 2 (vers le bas)',wr:['le poids de A et la force du fil 1','le poids de A, le poids de B et la force du fil 1','le poids de A, la force du fil 1 et la force du fil 2 vers le haut']},
+ {th:'R',img:'pomme',q:'Une pomme tombe d’un arbre (on néglige l’air). Pendant la chute, la pomme attire la Terre avec une force…',ok:'de même intensité que le poids de la pomme, vers le haut',wr:['nulle : c’est la Terre qui attire la pomme','beaucoup plus petite que le poids de la pomme','égale au poids de la pomme, vers le bas']},
+ {th:'F',img:'aimants',q:'Deux aimants sont enfilés sur un crayon vertical : celui du haut flotte au-dessus de celui du bas, sans le toucher. Quelles forces s’exercent <b>sur l’aimant du haut</b> ?',ok:'son poids et la force magnétique de l’aimant du bas, vers le haut',wr:['seulement la force magnétique de l’aimant du bas','son poids et la réaction de l’aimant du bas','son poids seulement : rien ne le touche']},
+ {th:'R',img:'aimants',q:'Même situation. La force magnétique exercée par l’aimant du haut <b>sur l’aimant du bas</b> est dirigée…',ok:'vers le bas',wr:['vers le haut','il n’y en a pas : seul l’aimant du bas exerce une force','horizontalement']},
+ {th:'F',img:'mur',q:'Je tiens un livre contre un mur vertical en le poussant horizontalement avec la main. Quelles forces s’exercent sur le livre ?',ok:'son poids, la poussée de la main, la réaction du mur et le frottement du mur',wr:['son poids, la poussée de la main et la réaction du mur','la poussée de la main et la réaction du mur','son poids et la poussée de la main']},
+ {th:'F',img:'poulie',q:'Une caisse sur un plan incliné est retenue par un fil, parallèle au plan, qui passe par une poulie et porte une masse pendue. On néglige les frottements. Quelles forces s’exercent sur la <b>caisse</b> ?',ok:'son poids, la réaction du plan (perpendiculaire au plan) et la tension du fil (parallèle au plan, vers la poulie)',wr:['son poids, la réaction du plan et le poids de la masse pendue','son poids, la réaction du plan (verticale) et la tension du fil (verticale)','son poids et la tension du fil']}
+];
+var THEMES={F:'Les forces et le bilan des forces (parties B, C, D et F)',R:'Les actions réciproques (partie E)'};
+function runDiag(){
+  var i=0,res={F:[0,0],R:[0,0]},root=$('diagcard');
+  function show(){
+    if(i>=DIAG.length)return end();
+    var d=DIAG[i],ch=shuffle([{h:d.ok,ok:true}].concat(d.wr.map(function(w){return{h:w,ok:false}})));
+    var h='<div class="qhead"><span>Question '+(i+1)+' sur '+DIAG.length+'</span></div><div class="bar"><div style="width:'+(100*i/DIAG.length)+'%"></div></div><div class="qtext">'+d.q+'</div>'+(d.img?IMG[d.img]:'');
+    ch.forEach(function(c,k){h+='<button class="ch" data-k="'+k+'">'+c.h+'</button>'});
+    root.innerHTML=h;
+    Array.prototype.forEach.call(root.querySelectorAll('.ch'),function(b){b.onclick=function(){var c=ch[+b.getAttribute('data-k')];res[d.th][1]++;if(c.ok)res[d.th][0]++;i++;show()}});
+  }
+  function end(){
+    var tot=0,h='<span class="badge">Résultat du test</span><table class="res">';
+    Object.keys(res).forEach(function(k){var r=res[k];tot+=r[0];h+='<tr><td>'+THEMES[k]+'</td><td><b>'+r[0]+'/'+r[1]+'</b></td><td>'+(r[0]===r[1]?'✔ acquis':'<b style="color:var(--coral)">à revoir</b>')+'</td></tr>'});
+    h+='</table><p><b>Score : '+tot+'/12.</b> '+(tot===12?'Bravo ! Survole quand même la partie « Comprendre », puis passe à l’entraînement.':'Commence par les parties <b>à revoir</b> dans l’onglet « Comprendre ».')+'</p><p style="font-size:14px;color:#4a5a6c">Note ton score sur ta feuille de travail.</p><div class="row"><button class="btn" id="gocomp">Aller à « Comprendre »</button><button class="btn alt" id="redo">Refaire le test</button></div>';
+    root.innerHTML=h;$('gocomp').onclick=function(){showTab('comp')};$('redo').onclick=runDiag;
+  }
+  show();
+}
+$('startdiag').onclick=runDiag;
+/* ===== Entraînement 10 + 3 ===== */
+function mcq(q,ok,wr,why,img){if(img)q+=IMG[img];return {q:q,ch:shuffle([{h:ok,ok:true}].concat(shuffle(wr).slice(0,3).map(function(w){return{h:w,ok:false}}))),why:why,key:q}}
+function num(q,v,unit,why,tol,img){if(img)q+=IMG[img];return {q:q,num:{v:v,unit:unit,tol:tol},why:why,key:q}}
+var EX=[
+ function(){var m=pick([0.25,0.4,0.5,1.2,2.5,3,6,12,45,60,75]);return num('Calcule le poids d’un objet de masse <b>'+fmt(m,2)+' kg</b> sur Terre (g = 9,81 N/kg). Arrondis au dixième.',m*G,'N','P = m · g = '+fmt(m,2)+' × 9,81 = '+fmt(m*G,1)+' N.')},
+ function(){var g=pick([150,250,300,500,800]);return num('Calcule le poids d’un objet de masse <b>'+g+' g</b> sur Terre (g = 9,81 N/kg). Arrondis au centième.',g/1000*G,'N','Attention aux unités : '+g+' g = '+fmt(g/1000,3)+' kg. P = '+fmt(g/1000,3)+' × 9,81 = '+fmt(g/1000*G,2)+' N.')},
+ function(){var P=pick([49.05,98.1,196.2,588.6,686.7,294.3]);return num('Un objet a un poids de <b>'+fmt(P,2)+' N</b> sur Terre. Calcule sa masse.',P/G,'kg','m = P / g = '+fmt(P,2)+' / 9,81 = '+fmt(P/G,1)+' kg.')},
+ function(){var m=pick([60,70,80,90,120]);return num('Un astronaute de <b>'+m+' kg</b> est sur la Lune (g = 1,62 N/kg). Calcule son poids sur la Lune.',m*GL,'N','P = m · g<sub>Lune</sub> = '+m+' × 1,62 = '+fmt(m*GL,1)+' N.',undefined,'astronaute')},
+ function(){var m=pick([60,70,80,90,120]);return mcq('Un astronaute a une masse de '+m+' kg sur Terre. Sur la Lune, sa <b>masse</b> vaut :',m+' kg',[fmt(m/6,1)+' kg',fmt(m*GL,1)+' kg',fmt(m*G,1)+' N'],'La masse (quantité de matière) ne dépend pas de l’endroit. C’est le <b>poids</b> qui change.','astronaute')},
+ function(){var k=pick([5,10,20,25,50]),n=pick([2,3,4,5,6]),F=k*n;return num('Échelle : 1 cm représente <b>'+k+' N</b>. Quelle longueur doit avoir la flèche d’une force de <b>'+F+' N</b> ?',n,'cm','Longueur = '+F+' / '+k+' = '+n+' cm.')},
+ function(){var k=pick([10,20,50,100]),L=pick([1.5,2,2.5,3,3.5,4]);return num('Échelle : 1 cm représente <b>'+k+' N</b>. Une flèche mesure <b>'+fmt(L,1)+' cm</b>. Quelle est l’intensité de la force ?',k*L,'N','F = '+fmt(L,1)+' × '+k+' = '+fmt(k*L,0)+' N.')},
+ function(){var F=pick([15,20,35,40,60]),dirs=[['vers la gauche','horizontale'],['vers la droite','horizontale'],['vers le haut','verticale'],['vers le bas','verticale']],d=pick(dirs);
+   return mcq('Une force de '+F+' N est horizontale ou verticale, et dirigée <b>'+d[0]+'</b>. Quelle est sa <b>direction</b> ?',d[1],[d[0],F+' N',d[1]==='horizontale'?'verticale':'horizontale'],'La direction est la droite qui porte la force ('+d[1]+'). « '+d[0]+' », c’est le <b>sens</b>.')},
+ function(){var F=pick([10,25,40]),ax=pick([['l’axe x orienté vers la droite','vers la gauche',-1],['l’axe x orienté vers la droite','vers la droite',1],['l’axe y orienté vers le haut','vers le bas',-1],['l’axe y orienté vers le haut','vers le haut',1]]);
+   return num('On choisit '+ax[0]+'. Une force de <b>'+F+' N</b> est dirigée <b>'+ax[1]+'</b>, parallèlement à cet axe. Quelle est sa composante sur cet axe ?',ax[2]*F,'N','La composante est positive si la force va dans le sens de l’axe, négative sinon : '+fmt(ax[2]*F,0)+' N.')},
+ function(){var F=pick([20,35,50,120]),p=pick([['la Terre','la Lune'],['l’aimant A','l’aimant B'],['le joueur','le ballon'],['la main','le mur']]);
+   return num(p[0].charAt(0).toUpperCase()+p[0].slice(1)+' exerce sur '+p[1]+' une force de <b>'+F+' N</b>. Quelle est l’intensité de la force exercée par '+p[1]+' sur '+p[0]+' ?',F,'N','Actions réciproques : même intensité ('+F+' N), même direction, sens opposé.')},
+ function(){var sc=pick([['un livre posé sur une table',2,'le poids et la réaction de la table'],['une lampe suspendue à un fil',2,'le poids et la tension du fil'],['une caisse tirée sur le sol à vitesse constante',4,'le poids, la réaction du sol, la traction de la corde, le frottement'],['un ballon en l’air après un lancer (air négligé)',1,'le poids seulement'],['un parachutiste qui descend à vitesse constante',2,'le poids et le frottement de l’air'],['la caisse du dessous de deux caisses empilées',3,'son poids, la force exercée par la caisse du dessus et la réaction du sol'],['un palet qui glisse sur la glace (frottements négligés)',2,'son poids et la réaction de la glace (aucune force ne le pousse)'],['un satellite en orbite autour de la Terre',1,'l\u2019attraction de la Terre']]);
+   return num('Combien de forces s’exercent sur <b>'+sc[0]+'</b> ?',sc[1],'force(s)','Il y a '+sc[1]+' force(s) : '+sc[2]+'.',undefined,/livre/.test(sc[0])?'livre':(/ballon/.test(sc[0])?'ballon':null))},
+ function(){return mcq('Où se situe le point d’application du poids d’un objet ?','au centre de gravité de l’objet',['au point de contact avec le sol','au centre de la Terre','sur le dessus de l’objet'],'Le poids s’applique au <b>centre de gravité</b> de l’objet.')},
+ function(){return mcq('Les deux forces de deux actions réciproques ne s’annulent pas parce que…','elles s’appliquent sur deux objets différents',['elles n’ont pas la même intensité','elles ont le même sens','elles n’ont pas la même direction'],'Pour que des forces se compensent, elles doivent agir sur le <b>même</b> objet.')}
+,
+ function(){var c=pick([['Une voiture accélère en montant une côte et tire une caravane.','la voiture','la caravane'],['Un tracteur freine en tirant une remorque.','le tracteur','la remorque'],['Un cheval avance à vitesse constante en tirant une charrette.','le cheval','la charrette'],['Une locomotive démarre en tirant un wagon.','la locomotive','le wagon']]);
+   return mcq(c[0]+' Comparée à la force exercée par '+c[2]+' sur '+c[1]+', la force exercée par '+c[1]+' sur '+c[2]+' est :','de même intensité',['plus grande','plus petite','plus grande seulement pendant l’accélération'],'Actions réciproques : F<sub>A/B</sub> et F<sub>B/A</sub> ont <b>toujours</b> la même intensité, que ça accélère, freine ou roule à vitesse constante. Ce qui fait accélérer '+c[2]+', ce sont les autres forces qui s’exercent <b>sur elle</b>.')},
+ function(){var c=pick([['Un camion percute une petite voiture.','le camion','la voiture'],['Un adulte et un enfant, sur des patins, se poussent l’un l’autre.','l’adulte','l’enfant'],['Une balle de tennis rebondit sur un mur.','la balle','le mur']]);
+   return mcq(c[0]+' Pendant le contact, quelle force est la plus grande ?','les deux forces ont la même intensité',['la force exercée par '+c[1]+' sur '+c[2],'la force exercée par '+c[2]+' sur '+c[1],'on ne peut pas savoir'],'Actions réciproques : même intensité. Les <b>effets</b> peuvent être différents (l’objet le plus léger est le plus secoué), mais pas les forces.')},
+ function(){var c=pick([['du poids d’une pomme','la force exercée par la pomme sur la Terre',['la réaction de la branche sur la pomme','la force exercée par la Terre sur la pomme','il n’y en a pas']],['de la réaction de la table sur un livre','la force exercée par le livre sur la table',['le poids du livre','la force exercée par la Terre sur le livre','il n’y en a pas']],['de la tension du fil sur une lampe','la force exercée par la lampe sur le fil',['le poids de la lampe','la force exercée par le plafond sur le fil','il n’y en a pas']]]);
+   return mcq('Quelle est la force réciproque '+c[0]+' ?',c[1],c[2],'La réciproque de F<sub>A/B</sub> est F<sub>B/A</sub> : on <b>échange</b> les deux objets. Elle s’exerce sur l’autre objet.')},
+ function(){return mcq('Le poids d’un livre posé sur une table et la réaction de la table sont-ils des actions réciproques ?','non : elles s’exercent toutes les deux sur le livre',['oui : elles sont égales et opposées','oui : elles se compensent','non : elles n’ont pas la même intensité'],'Deux actions réciproques s’exercent sur <b>deux objets différents</b>. Ici, les deux forces agissent sur le livre : elles se compensent, mais ce ne sont pas des actions réciproques.','livre')},
+ function(){return mcq('Sur un plan incliné, la réaction du support <span class="v">R</span> est :','perpendiculaire au plan incliné',['verticale, vers le haut','parallèle au plan incliné','horizontale'],'La réaction du support est toujours <b>perpendiculaire</b> au support, vers l’extérieur.','plan')},
+ function(){return mcq('Une caisse glisse vers la droite sur le sol. La force de frottement du sol sur la caisse est dirigée :','vers la gauche, parallèlement au sol',['vers la droite','vers le haut','vers le bas'],'Le frottement est parallèle au support et <b>s’oppose au mouvement</b>.')},
+ function(){return mcq('Une corde tendue attachée à un objet exerce sur lui une force…','qui tire l’objet, selon la corde',['qui pousse l’objet, selon la corde','toujours verticale','toujours horizontale'],'Une corde ou un fil <b>tire</b> toujours, jamais ne pousse, et la force suit la direction de la corde.')},
+ function(){return mcq('La poussée d’Archimède exercée par l’eau sur un objet immergé est :','verticale, vers le haut',['verticale, vers le bas','perpendiculaire au fond','dans le sens du courant'],'L’eau pousse l’objet vers le haut. Son intensité est égale au poids de l’eau déplacée.')},
+ function(){var same=Math.random()<.5;return mcq('Deux boules chargées '+(same?'toutes les deux positivement':'l’une positivement, l’autre négativement')+'. Elles…',same?'se repoussent':'s’attirent',[same?'s’attirent':'se repoussent','n’exercent aucune force l’une sur l’autre','tombent vers le bas'],'Charges de même signe : répulsion. Charges de signes contraires : attraction. C’est une force <b>à distance</b>.')},
+ function(){return mcq('Un ressort étiré est accroché à une caisse. Il exerce sur la caisse une force…','qui tire la caisse vers le ressort',['qui pousse la caisse loin du ressort','nulle','verticale vers le bas'],'Un ressort <b>s’oppose à sa déformation</b> : étiré, il tire ; comprimé, il pousse.')},
+ function(){return mcq('Dans l’hypothèse du mobile ponctuel, on…','remplace l’objet par un point de même masse, d’où partent toutes les forces',['néglige la masse de l’objet','supprime le poids','dessine chaque force à l’endroit exact où elle agit'],'Quand l’objet ne tourne pas, on peut le remplacer par un point : toutes les flèches partent de ce point.')}
+];
+function parseNum(s){s=s.replace(/\s/g,'').replace(',','.').replace('−','-');if(!/^-?\d*\.?\d+$/.test(s))return NaN;return parseFloat(s)}
+function runEx(){
+  var FIRST=10,PEN=3,planned=FIRST,done=0,wrong=0,asked={},bag=[],cur,root=$('quiz');
+  function next(){for(var t=0;t<50;t++){if(!bag.length)bag=shuffle(EX.map(function(_,i){return i}));var q=EX[bag.pop()]();if(!asked[q.key]){asked[q.key]=1;return q}}return EX[R(0,EX.length-1)]()}
+  function show(){
+    if(done>=planned)return end();cur=next();
+    var h='<div class="qhead"><span>Question '+(done+1)+' sur '+planned+(planned>FIRST?' <b style="color:var(--coral)">(+'+(planned-FIRST)+')</b>':'')+'</span><span>Erreurs : '+wrong+'</span></div><div class="bar"><div style="width:'+(100*done/planned)+'%"></div></div><div class="qtext">'+cur.q+'</div>';
+    if(cur.num){h+='<div class="numrow"><button class="pm" id="pm" type="button">±</button><input id="na" type="text" inputmode="decimal" autocomplete="off" placeholder="ta réponse"><span class="unit">'+cur.num.unit+'</span></div><div class="row"><button class="btn" id="ok">Valider</button></div>'}
+    else cur.ch.forEach(function(c,i){h+='<button class="ch" data-i="'+i+'">'+c.h+'</button>'});
+    h+='<div id="fb"></div><div class="row" id="nx"></div>';root.innerHTML=h;
+    if(cur.num){$('pm').onclick=function(){var v=$('na').value.trim();$('na').value=(v.charAt(0)==='-'||v.charAt(0)===M)?v.slice(1):'-'+v;$('na').focus()};
+      $('ok').onclick=function(){var v=parseNum($('na').value);if(isNaN(v)){$('fb').innerHTML='<div class="fb">Écris un nombre (avec une virgule si besoin).</div>';return}
+        var tol=cur.num.tol||Math.max(Math.abs(cur.num.v)*0.01,0.051);answer(Math.abs(v-cur.num.v)<=tol);$('ok').disabled=true;$('na').disabled=true;$('pm').disabled=true};
+      $('na').onkeydown=function(e){if(e.key==='Enter')$('ok').click()}}
+    else Array.prototype.forEach.call(root.querySelectorAll('.ch'),function(b,k){b.onclick=function(){Array.prototype.forEach.call(root.querySelectorAll('.ch'),function(x,j){x.disabled=true;if(cur.ch[j].ok)x.classList.add('good');else if(j===k)x.classList.add('bad')});answer(cur.ch[k].ok)}});
+  }
+  function answer(ok){done++;if(ok)$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+cur.why+'</div>';else{wrong++;planned+=PEN;$('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> '+cur.why+'<br><b>+3 questions</b> pour consolider.</div>'}
+    $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';$('go').onclick=show}
+  function end(){root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Entraînement terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur.':wrong+' erreur'+(wrong>1?'s':'')+', rattrapée'+(wrong>1?'s':'')+' par les questions de consolidation.')+'</p><div class="fb ok" style="text-align:center"><b>Tu maîtrises maintenant :</b><br>« les rappels de dynamique : représenter une force, le poids, les actions réciproques et le bilan des forces »</div><div class="row"><button class="btn alt" id="again">Refaire un entraînement</button><button class="btn" id="todefi">Passer aux schémas à corriger</button></div>';
+    $('again').onclick=runEx;$('todefi').onclick=function(){showTab('cor')}}
+  root._peek=function(){return cur};show();
+}
+$('startex').onclick=function(){$('excard').style.display='none';$('exq').style.display='block';runEx()};
+var VEL=function(a,x,y,L){var r=a*Math.PI/180;L=L||70;var x2=x+Math.cos(r)*L,y2=y-Math.sin(r)*L;return '<line x1="'+x+'" y1="'+y+'" x2="'+x2+'" y2="'+y2+'" stroke="#8895a5" stroke-width="2.5" stroke-dasharray="6 5"/><polygon points="'+x2+','+y2+' '+(x2-Math.cos(r)*10-Math.sin(r)*5)+','+(y2+Math.sin(r)*10-Math.cos(r)*5)+' '+(x2-Math.cos(r)*10+Math.sin(r)*5)+','+(y2+Math.sin(r)*10+Math.cos(r)*5)+'" fill="#8895a5"/><text x="'+(x2+Math.cos(r)*12)+'" y="'+(y2-Math.sin(r)*12+4)+'" font-size="13" fill="#8895a5" font-style="italic">v</text>'};
+/* ===== Corriger des schémas ===== */
+var Mc=[170,115];
+function pm(){return '<circle cx="'+Mc[0]+'" cy="'+Mc[1]+'" r="5" fill="#1F2A44"/><text x="'+(Mc[0]-20)+'" y="'+(Mc[1]-8)+'" font-size="14" font-weight="700">M</text>'}
+function va(lab,dx,dy,ok,why,col){return {lab:lab,x1:Mc[0],y1:Mc[1],x2:Mc[0]+dx,y2:Mc[1]+dy,ok:ok,why:why,col:col||'#1F4E79'}}
+var COR=[
+ {t:'Un livre <b>immobile</b> sur une table. Schéma dessiné sur l’objet.',bg:'<rect x="40" y="140" width="260" height="14" fill="#8a5a2b"/><rect x="60" y="154" width="12" height="60" fill="#8a5a2b"/><rect x="268" y="154" width="12" height="60" fill="#8a5a2b"/><rect x="130" y="110" width="80" height="30" rx="3" fill="#FFD966" stroke="#1F4E79" stroke-width="2"/>',
+  ar:[{lab:'P',x1:180,y1:125,x2:180,y2:185,ok:true},{lab:'R',x1:160,y1:140,x2:160,y2:110,ok:false,why:'<b>R</b> est trop courte : le livre est immobile, R compense P et doit avoir la <b>même longueur</b>.'},{lab:'F livre/table',x1:240,y1:140,x2:240,y2:180,ok:false,why:'<b>F<sub>livre/table</sub></b> est exercée <b>par</b> le livre sur la table : elle ne s’exerce pas sur le livre et n’a rien à faire dans son bilan.'}]},
+ {t:'Un ballon en l’air, juste après un lancer (on néglige l’air). Mobile ponctuel.',bg:'<path d="M20,200 Q120,10 320,140" fill="none" stroke="#8895a5" stroke-dasharray="5 5"/>'+pm(),
+  ar:[va('P',0,60,true),va('F lancer',50,-40,false,'Il n’y a <b>pas de force du lancer</b> : la main ne touche plus le ballon. Seul le poids agit.')]},
+ {t:'Une caisse <b>immobile</b> sur un plan incliné (pente de 30°). Mobile ponctuel.',bg:'<line x1="40" y1="190" x2="300" y2="40" stroke="#C9B79C" stroke-width="6"/>'+pm(),
+  ar:[va('P',35,60.6,false,'Le <b>poids est toujours vertical</b>, vers le bas, même sur une pente.'),va('R',-30.3,-52.5,true),va('f',30.3,-17.5,true)]},
+ {t:'Une lampe <b>immobile</b>, suspendue à un fil. Mobile ponctuel.',bg:'<rect x="120" y="0" width="100" height="8" fill="#BFC7D1"/><line x1="170" y1="8" x2="170" y2="115" stroke="#bbb" stroke-dasharray="4 4"/>'+pm(),
+  ar:[va('T',0,-30,false,'<b>T</b> est trop courte : la lampe est immobile, la tension compense le poids, <b>même longueur</b>.'),va('P',0,60,true)]},
+ {t:'Une caisse tirée vers la droite sur le sol, à <b>vitesse constante</b>. Mobile ponctuel.',bg:'<line x1="10" y1="200" x2="330" y2="200" stroke="#C9B79C" stroke-width="8"/>'+pm(),
+  ar:[va('P',0,60,true),va('R',0,-60,true),va('T',60,0,true),va('f',-25,0,false,'<b>f</b> est trop courte : à vitesse constante, le frottement compense la traction, <b>même longueur</b> que T.')]},
+ {t:'Une voiture accélère et tire une caravane. <b>Système : la caravane</b> (frottements négligés). Mobile ponctuel.',bg:'<line x1="10" y1="200" x2="330" y2="200" stroke="#C9B79C" stroke-width="8"/>'+pm(),
+  ar:[va('P',0,60,true),va('R',0,-60,true),va('F voiture/caravane',70,0,true),va('F caravane/voiture',-70,0,false,'<b>F<sub>caravane/voiture</sub></b> s’exerce <b>sur la voiture</b>, pas sur la caravane : elle ne fait pas partie de ce bilan.')]},
+ {t:'Une main pousse une caisse vers la droite sur le sol (vitesse constante). Schéma dessiné sur l’objet.',bg:'<rect x="0" y="170" width="340" height="40" fill="#C9B79C"/><rect x="130" y="110" width="80" height="60" rx="3" fill="#FFD966" stroke="#1F4E79" stroke-width="2"/><ellipse cx="112" cy="140" rx="18" ry="10" fill="#F2C9A0" stroke="#b07a4a"/><rect x="40" y="134" width="60" height="12" rx="5" fill="#F2C9A0" stroke="#b07a4a"/>',
+  ar:[{lab:'F main/caisse',x1:130,y1:125,x2:80,y2:125,ok:false,why:'La main <b>pousse</b> : F<sub>main/caisse</sub> va de la main vers la caisse, donc <b>vers la droite</b>.'},{lab:'P',x1:170,y1:140,x2:170,y2:195,ok:true},{lab:'R',x1:185,y1:170,x2:185,y2:115,ok:true},{lab:'f',x1:150,y1:170,x2:100,y2:170,ok:true}]}
+,
+ {t:'Deux caisses empilées sur le sol : A (20 N) dessus, B (30 N) dessous. Schéma des forces <b>sur la caisse B</b>.',bg:'<rect x="0" y="170" width="340" height="45" fill="#C9B79C"/><rect x="110" y="110" width="120" height="60" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="120" y="130" font-size="13" font-weight="700" fill="#8a5a2b">B</text><rect x="135" y="75" width="70" height="35" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="142" y="92" font-size="13" font-weight="700" fill="#5a3a1b">A</text>',
+  ar:[{lab:'P',x1:195,y1:140,x2:195,y2:200,ok:true},{lab:'P de A',x1:150,y1:110,x2:150,y2:150,ok:false,why:'Le <b>poids de A</b> s’exerce sur A, pas sur B. Sur B, c’est F<sub>A/B</sub> (A appuie sur B, 20 N) qu’il fallait dessiner.'},{lab:'F sol/B',x1:240,y1:170,x2:240,y2:70,ok:true}]},
+ {t:'Un palet glisse vers la droite sur la glace (frottements négligés). Mobile ponctuel. La flèche grise <i>v</i> est la vitesse.',bg:'<line x1="10" y1="200" x2="330" y2="200" stroke="#BFE3F2" stroke-width="10"/>'+pm()+VEL(0,190,70,55),
+  ar:[va('P',0,60,true),va('R',0,-60,true),va('F mouvement',70,0,false,'Il n’y a <b>pas de « force du mouvement »</b> : le palet continue sur sa lancée sans qu’aucune force ne le pousse.')]},
+ {t:'Une caisse <b>monte</b> encore un plan incliné après qu’on l’a lâchée. Mobile ponctuel.',bg:'<line x1="40" y1="190" x2="300" y2="40" stroke="#C9B79C" stroke-width="6"/>'+pm()+VEL(30,215,75,50),
+  ar:[va('P',0,70,true),va('R',-30.3,-52.5,true),va('f',30.3,-17.5,false,'La caisse <b>monte</b> : le frottement s’oppose au mouvement, il est dirigé vers le <b>bas</b> de la pente.'),va('F poussée',55,0,false,'La main a lâché la caisse : il n’y a <b>plus de force de poussée</b>.')]}
+];
+var cIdx=0,cSel={},cDone=false,cScore=0;
+function drawCor(){
+  var sc=COR[cIdx],s='<svg viewBox="0 0 340 215" class="gr" style="max-width:460px;touch-action:manipulation">'+sc.bg;
+  sc.ar.forEach(function(a,i){var sel=!!cSel[i],col=cDone?(a.ok?(sel?'#E76F51':'#2A9D8F'):(sel?'#2A9D8F':'#E76F51')):(sel?'#E76F51':'#1F4E79');
+    var dx=a.x2-a.x1,dy=a.y2-a.y1,L=Math.sqrt(dx*dx+dy*dy),lx=a.x2+dx/L*16,ly=a.y2+dy/L*16+5;
+    s+='<g data-a="'+i+'" style="cursor:pointer">'+'<line x1="'+(a.x1+dx*0.35)+'" y1="'+(a.y1+dy*0.35)+'" x2="'+(a.x2+dx/L*8)+'" y2="'+(a.y2+dy/L*8)+'" stroke="transparent" stroke-width="26"/>'+
+      arrow(a.x1,a.y1,a.x2,a.y2,col,4,'')+(sel?'<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+(a.x2-dx/L*11)+'" y2="'+(a.y2-dy/L*11)+'" stroke="#fff" stroke-width="2.5" stroke-dasharray="5 5"/>':'')+
+      '<text x="'+Math.max(30,Math.min(310,lx))+'" y="'+ly+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+col+'">'+a.lab.replace(/ (\S+\/\S+)$/,'<tspan font-size="10" dy="3">$1</tspan>')+'</text></g>'});
+  s+='</svg>';
+  var h='<div class="qhead"><span>Schéma '+(cIdx+1)+' sur '+COR.length+'</span><span>Réussis : '+cScore+'</span></div><div class="qtext">'+sc.t+'</div>'+s;
+  if(!cDone)h+='<div class="row"><button class="btn" id="cck">Vérifier</button></div>';
+  else{var good=sc.ar.every(function(a,i){return a.ok===!cSel[i]});
+    h+='<div class="fb '+(good?'ok':'ko')+'"><b>'+(good?'Bravo, tu as trouvé toutes les erreurs !':'Pas tout à fait.')+'</b><ul class="pts">'+sc.ar.filter(function(a){return !a.ok}).map(function(a){return '<li>'+a.why+'</li>'}).join('')+'</ul>'+(good?'':'En vert : les flèches correctes ; en rouge : les flèches fausses.')+'</div>';
+    h+='<div class="row">'+(cIdx<COR.length-1?'<button class="btn" id="cn">Schéma suivant ▶</button>':'<button class="btn" id="cr">Recommencer</button><button class="btn alt" id="cgo">Passer au dessin</button>')+'</div>'}
+  $('cor').innerHTML=h;
+  if(!cDone){Array.prototype.forEach.call($('cor').querySelectorAll('g[data-a]'),function(g){g.onclick=function(){var i=+g.getAttribute('data-a');cSel[i]=!cSel[i];drawCor()}});
+    $('cck').onclick=function(){cDone=true;if(COR[cIdx].ar.every(function(a,i){return a.ok===!cSel[i]}))cScore++;drawCor()}}
+  else{if($('cn'))$('cn').onclick=function(){cIdx++;cSel={};cDone=false;drawCor()};if($('cr'))$('cr').onclick=function(){cIdx=0;cSel={};cDone=false;cScore=0;drawCor()};if($('cgo'))$('cgo').onclick=function(){showTab('des')}}
+}
+/* ===== Dessiner les forces ===== */
+/* req : nom -> [angle (°), intensité (N), zone d'application {c:[x,y], r:rayon}] (zone seulement en mode « objet ») */
+var DS=[
+ {t:'Un livre de poids <b>20 N</b> est posé sur une table.',bg:'<line x1="40" y1="230" x2="300" y2="230" stroke="#8a5a2b" stroke-width="6"/>',req:{P:[270,20],R:[90,20]},pal:['P','R','T','f','F livre/table'],
+  why:{'F livre/table':'F<sub>livre/table</sub> s’exerce sur la table, pas sur le livre.',R:'Immobile : R compense P, 20 N vers le haut.'}},
+ {t:'Une lampe de poids <b>30 N</b> est suspendue à un fil. Dessine les forces <b>sur la lampe</b>, chacune à son point d’application.',mode:'obj',
+  pic:'<rect x="110" y="0" width="120" height="10" fill="#BFC7D1"/><line x1="170" y1="10" x2="170" y2="120" stroke="#444" stroke-width="2"/><path d="M135,165 L170,120 L205,165 Z" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><circle cx="170" cy="150" r="3" fill="#8a5a2b"/><text x="178" y="154" font-size="11" fill="#8a5a2b">G</text>',
+  req:{P:[270,30,{c:[170,150],r:14}],T:[90,30,{c:[170,120],r:14}]},pal:['P','T','R','f'],
+  why:{P:'Le poids part du centre de gravité G, vers le bas.',T:'La tension part du point d’attache du fil et tire vers le haut.',R:'Il n’y a pas de support sous la lampe.'}},
+ {t:'Deux caisses sont posées l’une sur l’autre, sur le sol. La caisse A (dessus) pèse <b>20 N</b>, la caisse B (dessous) pèse <b>30 N</b>. Dessine les forces qui s’exercent <b>sur la caisse B</b>, chacune à son point d’application.',mode:'obj',
+  pic:'<rect x="0" y="280" width="340" height="60" fill="#C9B79C"/><rect x="110" y="220" width="120" height="60" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="122" y="240" font-size="14" font-weight="700" fill="#8a5a2b">B</text><rect x="135" y="180" width="70" height="40" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="143" y="198" font-size="14" font-weight="700" fill="#5a3a1b">A</text><circle cx="170" cy="250" r="3" fill="#8a5a2b"/>',
+  req:{P:[270,30,{c:[170,250],r:14}],'F A/B':[270,20,{c:[170,220],r:34}],'F sol/B':[90,50,{c:[170,280],r:50}]},pal:['P','P de A','F A/B','F B/A','F sol/B'],
+  why:{'P de A':'Le poids de A s’exerce sur A, pas sur B. Ce qui agit sur B, c’est F<sub>A/B</sub> : A appuie sur B avec 20 N.','F B/A':'F<sub>B/A</sub> s’exerce sur A, pas sur B.','F A/B':'A appuie sur B : 20 N vers le bas, sur la face du dessus de B.','F sol/B':'Le sol porte les deux caisses : 30 + 20 = 50 N vers le haut, sur la face du dessous de B.'}},
+ {t:'Un enfant de poids <b>400 N</b> est debout dans un ascenseur à l’arrêt. Il tient à la main un sac de poids <b>50 N</b>. Dessine les forces qui s’exercent <b>sur l’enfant</b>. Échelle : <b>1 carreau = 100 N</b>.',scale:100,bg:'<line x1="40" y1="300" x2="300" y2="300" stroke="#8895a5" stroke-width="5"/>',
+  req:{P:[270,400],'F sac/enfant':[270,50],'F plancher/enfant':[90,450]},pal:['P','P du sac','F sac/enfant','F plancher/enfant','F enfant/sac'],
+  why:{'P du sac':'Le poids du sac s’exerce sur le sac. Sur l’enfant, c’est le sac qui tire sa main : F<sub>sac/enfant</sub>.','F enfant/sac':'Elle s’exerce sur le sac.','F plancher/enfant':'Le plancher porte l’enfant et son sac : 400 + 50 = 450 N vers le haut.','F sac/enfant':'Le sac tire la main vers le bas avec 50 N.'}},
+ {t:'Un palet de hockey de poids <b>2 N</b> glisse vers la droite sur la glace. On néglige les frottements. Échelle : <b>1 carreau = 1 N</b>.',scale:1,bg:'<line x1="10" y1="215" x2="330" y2="215" stroke="#BFE3F2" stroke-width="10"/>',v:[0,170,170],req:{P:[270,2],R:[90,2]},pal:['P','R','F mouvement','f'],
+  why:{'F mouvement':'Aucune force ne pousse le palet vers la droite : il continue sur sa lancée. Vitesse et force n’ont pas besoin d’avoir la même direction.',f:'On néglige les frottements.'}},
+ {t:'Une boule de pétanque de poids <b>7 N</b> est au sommet de sa trajectoire : elle se déplace horizontalement vers la droite. On néglige l’air. Échelle : <b>1 carreau = 1 N</b>.',scale:1,bg:'<path d="M10,330 Q170,10 330,330" fill="none" stroke="#bbb" stroke-dasharray="5 5"/>',M:[170,140],v:[0,170,140],req:{P:[270,7]},pal:['P','F lancer','F mouvement','R'],
+  why:{'F lancer':'La main ne touche plus la boule : pas de force du lancer.','F mouvement':'La boule avance sur sa lancée, aucune force ne la pousse vers l’avant.',R:'Rien ne la touche.'}},
+ {t:'Un satellite tourne autour de la Terre sur une orbite circulaire. La Terre l’attire avec une force de <b>8000 N</b>. Dessine les forces qui s’exercent <b>sur le satellite</b>. Échelle : <b>1 carreau = 2000 N</b>.',mode:'obj',scale:2000,
+  pic:'<circle cx="170" cy="210" r="130" fill="none" stroke="#bbb" stroke-dasharray="4 6"/><circle cx="170" cy="210" r="48" fill="#5B8DEF"/><path d="M135,200 q15,-20 30,0 t30,5" fill="none" stroke="#9BC28A" stroke-width="8"/><text x="170" y="275" text-anchor="middle" font-size="13" fill="#1F4E79">Terre</text><rect x="160" y="70" width="20" height="20" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><rect x="138" y="76" width="20" height="8" fill="#2563EB"/><rect x="182" y="76" width="20" height="8" fill="#2563EB"/>'+VEL(0,180,80,60),
+  req:{'F Terre/satellite':[270,8000,{c:[170,80],r:16}]},pal:['F Terre/satellite','F satellite/Terre','F mouvement','R'],
+  why:{'F Terre/satellite':'La Terre attire le satellite vers son centre : vers le bas ici, perpendiculaire à la vitesse.','F satellite/Terre':'Elle s’exerce sur la Terre.','F mouvement':'Aucune force ne pousse le satellite le long de son orbite.',R:'Rien ne touche le satellite.'}},
+ {t:'Une caisse de poids <b>40 N</b> est tirée vers la droite par une corde horizontale (T = <b>20 N</b>), à vitesse constante.',bg:'<line x1="10" y1="250" x2="330" y2="250" stroke="#C9B79C" stroke-width="8"/>',req:{P:[270,40],R:[90,40],T:[0,20],f:[180,20]},pal:['P','R','T','f','F mouvement'],
+  why:{f:'Vitesse constante : f compense T, 20 N vers la gauche.',R:'R compense P : 40 N vers le haut.','F mouvement':'Il n’existe pas de « force du mouvement ».'}},
+ {t:'Une caisse de poids <b>40 N</b> est immobile sur un plan incliné qui monte vers la droite (pente de 30°). La réaction vaut <b>35 N</b> et le frottement <b>20 N</b>.',bg:'<line x1="40" y1="245" x2="320" y2="83.3" stroke="#C9B79C" stroke-width="6"/>',req:{P:[270,40],R:[120,35],f:[30,20]},pal:['P','R','f','T'],
+  why:{R:'R est perpendiculaire au plan : 30° + 90° = 120° par rapport à l’horizontale.',f:'Le frottement empêche la caisse de glisser vers le bas : parallèle au plan, vers le haut de la pente.',P:'Le poids reste vertical.'}},
+ {t:'On a poussé une caisse vers le haut d’un plan incliné (pente de 30°). La main l’a lâchée : la caisse <b>monte encore</b> en glissant. Poids <b>40 N</b>, réaction <b>35 N</b>, frottement <b>10 N</b>. Dessine les forces <b>sur la caisse</b>, chacune à son point d’application.',mode:'obj',
+  pic:'<polygon points="20,286.6 330,286.6 330,107.6" fill="#C9B79C"/><g transform="rotate(-30 170 200.6)"><rect x="140" y="160.6" width="60" height="40" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/></g><circle cx="160" cy="183.3" r="3" fill="#8a5a2b"/>'+VEL(30,205,150,60),
+  req:{P:[270,40,{c:[160,183.3],r:14}],R:[120,35,{c:[170,200.6],r:30}],f:[210,10,{c:[170,200.6],r:30}]},pal:['P','R','f','F poussée'],
+  why:{f:'La caisse monte : le frottement s’oppose au mouvement, il est dirigé <b>vers le bas</b> de la pente, au contact avec le plan.','F poussée':'La main ne touche plus la caisse : plus de force de poussée.',R:'Perpendiculaire au plan, au contact.',P:'Vertical, au centre de gravité.'}},
+ {t:'Un parachutiste de poids <b>600 N</b> descend à vitesse constante. Échelle : <b>1 carreau = 100 N</b>.',bg:'',scale:100,v:[270,200,170],req:{P:[270,600],f:[90,600]},pal:['P','f','R','T'],
+  why:{f:'Vitesse constante : le frottement de l’air compense le poids, 600 N vers le haut.',R:'Aucun support ne le touche.',T:'On étudie le système {parachutiste + parachute} : pas de fil extérieur.'}},
+ {t:'Une voiture accélère en tirant une caravane. <b>Système : la caravane</b>, de poids <b>50 N</b> (modèle réduit). F<sub>voiture/caravane</sub> = <b>20 N</b>, frottements négligés.',bg:'<line x1="10" y1="260" x2="330" y2="260" stroke="#C9B79C" stroke-width="8"/>',req:{P:[270,50],R:[90,50],'F voiture/caravane':[0,20]},pal:['P','R','F voiture/caravane','F caravane/voiture'],
+  why:{'F caravane/voiture':'Elle s’exerce sur la voiture, pas sur la caravane.','F voiture/caravane':'La voiture tire la caravane vers l’avant (vers la droite).'}}
+];
+var COLS={P:'#E76F51',R:'#2A9D8F',T:'#2563EB',f:'#7C3AED'};
+function colOf(l){return COLS[l]||'#C026D3'}
+var dIdx=0,dState={},dSel=null,dDone=false,dSol=false,dScore=0,DSQ=20;
+function lab2(l){return l.replace(/ (\S+\/\S+)$/,'<tspan font-size="10" dy="3">$1</tspan>')}
+function labH(l){return l.replace(/ (\S+\/\S+)$/,'<sub>$1</sub>')}
+function dM(sc){return sc.M||[170,170]}
+function drawDes(){
+  var sc=DS[dIdx],k=sc.scale||10,W=340,H=340,obj=sc.mode==='obj',M=dM(sc),s='<svg id="dsvg" viewBox="0 0 '+W+' '+H+'" class="gr" style="max-width:460px;touch-action:none;user-select:none;-webkit-user-select:none">'+grid(W,H)+(obj?sc.pic:(sc.bg||''));
+  if(!obj&&sc.v)s+=VEL(sc.v[0],sc.v[1]+(sc.v[0]===0?20:0),sc.v[2]+(sc.v[0]===270?-0:0),60);
+  Object.keys(dState).forEach(function(l){var v=dState[l],r=v.a*Math.PI/180,L=v.n/k*DSQ,x1=v.x,y1=v.y;var x2=x1+Math.cos(r)*L,y2=y1-Math.sin(r)*L;
+    s+=arrow(x1,y1,x2,y2,colOf(l),4,'')+'<text x="'+(x2+Math.cos(r)*18)+'" y="'+(y2-Math.sin(r)*18+5)+'" text-anchor="middle" font-size="14" font-weight="700" fill="'+colOf(l)+'">'+lab2(l)+'</text>'});
+  if(dSol)Object.keys(sc.req).forEach(function(l){var v=sc.req[l],r=v[0]*Math.PI/180,L=v[1]/k*DSQ,o=obj?v[2].c:M;s+='<line x1="'+o[0]+'" y1="'+o[1]+'" x2="'+(o[0]+Math.cos(r)*L)+'" y2="'+(o[1]-Math.sin(r)*L)+'" stroke="#1F2A44" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/><circle cx="'+o[0]+'" cy="'+o[1]+'" r="4" fill="none" stroke="#1F2A44"/>'});
+  if(!obj)s+='<circle cx="'+M[0]+'" cy="'+M[1]+'" r="6" fill="#1F2A44"/><text x="'+(M[0]-22)+'" y="'+(M[1]-10)+'" font-size="15" font-weight="700">M</text>';
+  s+='<text x="6" y="16" font-size="12" fill="#4a5a6c">1 carreau = '+k+' N</text><g id="live"></g></svg>';
+  var h='<div class="qhead"><span>Situation '+(dIdx+1)+' sur '+DS.length+'</span><span>Réussies : '+dScore+'</span></div><div class="qtext">'+sc.t+'</div>';
+  if(sc.v||(obj&&sc.pic.indexOf('stroke-dasharray="6 5"')>0))h+='<div class="hint">La flèche grise en pointillé <i>v</i> montre le sens du mouvement : ce n’est <b>pas</b> une force.</div>';
+  h+='<div class="pal">'+sc.pal.map(function(l){return '<button class="fbtn'+(dSel===l?' on':'')+(dState[l]?' drawn':'')+'" data-l="'+l+'" style="--c:'+colOf(l)+'">'+labH(l)+(dState[l]?' ✓':'')+'</button>'}).join('')+'</div>';
+  h+='<div class="hint" id="dhint">'+(dDone?'':(dSel?(obj?'Pose ton doigt au <b>point d’application</b> de ':'Glisse à partir de M pour dessiner ')+'<b>'+labH(dSel)+'</b>.':'Choisis d’abord une force.'))+'</div>'+s;
+  if(!dDone)h+='<div class="row"><button class="btn alt" id="dclr">Effacer</button><button class="btn" id="dck">Vérifier</button></div>';
+  else h+=dFeedback()+'<div class="row">'+(dSol?'':'<button class="btn alt" id="dsol">Voir la solution</button>')+(dIdx<DS.length-1?'<button class="btn" id="dn">Situation suivante ▶</button>':'<button class="btn" id="dr">Recommencer</button>')+'</div>';
+  $('des').innerHTML=h;
+  Array.prototype.forEach.call($('des').querySelectorAll('.fbtn'),function(b){b.onclick=function(){if(dDone)return;dSel=b.getAttribute('data-l');drawDes()}});
+  if(!dDone){$('dclr').onclick=function(){dState={};dSel=null;drawDes()};$('dck').onclick=function(){dDone=true;if(dOk())dScore++;drawDes()};bindDraw()}
+  else{if($('dsol'))$('dsol').onclick=function(){dSol=true;drawDes()};if($('dn'))$('dn').onclick=function(){dIdx++;dState={};dSel=null;dDone=false;dSol=false;drawDes()};if($('dr'))$('dr').onclick=function(){dIdx=0;dState={};dSel=null;dDone=false;dSol=false;dScore=0;drawDes()}}
+}
+function bindDraw(){
+  var svg=$('dsvg'),drawing=false,sc=DS[dIdx],k=sc.scale||10,obj=sc.mode==='obj',o=null;
+  function pt(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+  function vec(e){var q=pt(e),dx=q.x-o[0],dy=o[1]-q.y,a=Math.atan2(dy,dx)*180/Math.PI;if(a<0)a+=360;a=Math.round(a/15)*15%360;var L=Math.sqrt(dx*dx+dy*dy)/DSQ;L=Math.round(L*2)/2;return {a:a,n:L*k,x:o[0],y:o[1]}}
+  function live(v){var r=v.a*Math.PI/180,L=v.n/k*DSQ;$('live').innerHTML=(L>0?arrow(v.x,v.y,v.x+Math.cos(r)*L,v.y-Math.sin(r)*L,colOf(dSel),4,''):'')+'<circle cx="'+v.x+'" cy="'+v.y+'" r="4" fill="'+colOf(dSel)+'"/>';
+    $('dhint').innerHTML='<b>'+labH(dSel)+'</b> : '+fmt(v.n,0)+' N, angle '+v.a+'° avec l’horizontale'}
+  svg.addEventListener('pointerdown',function(e){if(!dSel)return;drawing=true;try{svg.setPointerCapture(e.pointerId)}catch(x){}
+    if(obj){var q=pt(e);o=[Math.round(q.x/5)*5,Math.round(q.y/5)*5]}else o=dM(sc);live(vec(e));e.preventDefault()});
+  svg.addEventListener('pointermove',function(e){if(!drawing)return;live(vec(e));e.preventDefault()});
+  svg.addEventListener('pointerup',function(e){if(!drawing)return;drawing=false;var v=vec(e);if(v.n>0)dState[dSel]=v;else delete dState[dSel];drawDes()});
+}
+function angDiff(a,b){var d=Math.abs(a-b)%360;return d>180?360-d:d}
+function dCheck(){var sc=DS[dIdx],k=sc.scale||10,obj=sc.mode==='obj',out=[];
+  Object.keys(sc.req).forEach(function(l){var r=sc.req[l],v=dState[l],w=sc.why[l]?' '+sc.why[l]:'';
+    if(!v)out.push([false,'<b>'+labH(l)+'</b> manque.'+w]);
+    else if(obj&&Math.hypot(v.x-r[2].c[0],v.y-r[2].c[1])>r[2].r)out.push([false,'<b>'+labH(l)+'</b> : mauvais point d’application.'+w]);
+    else if(angDiff(v.a,r[0])>8)out.push([false,'<b>'+labH(l)+'</b> : mauvaise direction ou mauvais sens.'+w]);
+    else if(Math.abs(v.n-r[1])>0.6*k)out.push([false,'<b>'+labH(l)+'</b> : la longueur ne correspond pas à '+r[1]+' N ('+fmt(r[1]/k,1)+' carreaux).'+w]);
+    else out.push([true,'<b>'+labH(l)+'</b> : correct.'])});
+  Object.keys(dState).forEach(function(l){if(!sc.req[l])out.push([false,'<b>'+labH(l)+'</b> ne s’exerce pas sur le système. '+(sc.why[l]||'')])});
+  return out}
+function dOk(){return dCheck().every(function(o){return o[0]})}
+function dFeedback(){var c=dCheck(),ok=c.every(function(o){return o[0]});
+  return '<div class="fb '+(ok?'ok':'ko')+'"><b>'+(ok?'Bravo, schéma correct !':'À corriger :')+'</b><ul class="pts">'+c.map(function(o){return '<li>'+(o[0]?'✔ ':'✘ ')+o[1]+'</li>'}).join('')+'</ul></div>'}
+drawF1();drawP1();drawC1();drawMP();drawCat();drawPieges();drawBil();drawCor();drawDes();
+</script></body></html>
