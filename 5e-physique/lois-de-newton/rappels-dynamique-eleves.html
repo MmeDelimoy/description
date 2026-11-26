@@ -117,12 +117,12 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 <li><b>Test</b> (10 min) : 12 questions, 2 par partie. Il te dit quelles parties revoir.</li>
 <li><b>Comprendre</b> (10 min) : lis seulement les parties à revoir.</li>
 <li><b>S'entraîner</b> (10 min) : 10 questions, +3 à chaque faute.</li>
-<li><b>Corriger</b> (8 min) : 6 schémas où il faut trouver les erreurs.</li>
+<li><b>Trouve l'erreur</b> (8 min) : 6 schémas faits par un élève, à toi de repérer les flèches fausses.</li>
 <li><b>Dessiner</b> (12 min) : 6 situations, chacune en 2 étapes (sur l'objet, puis au point M).</li>
 </ol>
 <p style="margin:6px 0 0;font-size:15px">Tu as fini avant ? Fais les schémas et situations « Pour aller plus loin ». Tu n'as pas fini ? Termine chez toi.</p></div>
 <div class="tabs" id="tabs">
-<button data-t="diag" class="on">1. Test</button><button data-t="comp">2. Comprendre</button><button data-t="ex">3. S'entraîner</button><button data-t="cor">4. Corriger</button><button data-t="des" class="wide">5. Dessiner les forces</button>
+<button data-t="diag" class="on">1. Test</button><button data-t="comp">2. Comprendre</button><button data-t="ex">3. S'entraîner</button><button data-t="cor">4. Trouve l’erreur</button><button data-t="des" class="wide">5. Dessiner les forces</button>
 </div>
 
 <section id="t-diag">
@@ -160,7 +160,7 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 <li>seulement les forces exercées <b>sur</b> le système, jamais celles qu'il exerce sur les autres ;</li>
 <li>des longueurs <b>à l'échelle</b>, et l'échelle notée à côté du schéma ;</li>
 <li>le <b>nom</b> de la force sur chaque flèche.</li></ul>
-<p style="margin:6px 0 0;font-size:15px">Si deux flèches tombent l'une sur l'autre sur l'objet, décale-les un tout petit peu pour qu'on voie les deux.</p></div>
+<p style="margin:6px 0 0;font-size:15px">Le poids part <b>toujours exactement</b> du centre de gravité G. Si une autre flèche tombe sur lui (souvent R), fais-la partir un peu à côté, mais toujours sur la surface de contact.</p></div>
 </div>
 
 <div class="card" id="sC"><span class="badge">C</span><h2>Les forces à connaître</h2>
@@ -208,7 +208,7 @@ details.force .plus{margin:6px 10px 10px;font-size:15px}
 </section>
 
 <section id="t-cor" hidden>
-<div class="card"><span class="badge">Corriger</span><h2>Trouve les erreurs</h2>
+<div class="card"><span class="badge">Trouve l’erreur</span><h2>Des schémas à vérifier</h2>
 <p>Un élève a dessiné ces schémas. Les intensités et l'échelle sont données. <b>Touche les flèches fausses</b> (elles deviennent pointillées), puis vérifie.</p>
 <p style="font-size:15px">Une flèche est fausse si : la force n'existe pas ou ne s'exerce pas sur le système, sa direction ou son sens est faux, sa longueur ne correspond pas à l'intensité, ou elle ne part pas du bon point (sur le schéma sur l'objet). Il ne manque aucune force. Il y a au moins une erreur par schéma.</p>
 <div id="cor"></div></div>
@@ -356,7 +356,7 @@ var SCENES=[
  {nom:'Un livre posé sur une table',sys:'le livre',contact:'la table',dist:'la Terre',k:10,val:'P = 20 N, R = 20 N',
   forces:[['P','le poids, <span class="v">F</span><sub>Terre/livre</sub>'],['R','la réaction de la table, <span class="v">F</span><sub>table/livre</sub>']],
   bg:'<rect x="40" y="150" width="260" height="14" fill="#8a5a2b"/><rect x="60" y="164" width="12" height="50" fill="#8a5a2b"/><rect x="268" y="164" width="12" height="50" fill="#8a5a2b"/>',body:function(n){return bx(n,130,120,80,30)},
-  real:[['P',176,135,0,40,'#E76F51'],['R',164,150,0,-40,'#2A9D8F']],note:'P part du centre de gravité, R du milieu de la surface de contact. Elles sont sur la même verticale : on les décale un tout petit peu pour qu’elles ne se cachent pas.'},
+  real:[['P',170,135,0,40,'#E76F51'],['R',158,150,0,-40,'#2A9D8F']],note:'P part <b>exactement</b> du centre de gravité. R part de la surface de contact : pour que les deux flèches ne se cachent pas, on la fait partir un peu à côté du milieu, toujours sur la surface de contact.'},
  {nom:'Une lampe suspendue à un fil',sys:'la lampe',contact:'le fil',dist:'la Terre',k:10,val:'P = 30 N, T = 30 N',
   forces:[['P','le poids, <span class="v">F</span><sub>Terre/lampe</sub>'],['T','la tension du fil, <span class="v">F</span><sub>fil/lampe</sub>']],
   bg:'<rect x="120" y="0" width="100" height="10" fill="#BFC7D1"/><line x1="170" y1="10" x2="170" y2="100" stroke="#444" stroke-width="2"/>',body:function(n){return '<path d="M140,130 L170,100 L200,130 Z" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/>'},
@@ -364,7 +364,7 @@ var SCENES=[
  {nom:'Une caisse tirée par une corde horizontale',sys:'la caisse',contact:'le sol et la corde',dist:'la Terre',k:10,val:'P = 25 N, R = 25 N, T = 15 N, f = 15 N',
   forces:[['P','le poids, <span class="v">F</span><sub>Terre/caisse</sub>'],['R','la réaction du sol (partie perpendiculaire de la force du sol)'],['T','la tension de la corde, <span class="v">F</span><sub>corde/caisse</sub>'],['f','le frottement du sol (partie parallèle de la force du sol)']],
   bg:'<rect x="0" y="170" width="340" height="40" fill="#C9B79C"/><line x1="200" y1="145" x2="330" y2="145" stroke="#8a5a2b" stroke-width="2"/>',body:function(n){return bx(n,120,120,80,50)},
-  real:[['P',166,145,0,50,'#E76F51'],['R',154,170,0,-50,'#2A9D8F'],['T',200,145,30,0,'#2563EB'],['f',140,168,-30,0,'#7C3AED']],note:'T part du point d’attache de la corde ; R et f partent de la surface de contact avec le sol ; P du centre de gravité.'},
+  real:[['P',160,145,0,50,'#E76F51'],['R',148,170,0,-50,'#2A9D8F'],['T',200,145,30,0,'#2563EB'],['f',140,168,-30,0,'#7C3AED']],note:'T part du point d’attache de la corde ; R et f partent de la surface de contact avec le sol ; P du centre de gravité.'},
  {nom:'Une caisse immobile sur un plan incliné',sys:'la caisse',contact:'le plan incliné',dist:'la Terre',k:10,val:'P = 35 N, R ≈ 30 N, f ≈ 17,5 N',
   forces:[['P','le poids, <span class="v">F</span><sub>Terre/caisse</sub>'],['R','la réaction du plan, perpendiculaire au plan'],['f','le frottement du plan, qui l’empêche de glisser']],
   bg:'<polygon points="30,200 330,200 330,26.8" fill="#C9B79C"/>',body:function(n){return '<g transform="rotate(-30 180 113.4)"><rect x="150" y="73.4" width="60" height="40" rx="3" fill="'+(n>=1?'#FFD966':'#5B8DEF')+'" stroke="#1F4E79" stroke-width="'+(n>=1?3:1)+'"/></g>'},
@@ -404,9 +404,9 @@ var IMG={
 };
 /* ===== Test diagnostique : 2 questions par partie ===== */
 var DIAG=[
- {th:'A',q:'Une force est représentée par une flèche horizontale de 3 carreaux, qui pointe vers la gauche. Échelle : 1 carreau = 10 N. Quelle description est correcte ?',ok:'direction horizontale, sens vers la gauche, intensité 30 N',wr:['direction vers la gauche, sens horizontal, intensité 30 N','direction horizontale, sens vers la gauche, intensité 3 N','direction horizontale, sens vers la droite, intensité 30 N']},
- {th:'A',q:'Échelle : 1 carreau = 20 N. Combien de carreaux mesure la flèche d’une force de 50 N ?',ok:'2,5 carreaux',wr:['5 carreaux','1000 carreaux','0,4 carreau']},
- {th:'B',q:'Dans le schéma du mobile ponctuel, d’où partent les flèches des forces ?',ok:'toutes du point M qui remplace l’objet',wr:['chacune de son point d’application sur l’objet','du centre de la Terre','du point de contact avec le sol']},
+ {th:'A',q:'Une caisse est tirée par une corde attachée sur son côté droit. La corde monte vers la droite en faisant un angle de 30° avec le sol. Quelle description de la force exercée par la corde est correcte ?',ok:'point d’application : le point d’attache ; direction : inclinée de 30° sur l’horizontale ; sens : vers le haut et vers la droite',wr:['point d’application : le point d’attache ; direction : vers le haut et vers la droite ; sens : incliné de 30°','point d’application : le centre de gravité ; direction : inclinée de 30° sur l’horizontale ; sens : vers le haut et vers la droite','point d’application : le point d’attache ; direction : horizontale ; sens : vers la droite']},
+ {th:'A',q:'On tire une haute armoire vers la droite avec la même force (même direction, même sens, même intensité) : une fois tout en bas, une fois tout en haut. Qu’est-ce qui change ?',ok:'le point d’application : tirée en haut, l’armoire risque de basculer',wr:['rien : c’est la même force, l’effet est le même','l’intensité : tirer en haut demande plus de force','la direction : tirée en haut, la force devient oblique']},
+ {th:'B',q:'Sur le schéma sur l’objet, la tension T d’une corde inclinée part du coin supérieur droit de la caisse. Sur le schéma du mobile ponctuel, la flèche T…',ok:'part de M, avec la même direction, le même sens et la même longueur',wr:['part de M, mais devient horizontale','part toujours du coin supérieur droit','part de M, mais plus courte, car M est au centre']},
  {th:'B',q:'Quand on remplace un objet par un mobile ponctuel, quelle information sur les forces perd-on ?',ok:'leur point d’application',wr:['leur intensité','leur direction','leur sens']},
  {th:'C',img:'plan',q:'Sur un plan incliné, la réaction du support est :',ok:'perpendiculaire au plan',wr:['verticale, vers le haut','parallèle au plan','horizontale']},
  {th:'C',img:'glisse',q:'Une caisse glisse vers la droite sur le sol. Le frottement du sol sur la caisse est :',ok:'parallèle au sol, vers la gauche',wr:['parallèle au sol, vers la droite','perpendiculaire au sol, vers le haut','vertical, vers le bas']},
@@ -493,41 +493,41 @@ function runEx(){
   }
   function answer(ok){done++;if(ok)$('fb').innerHTML='<div class="fb ok"><b>Bravo !</b> '+cur.why+'</div>';else{wrong++;planned+=PEN;$('fb').innerHTML='<div class="fb ko"><b>Pas tout à fait.</b> '+cur.why+'<br><b>+3 questions</b> pour consolider.</div>'}
     $('nx').innerHTML='<button class="btn" id="go">'+(done>=planned?'Voir mon résultat':'Question suivante ▶')+'</button>';$('go').onclick=show}
-  function end(){root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Entraînement terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur.':wrong+' erreur'+(wrong>1?'s':'')+', rattrapée'+(wrong>1?'s':'')+' par les questions de consolidation.')+'</p><div class="fb ok" style="text-align:center"><b>Tu maîtrises maintenant :</b><br>« les rappels de dynamique : représenter une force, le poids, les actions réciproques et le bilan des forces »</div><div class="row"><button class="btn alt" id="again">Refaire un entraînement</button><button class="btn" id="todefi">Passer aux schémas à corriger</button></div>';
+  function end(){root.innerHTML='<div class="big">🎉</div><h2 style="text-align:center">Entraînement terminé !</h2><p style="text-align:center">'+(wrong===0?'Aucune erreur.':wrong+' erreur'+(wrong>1?'s':'')+', rattrapée'+(wrong>1?'s':'')+' par les questions de consolidation.')+'</p><div class="fb ok" style="text-align:center"><b>Tu maîtrises maintenant :</b><br>« les rappels de dynamique : représenter une force, le poids, les actions réciproques et le bilan des forces »</div><div class="row"><button class="btn alt" id="again">Refaire un entraînement</button><button class="btn" id="todefi">Passer à « Trouve l’erreur »</button></div>';
     $('again').onclick=runEx;$('todefi').onclick=function(){showTab('cor')}}
   root._peek=function(){return cur};show();
 }
 $('startex').onclick=function(){$('excard').style.display='none';$('exq').style.display='block';runEx()};
 var VEL=function(a,x,y,L){var r=a*Math.PI/180;L=L||70;var x2=x+Math.cos(r)*L,y2=y-Math.sin(r)*L;return '<line x1="'+x+'" y1="'+y+'" x2="'+x2+'" y2="'+y2+'" stroke="#8895a5" stroke-width="2.5" stroke-dasharray="6 5"/><polygon points="'+x2+','+y2+' '+(x2-Math.cos(r)*10-Math.sin(r)*5)+','+(y2+Math.sin(r)*10-Math.cos(r)*5)+' '+(x2-Math.cos(r)*10+Math.sin(r)*5)+','+(y2+Math.sin(r)*10+Math.cos(r)*5)+'" fill="#8895a5"/><text x="'+(x2+Math.cos(r)*12)+'" y="'+(y2-Math.sin(r)*12+4)+'" font-size="13" fill="#8895a5" font-style="italic">v</text>'};
-/* ===== Corriger des schémas (1 carreau = 20 px) ===== */
+/* ===== Trouve l'erreur : schémas (1 carreau = 20 px) ===== */
 var Mc=[170,115];
 function pm(){return '<circle cx="'+Mc[0]+'" cy="'+Mc[1]+'" r="5" fill="#1F2A44"/><text x="'+(Mc[0]-20)+'" y="'+(Mc[1]-8)+'" font-size="14" font-weight="700">M</text>'}
 function va(lab,dx,dy,ok,why){return {lab:lab,x1:Mc[0],y1:Mc[1],x2:Mc[0]+dx,y2:Mc[1]+dy,ok:ok,why:why}}
 function oa(lab,x1,y1,dx,dy,ok,why){return {lab:lab,x1:x1,y1:y1,x2:x1+dx,y2:y1+dy,ok:ok,why:why}}
 var COR=[
  {t:'Un livre immobile sur une table. <b>P = 20 N, R = 20 N.</b> Échelle : 1 carreau = 10 N. <b>Schéma sur l’objet.</b>',k:10,bg:'<rect x="40" y="160" width="260" height="14" fill="#8a5a2b"/><rect x="60" y="174" width="12" height="41" fill="#8a5a2b"/><rect x="268" y="174" width="12" height="41" fill="#8a5a2b"/><rect x="130" y="130" width="80" height="30" rx="3" fill="#FFD966" stroke="#1F4E79" stroke-width="2"/><circle cx="170" cy="145" r="2.5" fill="#8a5a2b"/>',
-  ar:[oa('P',176,145,0,40,true),oa('R',164,160,0,-20,false,'<b>R = 20 N</b> : il faut <b>2 carreaux</b>, la flèche n’en fait qu’un.'),oa('F livre/table',240,160,0,40,false,'<b>F<sub>livre/table</sub></b> est exercée <b>par</b> le livre sur la table : elle ne s’exerce pas sur le livre.')]},
+  ar:[oa('P',170,145,0,40,true),oa('R',158,160,0,-20,false,'<b>R = 20 N</b> : il faut <b>2 carreaux</b>, la flèche n’en fait qu’un.'),oa('F livre/table',240,160,0,40,false,'<b>F<sub>livre/table</sub></b> est exercée <b>par</b> le livre sur la table : elle ne s’exerce pas sur le livre.')]},
  {t:'Un ballon en l’air, juste après un lancer (on néglige l’air). <b>P = 6 N.</b> Échelle : 1 carreau = 2 N. <b>Mobile ponctuel.</b>',k:2,bg:'<path d="M20,200 Q120,10 320,140" fill="none" stroke="#8895a5" stroke-dasharray="5 5"/>'+pm(),
   ar:[va('P',0,60,true),va('F lancer',40,-40,false,'Il n’y a <b>pas de force du lancer</b> : la main ne touche plus le ballon. Seul le poids agit.')]},
  {t:'Une caisse immobile sur un plan incliné (pente de 30°). <b>P = 40 N, R = 35 N, f = 20 N.</b> Échelle : 1 carreau = 10 N. <b>Mobile ponctuel.</b>',k:10,bg:'<line x1="40" y1="190" x2="300" y2="40" stroke="#C9B79C" stroke-width="6"/>'+pm(),
   ar:[va('P',40,69.3,false,'Le <b>poids est toujours vertical</b>, vers le bas, même sur une pente.'),va('R',-35,-60.6,true),va('f',34.6,-20,true)]},
  {t:'Une lampe suspendue à un fil. <b>P = 30 N, T = 30 N.</b> Échelle : 1 carreau = 10 N. <b>Schéma sur l’objet.</b>',k:10,bg:'<rect x="120" y="0" width="100" height="8" fill="#BFC7D1"/><line x1="170" y1="8" x2="170" y2="100" stroke="#444" stroke-width="2"/><path d="M135,145 L170,100 L205,145 Z" fill="#FFD966" stroke="#1F4E79" stroke-width="2"/><circle cx="170" cy="130" r="2.5" fill="#8a5a2b"/><text x="150" y="138" font-size="11" fill="#8a5a2b">G</text>',
-  ar:[oa('T',164,130,0,-60,false,'La tension part du <b>point d’attache du fil</b> (en haut de la lampe), pas du centre de gravité.'),oa('P',176,130,0,60,true)]},
+  ar:[oa('T',170,130,0,-60,false,'La tension part du <b>point d’attache du fil</b> (en haut de la lampe), pas du centre de gravité.'),oa('P',170,130,0,60,true)]},
  {t:'Une caisse tirée vers la droite par une corde horizontale. <b>P = 40 N, R = 40 N, T = 20 N, f = 20 N.</b> Échelle : 1 carreau = 10 N. <b>Mobile ponctuel.</b>',k:10,bg:'<line x1="10" y1="205" x2="330" y2="205" stroke="#C9B79C" stroke-width="8"/>'+pm(),
   ar:[va('P',0,80,true),va('R',0,-80,true),va('T',40,0,true),va('f',-20,0,false,'<b>f = 20 N</b> : il faut <b>2 carreaux</b>, la flèche n’en fait qu’un.')]},
  {t:'Une main pousse une caisse vers la droite sur le sol. <b>F<sub>main/caisse</sub> = 30 N, f = 30 N, P = 50 N, R = 50 N.</b> Échelle : 1 carreau = 20 N. <b>Schéma sur l’objet.</b>',k:20,bg:'<rect x="0" y="170" width="340" height="45" fill="#C9B79C"/><rect x="130" y="110" width="80" height="60" rx="3" fill="#FFD966" stroke="#1F4E79" stroke-width="2"/><circle cx="170" cy="140" r="2.5" fill="#8a5a2b"/><ellipse cx="112" cy="135" rx="18" ry="10" fill="#F2C9A0" stroke="#b07a4a"/><rect x="40" y="129" width="60" height="12" rx="5" fill="#F2C9A0" stroke="#b07a4a"/>',
-  ar:[oa('F main/caisse',130,118,-30,0,false,'La main <b>pousse</b> : F<sub>main/caisse</sub> part du contact et va de la main vers la caisse, donc <b>vers la droite</b>.'),oa('P',176,140,0,50,true),oa('R',164,170,0,-50,true),oa('f',150,170,-30,0,true)]},
+  ar:[oa('F main/caisse',130,118,-30,0,false,'La main <b>pousse</b> : F<sub>main/caisse</sub> part du contact et va de la main vers la caisse, donc <b>vers la droite</b>.'),oa('P',170,140,0,50,true),oa('R',158,170,0,-50,true),oa('f',150,170,-30,0,true)]},
  {t:'Une voiture accélère et tire une caravane (modèle réduit). <b>Système : la caravane.</b> <b>P = 30 N, R = 30 N, F<sub>voiture/caravane</sub> = 20 N</b>, frottements négligés. Échelle : 1 carreau = 10 N. <b>Mobile ponctuel.</b>',k:10,x:1,bg:'<line x1="10" y1="205" x2="330" y2="205" stroke="#C9B79C" stroke-width="8"/>'+pm(),
   ar:[va('P',0,60,true),va('R',0,-60,true),va('F voiture/caravane',40,0,true),va('F caravane/voiture',-40,0,false,'<b>F<sub>caravane/voiture</sub></b> s’exerce <b>sur la voiture</b>, pas sur la caravane : elle ne fait pas partie de ce bilan.')]},
- {t:'Deux caisses empilées : A (20 N) dessus, B (30 N) dessous. Forces <b>sur la caisse B</b> : <b>P = 30 N, F<sub>A/B</sub> = 20 N, F<sub>sol/B</sub> = 50 N.</b> Échelle : 1 carreau = 20 N. <b>Schéma sur l’objet.</b>',k:20,x:1,bg:'<rect x="0" y="185" width="340" height="30" fill="#C9B79C"/><rect x="110" y="125" width="120" height="60" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="118" y="143" font-size="13" font-weight="700" fill="#8a5a2b">B</text><rect x="135" y="90" width="70" height="35" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="142" y="107" font-size="13" font-weight="700" fill="#5a3a1b">A</text><circle cx="170" cy="155" r="2.5" fill="#8a5a2b"/>',
-  ar:[oa('P',176,155,0,30,true),oa('P de A',190,107,0,20,false,'Le <b>poids de A</b> s’exerce sur A, pas sur B. Sur B, c’est F<sub>A/B</sub> (A appuie sur B) qu’il faut dessiner, et elle y est déjà.'),oa('F A/B',150,125,0,20,true),oa('F sol/B',120,185,0,-50,true)]},
+ {t:'Deux caisses empilées : A (20 N) dessus, B (30 N) dessous. Forces <b>sur la caisse B</b> : <b>P = 30 N, F<sub>A/B</sub> = 20 N, F<sub>sol/B</sub> = 50 N.</b> Échelle : 1 carreau = 20 N. <b>Schéma sur l’objet.</b>',k:20,x:1,bg:'<rect x="0" y="185" width="340" height="30" fill="#C9B79C"/><rect x="110" y="125" width="120" height="60" rx="3" fill="#FFD966" stroke="#8a5a2b" stroke-width="2"/><text x="118" y="143" font-size="13" font-weight="700" fill="#8a5a2b">B</text><rect x="135" y="90" width="70" height="35" rx="3" fill="#D9A066" stroke="#8a5a2b" stroke-width="2"/><text x="142" y="107" font-size="13" font-weight="700" fill="#5a3a1b">A</text><circle cx="170" cy="107" r="2.5" fill="#8a5a2b"/><circle cx="170" cy="155" r="2.5" fill="#8a5a2b"/>',
+  ar:[oa('P',170,155,0,30,true),oa('P de A',170,107,0,20,false,'Le <b>poids de A</b> s’exerce sur A, pas sur B. Sur B, c’est F<sub>A/B</sub> (A appuie sur B) qu’il faut dessiner, et elle y est déjà.'),oa('F A/B',150,125,0,20,true),oa('F sol/B',120,185,0,-50,true)]},
  {t:'Un palet glisse vers la droite sur la glace (frottements négligés). <b>P = 2 N, R = 2 N.</b> Échelle : 1 carreau = 1 N. <b>Mobile ponctuel.</b> La flèche grise <i>v</i> est la vitesse, ce n’est pas une force.',k:1,x:1,bg:'<line x1="10" y1="205" x2="330" y2="205" stroke="#BFE3F2" stroke-width="10"/>'+pm()+VEL(0,190,70,55),
   ar:[va('P',0,40,true),va('R',0,-40,true),va('F mouvement',60,0,false,'Il n’y a <b>pas de « force du mouvement »</b> : le palet continue sur sa lancée sans qu’aucune force ne le pousse.')]},
  {t:'On a poussé une caisse vers le haut d’un plan incliné et on l’a lâchée : elle <b>monte encore</b> en glissant. <b>P = 40 N, R = 35 N, f = 10 N.</b> Échelle : 1 carreau = 10 N. <b>Mobile ponctuel.</b>',k:10,x:1,bg:'<line x1="40" y1="190" x2="300" y2="40" stroke="#C9B79C" stroke-width="6"/>'+pm()+VEL(30,215,75,50),
   ar:[va('P',0,80,true),va('R',-35,-60.6,true),va('f',17.3,-10,false,'La caisse <b>glisse vers le haut</b> : le frottement s’oppose au glissement, il est dirigé vers le <b>bas</b> de la pente.'),va('F poussée',40,0,false,'La main a lâché la caisse : il n’y a <b>plus de force de poussée</b>.')]}
 ];
 (function(){function L(i,j,x,y){COR[i].ar[j].lx=x;COR[i].ar[j].ly=y}
- L(6,2,250,103);L(6,3,90,103);L(7,1,190,143);L(7,2,150,161);L(7,3,86,172);L(8,2,250,103);L(9,2,212,88);L(9,3,250,132);L(5,0,92,108);L(0,2,290,198)})();
+ L(6,2,250,103);L(6,3,90,103);L(7,1,198,120);L(7,2,150,161);L(7,3,86,172);L(8,2,250,103);L(9,2,212,88);L(9,3,250,132);L(5,0,92,108);L(0,2,290,198)})();
 var cIdx=0,cSel={},cDone=false,cScore=0;
 function drawCor(){
   var sc=COR[cIdx],s='<svg viewBox="0 0 340 215" class="gr" style="max-width:460px;touch-action:manipulation">'+grid(340,215)+sc.bg;
